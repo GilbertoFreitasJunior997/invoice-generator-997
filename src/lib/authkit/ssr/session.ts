@@ -135,7 +135,7 @@ async function verifyAccessToken(accessToken: string): Promise<boolean> {
 function getReturnPathname(url: string): string {
 	const newUrl = new URL(url);
 
-	return `${newUrl.pathname}${newUrl.searchParams.size > 0 ? "?" + newUrl.searchParams.toString() : ""}`;
+	return `${newUrl.pathname}${newUrl.searchParams.size > 0 ? `?${newUrl.searchParams.toString()}` : ""}`;
 }
 
 export async function updateSession(

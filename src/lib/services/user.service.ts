@@ -8,29 +8,21 @@ export const getAuthUser = createServerFn({ method: "POST" })
 	.inputValidator(getAuthUserSchema)
 	.handler(async ({ data }) => {
 		let user = await db.query.usersTable.findFirst({
-			where: eq(usersTable.id, data.id),
+			where: eq(usersTable.workOsId, data.id),
 		});
 
 		if (!user) {
-			const result = await db
-				.insert(usersTable)
-				.values({
-					id: data.id,
-					email: data.email,
-				})
-				.returning();
+			return null;
+		}
 
-			user = result[0];
-		} else if (user?.email !== data.email) {
-			const result = await db
+		if (user.email !== data.email) {
+			[user] = await db
 				.update(usersTable)
 				.set({
 					email: data.email,
 				})
-				.where(eq(usersTable.id, data.id))
+				.where(eq(usersTable.workOsId, data.id))
 				.returning();
-
-			user = result[0];
 		}
 
 		return user;

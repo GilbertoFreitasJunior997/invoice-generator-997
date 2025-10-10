@@ -1,0 +1,36 @@
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { createdAt, updatedAt } from "@/lib/utils/tables.utils";
+import { clientSnapshotsTable } from "./client-snapshots.table";
+import { clientsTable } from "./clients.table";
+import { serviceAgreementsTable } from "./service-agreements.table";
+import { usersTable } from "./user.table";
+import { userSnapshotsTable } from "./user-snapshots.table";
+
+export const invoicesTable = sqliteTable("invoices", {
+	id: text("id").primaryKey(),
+
+	invoiceNumber: text("invoice_number").notNull().unique(),
+	issueDate: integer("issue_date", { mode: "timestamp" }).notNull(),
+	amount: text("amount").notNull(),
+	currency: text("currency").notNull(),
+
+	description: text("description"),
+	userId: text("user_id")
+		.notNull()
+		.references(() => usersTable.id),
+	clientId: text("client_id")
+		.notNull()
+		.references(() => clientsTable.id),
+	serviceAgreementId: text("service_agreement_id").references(
+		() => serviceAgreementsTable.id,
+	),
+	userSnapshotId: text("user_snapshot_id")
+		.notNull()
+		.references(() => userSnapshotsTable.id),
+	clientSnapshotId: text("client_snapshot_id")
+		.notNull()
+		.references(() => clientSnapshotsTable.id),
+
+	createdAt: createdAt(),
+	updatedAt: updatedAt(),
+});
