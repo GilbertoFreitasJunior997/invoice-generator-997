@@ -22,5 +22,5 @@ export const Route = createFileRoute("/setup-account")({
 });
 
 function AccountSetup() {
-	return <div>Setup account</div>;
+	return <div></div>;
 }
