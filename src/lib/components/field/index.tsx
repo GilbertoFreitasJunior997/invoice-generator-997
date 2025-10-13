@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Label as LabelComponent } from "@/components/label";
+import { Label as LabelComponent } from "@/lib/components/label";
 import { cn } from "@/lib/utils/cn";
 import { fieldVariants } from "./consts";
 import type {

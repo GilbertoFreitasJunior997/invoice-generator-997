@@ -4,12 +4,12 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
 import * as React from "react";
-import { Button } from "@/components/button";
-import { Input } from "@/components/input";
-import { Separator } from "@/components/separator";
-import { Sheet } from "@/components/sheet";
-import { Skeleton } from "@/components/skeleton";
-import { Tooltip } from "@/components/tooltip";
+import { Button } from "@/lib/components/button";
+import { Input } from "@/lib/components/input";
+import { Separator } from "@/lib/components/separator";
+import { Sheet } from "@/lib/components/sheet";
+import { Skeleton } from "@/lib/components/skeleton";
+import { Tooltip } from "@/lib/components/tooltip";
 import { useIsMobile } from "@/lib/hooks/use-is-mobile";
 import { cn } from "@/lib/utils/cn";
 

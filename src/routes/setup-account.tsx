@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import type { User } from "@workos-inc/node";
-import { Button } from "@/components/button";
-import { Card } from "@/components/card";
-import { Form } from "@/components/form";
-import { Logo } from "@/components/logo";
 import { getAuth } from "@/lib/authkit/serverFunctions";
+import { Button } from "@/lib/components/button";
+import { Card } from "@/lib/components/card";
+import { Form } from "@/lib/components/form";
+import { Logo } from "@/lib/components/logo";
 import {
 	type UserSetupAccountForm,
 	userSetupAccountFormSchema,

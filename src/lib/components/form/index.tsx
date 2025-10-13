@@ -1,5 +1,5 @@
 import type { ComponentProps, FormEvent } from "react";
-import { Separator as SeparatorComponent } from "@/components/separator";
+import { Separator as SeparatorComponent } from "@/lib/components/separator";
 import { cn } from "@/lib/utils/cn";
 import type {
 	FormGroupProps,
