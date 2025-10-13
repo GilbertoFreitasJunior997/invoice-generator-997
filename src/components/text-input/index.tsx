@@ -3,12 +3,14 @@ import { BaseInput } from "../base-input";
 import { Input } from "../input";
 import type { TextInputProps } from "./types";
 
-export const TextInput = ({ label, inputProps }: TextInputProps) => {
+export const TextInput = ({ inputProps, ...props }: TextInputProps) => {
+	const { disabled } = props;
+
 	const field = useFieldContext<string>();
 
 	return (
 		<BaseInput
-			label={label}
+			{...props}
 			children={({ isInvalid }) => {
 				return (
 					<Input
@@ -18,6 +20,8 @@ export const TextInput = ({ label, inputProps }: TextInputProps) => {
 						onBlur={field.handleBlur}
 						onChange={(e) => field.handleChange(e.target.value)}
 						aria-invalid={isInvalid}
+						aria-disabled={disabled}
+						disabled={disabled}
 						{...inputProps}
 					/>
 				);

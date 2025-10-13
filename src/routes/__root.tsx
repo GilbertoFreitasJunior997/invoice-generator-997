@@ -7,6 +7,7 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import type { PropsWithChildren } from "react";
 import TanStackQueryDevtools from "../lib/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
@@ -39,14 +40,16 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 	shellComponent: RootDocument,
 });
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({ children }: PropsWithChildren) {
 	return (
 		<html lang="en">
 			<head>
 				<HeadContent />
 			</head>
 			<body className="dark">
-				{children}
+				<div className="w-full min-h-screen h-screen overflow-x-hidden overflow-y-auto">
+					{children}
+				</div>
 
 				<TanStackDevtools
 					config={{

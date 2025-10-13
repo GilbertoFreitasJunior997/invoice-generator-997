@@ -40,5 +40,8 @@ export const setupUserAccount = createServerFn({ method: "POST" })
 			name: data.name,
 			addressLine1: data.addressLine1,
 			addressLine2: data.addressLine2,
+			city: data.city,
+			state: data.state,
+			country: data.country,
 		});
 	});
