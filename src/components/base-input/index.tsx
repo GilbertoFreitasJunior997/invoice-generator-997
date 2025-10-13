@@ -1,7 +1,10 @@
+import { useFieldContext } from "@/lib/utils/forms.utils";
 import { Field } from "../field";
 import type { BaseInputProps } from "./types";
 
-export const BaseInput = ({ field, label, children }: BaseInputProps) => {
+export const BaseInput = ({ label, children }: BaseInputProps) => {
+	const field = useFieldContext();
+
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (

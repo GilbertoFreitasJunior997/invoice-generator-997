@@ -1,5 +1,5 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { createdAt, updatedAt } from "@/lib/utils/tables.utils";
+import { createdAt, id, updatedAt } from "@/lib/utils/tables.utils";
 import { clientsTable } from "./clients.table";
 import { usersTable } from "./user.table";
 
@@ -12,7 +12,7 @@ export const serviceAgreementStatusEnum = [
 
 export function getServiceAgreementsColumns() {
 	return {
-		id: text("id").primaryKey(),
+		id: id(),
 
 		description: text("description"),
 		rateAmount: text("rate_amount").notNull(),

@@ -1,9 +1,9 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { createdAt, updatedAt } from "@/lib/utils/tables.utils";
+import { createdAt, id, updatedAt } from "@/lib/utils/tables.utils";
 
 export function getUsersColumns() {
 	return {
-		id: text("id").primaryKey(),
+		id: id(),
 		workOsId: text("work_os_id").notNull().unique(),
 		email: text("email").notNull().unique(),
 		name: text("name"),

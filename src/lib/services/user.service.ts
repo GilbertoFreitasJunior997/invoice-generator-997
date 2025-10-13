@@ -2,7 +2,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { usersTable } from "../db/tables/user.table";
-import { getAuthUserSchema } from "../schemas/user.schemas";
+import {
+	getAuthUserSchema,
+	userSetupAccountSchema,
+} from "../schemas/user.schemas";
 
 export const getAuthUser = createServerFn({ method: "POST" })
 	.inputValidator(getAuthUserSchema)
@@ -26,4 +29,16 @@ export const getAuthUser = createServerFn({ method: "POST" })
 		}
 
 		return user;
+	});
+
+export const setupUserAccount = createServerFn({ method: "POST" })
+	.inputValidator(userSetupAccountSchema)
+	.handler(async ({ data }) => {
+		await db.insert(usersTable).values({
+			email: data.email,
+			workOsId: data.workOsId,
+			name: data.name,
+			addressLine1: data.addressLine1,
+			addressLine2: data.addressLine2,
+		});
 	});
