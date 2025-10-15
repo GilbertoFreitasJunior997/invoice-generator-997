@@ -34,10 +34,10 @@ function AuthenticatedRouteLayout() {
 		<Sidebar.Provider>
 			<AppSidebar />
 
-			<div className="p-4">
+			<div className="p-4 w-full">
 				<Sidebar.Trigger />
 
-				<main className="pl-1 pt-3">
+				<main className="pl-1 pt-3 w-full">
 					<Outlet />
 				</main>
 			</div>
