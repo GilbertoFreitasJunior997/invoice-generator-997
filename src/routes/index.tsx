@@ -6,7 +6,7 @@ export const Route = createFileRoute("/")({
 	beforeLoad: async () => {
 		const auth = await getAuth();
 		if (auth.user) {
-			throw redirect({ to: "/account" });
+			throw redirect({ to: "/dashboard" });
 		}
 	},
 	loader: async () => {

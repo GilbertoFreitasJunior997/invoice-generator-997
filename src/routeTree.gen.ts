@@ -13,6 +13,10 @@ import { Route as SetupAccountRouteImport } from './routes/setup-account'
 import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedServiceAgreementsRouteImport } from './routes/_authenticated/service-agreements'
+import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticated/invoices'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCustomersRouteImport } from './routes/_authenticated/customers'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as ApiAuthCallbackRouteImport } from './routes/api/auth/callback'
 
@@ -35,6 +39,27 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedServiceAgreementsRoute =
+  AuthenticatedServiceAgreementsRouteImport.update({
+    id: '/service-agreements',
+    path: '/service-agreements',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInvoicesRoute = AuthenticatedInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCustomersRoute = AuthenticatedCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -51,6 +76,10 @@ export interface FileRoutesByFullPath {
   '/logout': typeof LogoutRoute
   '/setup-account': typeof SetupAccountRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/customers': typeof AuthenticatedCustomersRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/invoices': typeof AuthenticatedInvoicesRoute
+  '/service-agreements': typeof AuthenticatedServiceAgreementsRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +87,10 @@ export interface FileRoutesByTo {
   '/logout': typeof LogoutRoute
   '/setup-account': typeof SetupAccountRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/customers': typeof AuthenticatedCustomersRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/invoices': typeof AuthenticatedInvoicesRoute
+  '/service-agreements': typeof AuthenticatedServiceAgreementsRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
 }
 export interface FileRoutesById {
@@ -67,6 +100,10 @@ export interface FileRoutesById {
   '/logout': typeof LogoutRoute
   '/setup-account': typeof SetupAccountRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/customers': typeof AuthenticatedCustomersRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/invoices': typeof AuthenticatedInvoicesRoute
+  '/_authenticated/service-agreements': typeof AuthenticatedServiceAgreementsRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
 }
 export interface FileRouteTypes {
@@ -76,9 +113,22 @@ export interface FileRouteTypes {
     | '/logout'
     | '/setup-account'
     | '/account'
+    | '/customers'
+    | '/dashboard'
+    | '/invoices'
+    | '/service-agreements'
     | '/api/auth/callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/logout' | '/setup-account' | '/account' | '/api/auth/callback'
+  to:
+    | '/'
+    | '/logout'
+    | '/setup-account'
+    | '/account'
+    | '/customers'
+    | '/dashboard'
+    | '/invoices'
+    | '/service-agreements'
+    | '/api/auth/callback'
   id:
     | '__root__'
     | '/'
@@ -86,6 +136,10 @@ export interface FileRouteTypes {
     | '/logout'
     | '/setup-account'
     | '/_authenticated/account'
+    | '/_authenticated/customers'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/invoices'
+    | '/_authenticated/service-agreements'
     | '/api/auth/callback'
   fileRoutesById: FileRoutesById
 }
@@ -127,6 +181,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/service-agreements': {
+      id: '/_authenticated/service-agreements'
+      path: '/service-agreements'
+      fullPath: '/service-agreements'
+      preLoaderRoute: typeof AuthenticatedServiceAgreementsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/invoices': {
+      id: '/_authenticated/invoices'
+      path: '/invoices'
+      fullPath: '/invoices'
+      preLoaderRoute: typeof AuthenticatedInvoicesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/customers': {
+      id: '/_authenticated/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof AuthenticatedCustomersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/account': {
       id: '/_authenticated/account'
       path: '/account'
@@ -146,10 +228,18 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedCustomersRoute: typeof AuthenticatedCustomersRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedInvoicesRoute: typeof AuthenticatedInvoicesRoute
+  AuthenticatedServiceAgreementsRoute: typeof AuthenticatedServiceAgreementsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedCustomersRoute: AuthenticatedCustomersRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedInvoicesRoute: AuthenticatedInvoicesRoute,
+  AuthenticatedServiceAgreementsRoute: AuthenticatedServiceAgreementsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

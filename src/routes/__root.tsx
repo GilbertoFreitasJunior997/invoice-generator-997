@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import type { PropsWithChildren } from "react";
-import TanStackQueryDevtools from "../lib/tanstack-query/devtools";
+import TanStackQueryDevtools from "../lib/components/tanstack-query-provider/devtools";
 import appCss from "../styles.css?url";
 
 type RouterContext = {

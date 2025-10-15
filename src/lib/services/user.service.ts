@@ -4,6 +4,7 @@ import { db } from "../db";
 import { usersTable } from "../db/tables/user.table";
 import {
 	getAuthUserSchema,
+	type UserSelect,
 	userSetupAccountSchema,
 } from "../schemas/user.schemas";
 
@@ -28,7 +29,7 @@ export const getAuthUser = createServerFn({ method: "POST" })
 				.returning();
 		}
 
-		return user;
+		return user as UserSelect;
 	});
 
 export const setupUserAccount = createServerFn({ method: "POST" })
@@ -43,5 +44,6 @@ export const setupUserAccount = createServerFn({ method: "POST" })
 			city: data.city,
 			state: data.state,
 			country: data.country,
+			avatarUrl: data.avatarUrl,
 		});
 	});

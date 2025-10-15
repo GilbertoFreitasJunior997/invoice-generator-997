@@ -1,4 +1,4 @@
 export type LogoProps = {
 	className?: string;
-	small?: boolean;
+	size: "sm" | "default" | "lg";
 };

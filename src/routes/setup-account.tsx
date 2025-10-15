@@ -28,7 +28,7 @@ export const Route = createFileRoute("/setup-account")({
 			return;
 		}
 
-		redirect({ to: "/account" });
+		redirect({ to: "/dashboard" });
 	},
 	loader: async () => {
 		const auth = await getAuth();
@@ -49,11 +49,12 @@ export default function SetupAccountPage() {
 					...data,
 					email: authUser.email,
 					workOsId: authUser.id,
+					avatarUrl: authUser.profilePictureUrl ?? "",
 				},
 			});
 		},
 		onSuccess: () => {
-			navigate({ to: "/account" });
+			navigate({ to: "/dashboard" });
 		},
 	});
 
@@ -79,7 +80,9 @@ export default function SetupAccountPage() {
 		<div className="h-full bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
 			<div className="w-full max-w-xl">
 				<div className="mb-8 text-center space-y-4">
-					<Logo />
+					<div className="w-full flex items-center justify-center">
+						<Logo size="lg" />
+					</div>
 
 					<h1 className="text-4xl font-bold text-foreground text-balance tracking-tight">
 						Complete Your Account Setup

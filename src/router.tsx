@@ -1,7 +1,7 @@
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import type { PropsWithChildren } from "react";
-import * as TanstackQuery from "./lib/tanstack-query/root-provider";
+import * as TanstackQuery from "./lib/components/tanstack-query-provider";
 import { routeTree } from "./routeTree.gen";
 
 export const getRouter = () => {

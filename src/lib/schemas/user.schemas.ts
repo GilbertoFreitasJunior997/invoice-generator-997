@@ -3,6 +3,7 @@ import z from "zod";
 import { usersTable } from "../db/tables/user.table";
 
 export const userSelectSchema = createSelectSchema(usersTable);
+export type UserSelect = z.infer<typeof userSelectSchema>;
 
 export const getAuthUserSchema = z.object({
 	id: z.string(),
@@ -21,5 +22,5 @@ export const userSetupAccountFormSchema = z.object({
 export type UserSetupAccountForm = z.infer<typeof userSetupAccountFormSchema>;
 
 export const userSetupAccountSchema = userSetupAccountFormSchema.extend(
-	userSelectSchema.pick({ workOsId: true }).shape,
+	userSelectSchema.pick({ workOsId: true, avatarUrl: true }).shape,
 );

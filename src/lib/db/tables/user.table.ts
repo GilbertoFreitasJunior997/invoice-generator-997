@@ -12,6 +12,7 @@ export function getUsersColumns() {
 		city: text("city").notNull(),
 		state: text("state").notNull(),
 		country: text("country").notNull(),
+		avatarUrl: text("avatar_url").notNull(),
 
 		createdAt: createdAt(),
 		updatedAt: updatedAt(),
