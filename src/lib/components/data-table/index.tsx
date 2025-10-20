@@ -26,7 +26,6 @@ import {
 import { useState } from "react";
 import { Button } from "@/lib/components/button";
 import { DropdownMenu } from "@/lib/components/dropdown-menu";
-import { Input } from "@/lib/components/input";
 import { Select } from "@/lib/components/select";
 import { Table as TableComponent } from "@/lib/components/table";
 import { Checkbox } from "../checkbox";
@@ -118,14 +117,14 @@ const DataTableToolbar = <TData,>({ table }: DataTableToolbarProps<TData>) => {
 	return (
 		<div className="flex items-center justify-between">
 			<div className="flex flex-1 items-center space-x-2">
-				<Input
+				{/* <Input
 					placeholder="Filter tasks..."
 					value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
 					onChange={(event) =>
 						table.getColumn("name")?.setFilterValue(event.target.value)
 					}
 					className="h-8 w-[150px] lg:w-[250px]"
-				/>
+				/> */}
 			</div>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger asChild>

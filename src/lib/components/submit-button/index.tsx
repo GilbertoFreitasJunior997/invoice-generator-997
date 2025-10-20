@@ -7,6 +7,7 @@ export const SubmitButton = ({
 	label,
 	className,
 	buttonProps: buttonPropsProp,
+	isDisabled,
 }: SubmitButtonProps) => {
 	const form = useFormContext();
 
@@ -18,8 +19,8 @@ export const SubmitButton = ({
 
 	return (
 		<form.Subscribe
-			selector={(state) => [state.isSubmitting]}
-			children={([isSubmitting]) => (
+			selector={(state) => [state.isSubmitting, state.isDefaultValue]}
+			children={([isSubmitting, isDefaultValue]) => (
 				<Button
 					type="submit"
 					{...buttonProps}
@@ -30,7 +31,7 @@ export const SubmitButton = ({
 
 						buttonProps?.onClick?.(event);
 					}}
-					disabled={isSubmitting || disabled}
+					disabled={isSubmitting || disabled || isDisabled || isDefaultValue}
 					className={cn(className, buttonPropsClassName)}
 				>
 					{label ?? "Submit"}

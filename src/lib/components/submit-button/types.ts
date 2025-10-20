@@ -5,4 +5,5 @@ export type SubmitButtonProps = {
 	label?: ReactNode;
 	className?: string;
 	buttonProps?: ButtonProps;
+	isDisabled?: boolean;
 };
