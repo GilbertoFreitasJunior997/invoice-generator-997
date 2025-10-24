@@ -1,3 +1,4 @@
+import { Toaster } from "@/lib/components/toaster";
 import "@/lib/utils/zod.utils";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
@@ -50,6 +51,8 @@ function RootDocument({ children }: PropsWithChildren) {
 				<div className="w-full min-h-screen h-screen overflow-x-hidden overflow-y-auto">
 					{children}
 				</div>
+
+				<Toaster />
 
 				<TanStackDevtools
 					config={{

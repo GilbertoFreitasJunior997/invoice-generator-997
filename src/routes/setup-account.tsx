@@ -21,10 +21,10 @@ export const Route = createFileRoute("/setup-account")({
 			throw redirect({ to: "/" });
 		}
 
-		const user = await getAuthUser({
+		const result = await getAuthUser({
 			data: auth.user,
 		});
-		if (!user) {
+		if (!result?.success) {
 			return;
 		}
 

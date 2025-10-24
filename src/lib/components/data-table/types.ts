@@ -7,7 +7,7 @@ export type DataTableColumn<TData> = {
 
 export type DataTableProps<TData> = {
 	columns: DataTableColumn<TData>[];
-	data: TData[];
+	data: TData[] | undefined;
 
 	onCreateClick?: () => void;
 	onEditClick?: (data: TData) => void;

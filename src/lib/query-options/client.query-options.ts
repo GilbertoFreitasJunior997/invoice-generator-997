@@ -2,6 +2,7 @@ import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import type { ClientUpsertForm } from "../schemas/client.schemas";
 import type { UserSelect } from "../schemas/user.schemas";
 import {
+	checkHasClientWithSameCompanyName,
 	getAllClients,
 	getClientById,
 	removeClient,
@@ -35,14 +36,15 @@ export const upsertClientMutationOptions = (data: {
 	onSuccess?: () => void;
 }) =>
 	mutationOptions({
-		mutationFn: (formData: ClientUpsertForm) =>
-			upsertClient({
+		mutationFn: (formData: ClientUpsertForm) => {
+			return upsertClient({
 				data: {
 					...formData,
 					userId: data.user.id,
 					id: data.editId ?? undefined,
 				},
-			}),
+			});
+		},
 		onSuccess: (_a, _b, _c, context) => {
 			context.client.invalidateQueries({
 				queryKey: ["clients"],
@@ -51,6 +53,26 @@ export const upsertClientMutationOptions = (data: {
 
 			data.onSuccess?.();
 		},
+	});
+
+export const checkHasClientWithSameCompanyNameQueryOptions = (data: {
+	user: UserSelect;
+	companyName: string;
+}) =>
+	queryOptions({
+		queryKey: [
+			"clients",
+			data.user.id,
+			"check-has-client-with-same-company-name",
+			data.companyName,
+		],
+		queryFn: () =>
+			checkHasClientWithSameCompanyName({
+				data: {
+					userId: data.user.id,
+					companyName: data.companyName,
+				},
+			}),
 	});
 
 export const removeClientMutationOptions = (data: {

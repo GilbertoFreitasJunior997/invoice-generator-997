@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/lib/components/button";
-import { getAllClientsQueryOptions } from "@/lib/query-options/client.query-options";
 import { ClientsForm } from "./-components/clients-form";
 import { ClientsRemoveModal } from "./-components/clients-remove-modal";
 import { ClientsTable } from "./-components/clients-table";
@@ -17,10 +16,6 @@ export const Route = createFileRoute("/_authenticated/clients/")({
 	validateSearch: searchParamsSchema,
 	component: RouteComponent,
 	loader: async ({ context }) => {
-		await context.queryClient.prefetchQuery(
-			getAllClientsQueryOptions({ user: context.user }),
-		);
-
 		return { user: context.user };
 	},
 });

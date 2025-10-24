@@ -1,10 +1,15 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useStore } from "@tanstack/react-form";
 import { useEffect } from "react";
 import { Button } from "@/lib/components/button";
 import { Form } from "@/lib/components/form";
 import { Sheet } from "@/lib/components/sheet";
 import { Skeleton } from "@/lib/components/skeleton";
 import {
+	useServerMutation,
+	useServerQuery,
+} from "@/lib/hooks/use-server-query";
+import {
+	checkHasClientWithSameCompanyNameQueryOptions,
 	getClientByIdQueryOptions,
 	upsertClientMutationOptions,
 } from "@/lib/query-options/client.query-options";
@@ -20,7 +25,7 @@ export const ClientsForm = () => {
 	const isOpen = isCreating || !!editId;
 	const isEditing = !!editId;
 
-	const { mutateAsync: upsertClientMutation } = useMutation(
+	const { mutateAsync: upsertClientMutation } = useServerMutation(
 		upsertClientMutationOptions({
 			user,
 			editId,
@@ -35,7 +40,7 @@ export const ClientsForm = () => {
 		}),
 	);
 
-	const { data: client, isFetching: isClientLoading } = useQuery({
+	const { data: client, isFetching: isClientLoading } = useServerQuery({
 		...getClientByIdQueryOptions({
 			user: user,
 			id: editId ?? "",
@@ -57,6 +62,18 @@ export const ClientsForm = () => {
 		},
 	});
 
+	const companyName = useStore(form.store, (s) => s.values.companyName);
+	const {
+		data: hasClientWithSameName,
+		isFetching: isLoadingHasClientWithSameName,
+	} = useServerQuery({
+		...checkHasClientWithSameCompanyNameQueryOptions({
+			user,
+			companyName,
+		}),
+		enabled: !!companyName,
+	});
+
 	const handleOpenChange = (open: boolean) => {
 		if (!open) {
 			navigate({
@@ -76,6 +93,22 @@ export const ClientsForm = () => {
 			form.reset();
 		}
 	}, [isOpen, form]);
+
+	useEffect(() => {
+		const errorMap = form.getAllErrors().form.errorMap;
+
+		form.setErrorMap({
+			...errorMap,
+			onChange: {
+				fields: {
+					companyName: hasClientWithSameName
+						? "Company name already exists"
+						: undefined,
+					...form.getAllErrors().form.errorMap.onChange,
+				},
+			},
+		});
+	}, [hasClientWithSameName, form]);
 
 	return (
 		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange} modal={true}>
@@ -144,7 +177,7 @@ export const ClientsForm = () => {
 
 						<form.SubmitButton
 							label={`${isEditing ? "Update" : "Add"} Client`}
-							isDisabled={isClientLoading}
+							isDisabled={isClientLoading || isLoadingHasClientWithSameName}
 						/>
 					</Sheet.Footer>
 				</Form.Root>

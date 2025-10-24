@@ -2,7 +2,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 
 export const getContext = () => {
-	const queryClient = new QueryClient();
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				retry: false,
+				staleTime: 60 * 1000 * 5, // 5 minutes
+			},
+		},
+	});
 	return {
 		queryClient,
 	};

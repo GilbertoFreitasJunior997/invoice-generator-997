@@ -2,67 +2,129 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { db } from "../db";
 import { clientsTable } from "../db/tables";
+import { ServerNotFoundError } from "../errors/server-fns.errors";
 import { clientUpsertSchema } from "../schemas/client.schemas";
 import type { UserSelect } from "../schemas/user.schemas";
+import {
+	createServerErrorResponse,
+	createServerSuccessResponse,
+	HTTP_STATUS,
+} from "../utils/server-fns.utils";
+
+export const checkHasClientWithSameCompanyName = createServerFn()
+	.inputValidator((d: { userId: string; companyName: string }) => d)
+	.handler(async ({ data }) => {
+		try {
+			const { userId, companyName } = data;
+
+			const client = await db.query.clientsTable.findFirst({
+				where: and(
+					eq(clientsTable.userId, userId),
+					eq(clientsTable.companyName, companyName),
+				),
+			});
+			const hasClientWithSameName = !!client;
+
+			return createServerSuccessResponse({ data: hasClientWithSameName });
+		} catch (error) {
+			return createServerErrorResponse({ error });
+		}
+	});
 
 export const getAllClients = createServerFn()
-	.inputValidator((d) => d as { user: UserSelect })
+	.inputValidator((d: { user: UserSelect }) => d)
 	.handler(async ({ data }) => {
-		const { user } = data;
+		try {
+			const { user } = data;
 
-		const clients = await db.query.clientsTable.findMany({
-			where: eq(clientsTable.userId, user.id),
-		});
+			const clients = await db.query.clientsTable.findMany({
+				where: eq(clientsTable.userId, user.id),
+			});
 
-		return clients;
+			return createServerSuccessResponse({ data: clients });
+		} catch (error) {
+			return createServerErrorResponse({ error });
+		}
 	});
 
 export const getClientById = createServerFn()
-	.inputValidator((d) => d as { user: UserSelect; id: string })
+	.inputValidator((d: { user: UserSelect; id: string }) => d)
 	.handler(async ({ data }) => {
-		const { user, id } = data;
+		try {
+			const { user, id } = data;
 
-		const client = await db.query.clientsTable.findFirst({
-			where: and(eq(clientsTable.userId, user.id), eq(clientsTable.id, id)),
-		});
+			const client = await db.query.clientsTable.findFirst({
+				where: and(eq(clientsTable.userId, user.id), eq(clientsTable.id, id)),
+			});
 
-		return client;
+			if (!client) {
+				throw new ServerNotFoundError("Client not found");
+			}
+
+			return createServerSuccessResponse({ data: client });
+		} catch (error) {
+			return createServerErrorResponse({ error });
+		}
 	});
 
 export const upsertClient = createServerFn()
 	.inputValidator(clientUpsertSchema)
 	.handler(async ({ data }) => {
-		const [client] = await db
-			.insert(clientsTable)
-			.values({
-				id: data.id,
-				addressLine1: data.addressLine1,
-				addressLine2: data.addressLine2,
-				companyName: data.companyName,
-				userId: data.userId,
-			})
-			.onConflictDoUpdate({
-				target: clientsTable.id,
-				set: {
+		try {
+			if (data.id) {
+				const [client] = await db
+					.update(clientsTable)
+					.set({
+						addressLine1: data.addressLine1,
+						addressLine2: data.addressLine2,
+						companyName: data.companyName,
+						updatedAt: new Date(),
+					})
+					.where(eq(clientsTable.id, data.id))
+					.returning();
+
+				return createServerSuccessResponse({
+					data: client,
+					message: `${data.companyName} updated successfully`,
+				});
+			}
+
+			const [client] = await db
+				.insert(clientsTable)
+				.values({
+					userId: data.userId,
 					addressLine1: data.addressLine1,
 					addressLine2: data.addressLine2,
 					companyName: data.companyName,
-				},
-			})
-			.returning();
+				})
+				.returning();
 
-		return client;
+			return createServerSuccessResponse({
+				data: client,
+				message: `${data.companyName} created successfully`,
+				status: HTTP_STATUS.CREATED,
+			});
+		} catch (error) {
+			return createServerErrorResponse({ error });
+		}
 	});
 
 export const removeClient = createServerFn()
-	.inputValidator((d) => d as { user: UserSelect; id: string })
+	.inputValidator((d: { user: UserSelect; id: string }) => d)
 	.handler(async ({ data }) => {
-		const { user, id } = data;
+		try {
+			const { user, id } = data;
 
-		const [client] = await db
-			.delete(clientsTable)
-			.where(and(eq(clientsTable.userId, user.id), eq(clientsTable.id, id)))
-			.returning();
+			const [client] = await db
+				.delete(clientsTable)
+				.where(and(eq(clientsTable.userId, user.id), eq(clientsTable.id, id)))
+				.returning();
 
-		return client;
+			return createServerSuccessResponse({
+				data: client,
+				message: `${client.companyName} deleted successfully`,
+			});
+		} catch (error) {
+			return createServerErrorResponse({ error });
+		}
 	});

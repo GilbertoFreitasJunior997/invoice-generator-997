@@ -323,7 +323,7 @@ export const DataTable = <TData, TValue>({
 	] satisfies ColumnDef<TData, TValue>[];
 
 	const table = useReactTable({
-		data,
+		data: data ?? ([] as TData[]),
 		columns,
 		state: {
 			sorting,

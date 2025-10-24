@@ -16,6 +16,7 @@ export const Button = ({
 		<Comp
 			data-slot="button"
 			className={cn(buttonVariants({ variant, size, className }))}
+			type="button"
 			{...props}
 		/>
 	);

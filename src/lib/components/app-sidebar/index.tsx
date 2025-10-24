@@ -118,7 +118,7 @@ export const AppSidebar = () => {
 								<Logo
 									size={isSidebarOpen ? "default" : "sm"}
 									className={cn(isSidebarOpen && "text-xs w-full text-center")}
-								 />
+								/>
 							</Link>
 						</Sidebar.MenuButton>
 					</Sidebar.MenuItem>

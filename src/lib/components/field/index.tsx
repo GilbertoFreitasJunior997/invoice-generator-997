@@ -39,6 +39,14 @@ const Label = ({ className, ...props }: FieldLabelProps) => {
 	);
 };
 
+const getErrorMessage = (error: { message?: string } | string | undefined) => {
+	if (typeof error === "string") {
+		return error;
+	}
+
+	return error?.message ?? undefined;
+};
+
 // named "FieldError" to avoid shadowing the global "Error" property
 const FieldError = ({
 	className,
@@ -55,16 +63,22 @@ const FieldError = ({
 			return null;
 		}
 
-		if (errors?.length === 1 && errors[0]?.message) {
-			return errors[0].message;
+		const firstError = getErrorMessage(errors[0]);
+		if (errors.length === 1 && firstError) {
+			return firstError;
 		}
 
 		return (
 			<ul className="ml-4 flex list-disc flex-col gap-1">
-				{errors.map(
-					(error) =>
-						!!error?.message && <li key={error.message}>{error.message}</li>,
-				)}
+				{errors.map((error) => {
+					const errorMessage = getErrorMessage(error);
+
+					if (!errorMessage) {
+						return null;
+					}
+
+					return <li key={errorMessage}>{errorMessage}</li>;
+				})}
 			</ul>
 		);
 	}, [children, errors]);

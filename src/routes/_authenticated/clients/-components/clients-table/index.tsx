@@ -1,6 +1,6 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { DataTable } from "@/lib/components/data-table";
 import type { DataTableColumn } from "@/lib/components/data-table/types";
+import { useServerQuery } from "@/lib/hooks/use-server-query";
 import { getAllClientsQueryOptions } from "@/lib/query-options/client.query-options";
 import type { ClientSelect } from "@/lib/schemas/client.schemas";
 import { Route } from "@/routes/_authenticated/clients";
@@ -24,9 +24,7 @@ export const ClientsTable = () => {
 	const { user } = Route.useLoaderData();
 	const navigate = Route.useNavigate();
 
-	const { data: clients } = useSuspenseQuery(
-		getAllClientsQueryOptions({ user }),
-	);
+	const { data: clients } = useServerQuery(getAllClientsQueryOptions({ user }));
 
 	return (
 		<DataTable

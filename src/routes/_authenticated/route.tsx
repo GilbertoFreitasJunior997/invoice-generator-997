@@ -13,15 +13,15 @@ export const Route = createFileRoute("/_authenticated")({
 			throw redirect({ href });
 		}
 
-		const user = await getAuthUser({
+		const result = await getAuthUser({
 			data: auth.user,
 		});
 
-		if (!user) {
+		if (!result?.success) {
 			throw redirect({ to: "/setup-account" });
 		}
 
-		return { user };
+		return { user: result.data };
 	},
 	loader: async ({ context }) => {
 		return { user: context.user };
