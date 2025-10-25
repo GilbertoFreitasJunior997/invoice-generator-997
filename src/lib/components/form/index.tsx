@@ -6,7 +6,6 @@ import type {
 	FormLegendProps,
 	FormRootProps,
 	FormSeparatorProps,
-	FormSetProps,
 } from "./types";
 
 const BaseRootForm = (props: ComponentProps<"form">) => {
@@ -45,20 +44,6 @@ const Group = ({ className, ...props }: FormGroupProps) => {
 	);
 };
 
-const FormSet = ({ className, ...props }: FormSetProps) => {
-	return (
-		<fieldset
-			data-slot="field-set"
-			className={cn(
-				"flex flex-col gap-6",
-				"has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3",
-				className,
-			)}
-			{...props}
-		/>
-	);
-};
-
 const Legend = ({
 	className,
 	variant = "legend",
@@ -69,7 +54,7 @@ const Legend = ({
 			data-slot="field-legend"
 			data-variant={variant}
 			className={cn(
-				"mb-3 font-medium",
+				"-mb-1 font-medium",
 				"data-[variant=legend]:text-base",
 				"data-[variant=label]:text-sm",
 				className,
@@ -85,7 +70,7 @@ const Separator = ({ children, className, ...props }: FormSeparatorProps) => {
 			data-slot="field-separator"
 			data-content={!!children}
 			className={cn(
-				"relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2",
+				"relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2 w-full col-span-full",
 				className,
 			)}
 			{...props}
@@ -106,7 +91,6 @@ const Separator = ({ children, className, ...props }: FormSeparatorProps) => {
 export const Form = {
 	Root,
 	Group,
-	Set: FormSet,
 	Legend,
 	Separator,
 };

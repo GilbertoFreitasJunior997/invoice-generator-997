@@ -149,7 +149,9 @@ export const ClientsForm = () => {
 									children={(field) => (
 										<field.TextInput
 											label="Address line 1"
-											description="e.g. 123 Main Street"
+											inputProps={{
+												placeholder: "123 Main Street",
+											}}
 											fieldRootProps={{
 												className: "col-span-2",
 											}}
@@ -162,7 +164,9 @@ export const ClientsForm = () => {
 									children={(field) => (
 										<field.TextInput
 											label="Address line 2"
-											description="e.g. Apt 123"
+											inputProps={{
+												placeholder: "Apt 123",
+											}}
 										/>
 									)}
 								/>

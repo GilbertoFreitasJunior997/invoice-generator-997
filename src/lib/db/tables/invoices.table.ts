@@ -1,8 +1,7 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { createdAt, id, updatedAt, userId } from "@/lib/utils/tables.utils";
+import { createdAt, id, updatedAt, userId } from "@/lib/utils/db.utils";
 import { clientSnapshotsTable } from "./client-snapshots.table";
 import { clientsTable } from "./clients.table";
-import { serviceAgreementsTable } from "./service-agreements.table";
 import { userSnapshotsTable } from "./user-snapshots.table";
 
 export const invoicesTable = sqliteTable("invoices", {
@@ -18,9 +17,7 @@ export const invoicesTable = sqliteTable("invoices", {
 	clientId: text("client_id")
 		.notNull()
 		.references(() => clientsTable.id),
-	serviceAgreementId: text("service_agreement_id").references(
-		() => serviceAgreementsTable.id,
-	),
+
 	userSnapshotId: text("user_snapshot_id")
 		.notNull()
 		.references(() => userSnapshotsTable.id),

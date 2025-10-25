@@ -1,5 +1,5 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { createdAt, id, updatedAt } from "@/lib/utils/tables.utils";
+import { createdAt, id, updatedAt } from "@/lib/utils/db.utils";
 
 export function getUsersColumns() {
 	return {

@@ -12,8 +12,6 @@ export type FormRootProps = ComponentProps<"form"> & {
 
 export type FormGroupProps = ComponentProps<"div">;
 
-export type FormSetProps = ComponentProps<"fieldset">;
-
 export type FormLegendProps = ComponentProps<"legend"> & {
 	variant?: "legend" | "label";
 };
