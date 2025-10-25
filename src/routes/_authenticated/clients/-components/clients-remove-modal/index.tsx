@@ -23,7 +23,7 @@ export const ClientsRemoveModal = () => {
 
 	const { mutateAsync: removeClientMutation, isPending } = useMutation(
 		removeClientMutationOptions({
-			user,
+			userId: user.id,
 			id: removeId ?? "",
 			onSuccess: () => {
 				setIsSuccess(true);

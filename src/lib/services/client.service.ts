@@ -4,7 +4,6 @@ import { db } from "../db";
 import { clientsTable } from "../db/tables";
 import { ServerNotFoundError } from "../errors/server-fns.errors";
 import { clientUpsertSchema } from "../schemas/client.schemas";
-import type { UserSelect } from "../schemas/user.schemas";
 import {
 	createServerErrorResponse,
 	createServerSuccessResponse,
@@ -32,13 +31,13 @@ export const checkHasClientWithSameCompanyName = createServerFn()
 	});
 
 export const getAllClients = createServerFn()
-	.inputValidator((d: { user: UserSelect }) => d)
+	.inputValidator((d: { userId: string }) => d)
 	.handler(async ({ data }) => {
 		try {
-			const { user } = data;
+			const { userId } = data;
 
 			const clients = await db.query.clientsTable.findMany({
-				where: eq(clientsTable.userId, user.id),
+				where: eq(clientsTable.userId, userId),
 			});
 
 			return createServerSuccessResponse({ data: clients });
@@ -48,13 +47,13 @@ export const getAllClients = createServerFn()
 	});
 
 export const getClientById = createServerFn()
-	.inputValidator((d: { user: UserSelect; id: string }) => d)
+	.inputValidator((d: { userId: string; id: string }) => d)
 	.handler(async ({ data }) => {
 		try {
-			const { user, id } = data;
+			const { userId, id } = data;
 
 			const client = await db.query.clientsTable.findFirst({
-				where: and(eq(clientsTable.userId, user.id), eq(clientsTable.id, id)),
+				where: and(eq(clientsTable.userId, userId), eq(clientsTable.id, id)),
 			});
 
 			if (!client) {
@@ -110,14 +109,14 @@ export const upsertClient = createServerFn()
 	});
 
 export const removeClient = createServerFn()
-	.inputValidator((d: { user: UserSelect; id: string }) => d)
+	.inputValidator((d: { userId: string; id: string }) => d)
 	.handler(async ({ data }) => {
 		try {
-			const { user, id } = data;
+			const { userId, id } = data;
 
 			const [client] = await db
 				.delete(clientsTable)
-				.where(and(eq(clientsTable.userId, user.id), eq(clientsTable.id, id)))
+				.where(and(eq(clientsTable.userId, userId), eq(clientsTable.id, id)))
 				.returning();
 
 			return createServerSuccessResponse({

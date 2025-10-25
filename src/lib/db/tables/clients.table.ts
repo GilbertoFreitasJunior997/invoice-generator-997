@@ -1,6 +1,5 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { createdAt, id, updatedAt } from "@/lib/utils/tables.utils";
-import { usersTable } from "./user.table";
+import { createdAt, id, updatedAt, userId } from "@/lib/utils/tables.utils";
 
 export function getClientsColumns() {
 	return {
@@ -9,9 +8,7 @@ export function getClientsColumns() {
 		addressLine1: text("address_line_1").notNull(),
 		addressLine2: text("address_line_2").notNull(),
 
-		userId: text("user_id")
-			.notNull()
-			.references(() => usersTable.id),
+		userId: userId(),
 
 		createdAt: createdAt(),
 		updatedAt: updatedAt(),

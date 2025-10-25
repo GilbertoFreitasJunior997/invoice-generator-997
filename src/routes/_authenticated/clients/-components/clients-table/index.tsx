@@ -24,7 +24,9 @@ export const ClientsTable = () => {
 	const { user } = Route.useLoaderData();
 	const navigate = Route.useNavigate();
 
-	const { data: clients } = useServerQuery(getAllClientsQueryOptions({ user }));
+	const { data: clients } = useServerQuery(
+		getAllClientsQueryOptions({ userId: user.id }),
+	);
 
 	return (
 		<DataTable

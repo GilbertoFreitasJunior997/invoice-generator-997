@@ -27,7 +27,7 @@ export const ClientsForm = () => {
 
 	const { mutateAsync: upsertClientMutation } = useServerMutation(
 		upsertClientMutationOptions({
-			user,
+			userId: user.id,
 			editId,
 			onSuccess: () => {
 				navigate({
@@ -42,7 +42,7 @@ export const ClientsForm = () => {
 
 	const { data: client, isFetching: isClientLoading } = useServerQuery({
 		...getClientByIdQueryOptions({
-			user: user,
+			userId: user.id,
 			id: editId ?? "",
 		}),
 		enabled: isEditing,
@@ -68,7 +68,7 @@ export const ClientsForm = () => {
 		isFetching: isLoadingHasClientWithSameName,
 	} = useServerQuery({
 		...checkHasClientWithSameCompanyNameQueryOptions({
-			user,
+			userId: user.id,
 			companyName,
 		}),
 		enabled: !!companyName,

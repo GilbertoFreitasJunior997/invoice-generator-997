@@ -2,11 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/lib/components/button";
 import { entitySearchParamsSchema } from "@/lib/utils/search-params.utils";
-import { ClientsForm } from "./-components/clients-form";
-import { ClientsRemoveModal } from "./-components/clients-remove-modal";
-import { ClientsTable } from "./-components/clients-table";
+import { ServiceAgreementsForm } from "./-components/service-agreements-form";
+import { ServiceAgreementsTable } from "./-components/service-agreements-table";
 
-export const Route = createFileRoute("/_authenticated/clients/")({
+export const Route = createFileRoute("/_authenticated/service-agreements/")({
 	validateSearch: entitySearchParamsSchema,
 	component: RouteComponent,
 	loader: async ({ context }) => {
@@ -27,15 +26,13 @@ function RouteComponent() {
 					size="sm"
 				>
 					<PlusIcon className="size-4" />
-					Add Client
+					Add Service Agreement
 				</Button>
 			</div>
 
-			<ClientsTable />
+			<ServiceAgreementsTable />
 
-			<ClientsForm />
-
-			<ClientsRemoveModal />
+			<ServiceAgreementsForm />
 		</div>
 	);
 }

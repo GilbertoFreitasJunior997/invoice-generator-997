@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
-    "serve": "vite preview",
-    "test": "vitest run",
     "format": "biome format",
     "lint": "biome lint",
-    "check": "biome check"
+    "check": "biome check",
+    "migrate": "bun drizzle-kit generate && bun drizzle-kit migrate",
+    "studio": "bun drizzle-kit studio"
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",

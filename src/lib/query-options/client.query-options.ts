@@ -1,6 +1,5 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import type { ClientUpsertForm } from "../schemas/client.schemas";
-import type { UserSelect } from "../schemas/user.schemas";
 import {
 	checkHasClientWithSameCompanyName,
 	getAllClients,
@@ -9,29 +8,29 @@ import {
 	upsertClient,
 } from "../services/client.service";
 
-export const getAllClientsQueryOptions = (data: { user: UserSelect }) =>
+export const getAllClientsQueryOptions = (data: { userId: string }) =>
 	queryOptions({
-		queryKey: ["clients", data.user.id],
+		queryKey: ["clients", data.userId],
 		queryFn: () =>
 			getAllClients({
-				data,
+				data: { userId: data.userId },
 			}),
 	});
 
 export const getClientByIdQueryOptions = (data: {
-	user: UserSelect;
+	userId: string;
 	id: string;
 }) =>
 	queryOptions({
-		queryKey: ["clients", data.user.id, data.id],
+		queryKey: ["clients", data.userId, data.id],
 		queryFn: () =>
 			getClientById({
-				data,
+				data: { userId: data.userId, id: data.id },
 			}),
 	});
 
 export const upsertClientMutationOptions = (data: {
-	user: UserSelect;
+	userId: string;
 	editId?: string;
 	onSuccess?: () => void;
 }) =>
@@ -40,7 +39,7 @@ export const upsertClientMutationOptions = (data: {
 			return upsertClient({
 				data: {
 					...formData,
-					userId: data.user.id,
+					userId: data.userId,
 					id: data.editId ?? undefined,
 				},
 			});
@@ -56,20 +55,20 @@ export const upsertClientMutationOptions = (data: {
 	});
 
 export const checkHasClientWithSameCompanyNameQueryOptions = (data: {
-	user: UserSelect;
+	userId: string;
 	companyName: string;
 }) =>
 	queryOptions({
 		queryKey: [
 			"clients",
-			data.user.id,
+			data.userId,
 			"check-has-client-with-same-company-name",
 			data.companyName,
 		],
 		queryFn: () =>
 			checkHasClientWithSameCompanyName({
 				data: {
-					userId: data.user.id,
+					userId: data.userId,
 					companyName: data.companyName,
 				},
 			}),
@@ -77,13 +76,13 @@ export const checkHasClientWithSameCompanyNameQueryOptions = (data: {
 
 export const removeClientMutationOptions = (data: {
 	id: string;
-	user: UserSelect;
+	userId: string;
 	onSuccess?: () => void;
 }) =>
 	mutationOptions({
 		mutationFn: () =>
 			removeClient({
-				data: { user: data.user, id: data.id },
+				data: { userId: data.userId, id: data.id },
 			}),
 		onSuccess: (_a, _b, _c, context) => {
 			context.client.invalidateQueries({

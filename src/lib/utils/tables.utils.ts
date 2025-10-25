@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import { integer, text } from "drizzle-orm/sqlite-core";
 import { v4 as uuidv4 } from "uuid";
+import { usersTable } from "../db/tables/user.table";
 
 export function createdAt() {
 	return integer("created_at", { mode: "timestamp" })
@@ -18,4 +19,13 @@ export function id() {
 	return text("id")
 		.primaryKey()
 		.$defaultFn(() => uuidv4());
+}
+
+export function userId() {
+	return text("user_id")
+		.notNull()
+		.references(() => usersTable.id, {
+			onDelete: "cascade",
+			onUpdate: "cascade",
+		});
 }

@@ -31,10 +31,7 @@ const getCurrentUser = createServerFn()
 const getCurrentUserQueryOptions = (pathname: string) =>
 	queryOptions({
 		queryKey: getCurrentUserQueryKeys,
-		queryFn: () => {
-			console.log("queryFn");
-			return getCurrentUser({ data: { pathname } });
-		},
+		queryFn: () => getCurrentUser({ data: { pathname } }),
 	});
 
 export const Route = createFileRoute("/_authenticated")({
