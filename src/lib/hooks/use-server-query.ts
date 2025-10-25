@@ -166,7 +166,6 @@ export const useServerQuery = <TQueryOptions extends AnyUseQueryOptions>(
 		toast.error(message);
 	});
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: biome doesn't support useEffectEvent yet
 	useEffect(() => {
 		if (isFetching) {
 			return;
