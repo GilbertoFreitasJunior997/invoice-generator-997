@@ -15,6 +15,12 @@ export function updatedAt() {
 		.default(sql`(unixepoch())`);
 }
 
+export function snapshotDate() {
+	return integer("snapshot_date", { mode: "timestamp" })
+		.notNull()
+		.default(sql`(unixepoch())`);
+}
+
 export function id() {
 	return text("id")
 		.primaryKey()

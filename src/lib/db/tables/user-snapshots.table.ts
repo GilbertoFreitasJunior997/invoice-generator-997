@@ -1,5 +1,5 @@
-import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { snapshotDate } from "@/lib/utils/db.utils";
 import { getUsersColumns, usersTable } from "./user.table";
 
 export const userSnapshotsTable = sqliteTable("user_snapshots", {
@@ -8,7 +8,5 @@ export const userSnapshotsTable = sqliteTable("user_snapshots", {
 	userId: text("user_id")
 		.notNull()
 		.references(() => usersTable.id),
-	snapshotDate: integer("snapshot_date", { mode: "timestamp" })
-		.notNull()
-		.default(sql`(unixepoch())`),
+	snapshotDate: snapshotDate(),
 });

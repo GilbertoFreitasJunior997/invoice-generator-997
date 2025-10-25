@@ -29,6 +29,7 @@ export const getAuthUser = createServerFn({ method: "POST" })
 					.update(usersTable)
 					.set({
 						email: data.email,
+						updatedAt: new Date(),
 					})
 					.where(eq(usersTable.workOsId, data.id))
 					.returning();

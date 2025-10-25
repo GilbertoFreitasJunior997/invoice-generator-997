@@ -140,7 +140,12 @@ export const ClientsForm = () => {
 						<Form.Group className="px-4">
 							<form.AppField
 								name="companyName"
-								children={(field) => <field.TextInput label="Company Name" />}
+								children={(field) => (
+									<field.TextInput
+										label="Company Name"
+										inputProps={{ placeholder: "Acme Inc." }}
+									/>
+								)}
 							/>
 
 							<Form.Group className="grid grid-cols-3">

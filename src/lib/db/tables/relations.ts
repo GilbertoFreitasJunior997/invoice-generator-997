@@ -2,6 +2,8 @@ import { relations } from "drizzle-orm";
 import { clientSnapshotsTable } from "./client-snapshots.table";
 import { clientsTable } from "./clients.table";
 import { invoicesTable } from "./invoices.table";
+import { servicesTable } from "./services.table";
+import { servicesSnapshotsTable } from "./services-snapshots.table";
 import { usersTable } from "./user.table";
 import { userSnapshotsTable } from "./user-snapshots.table";
 
@@ -60,3 +62,23 @@ export const invoicesRelations = relations(invoicesTable, ({ one }) => ({
 		references: [clientSnapshotsTable.id],
 	}),
 }));
+
+export const servicesRelations = relations(servicesTable, ({ one, many }) => ({
+	user: one(usersTable, {
+		fields: [servicesTable.userId],
+		references: [usersTable.id],
+	}),
+	snapshots: many(servicesSnapshotsTable),
+	invoices: many(invoicesTable),
+}));
+
+export const servicesSnapshotsRelations = relations(
+	servicesSnapshotsTable,
+	({ one, many }) => ({
+		service: one(servicesTable, {
+			fields: [servicesSnapshotsTable.serviceId],
+			references: [servicesTable.id],
+		}),
+		invoices: many(invoicesTable),
+	}),
+);
