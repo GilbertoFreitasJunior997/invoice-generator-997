@@ -1,15 +1,19 @@
+import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { getAuth, getSignInUrl } from "@/lib/authkit/serverFunctions";
 import { AppSidebar } from "@/lib/components/app-sidebar";
 import { Sidebar } from "@/lib/components/sidebar";
 import { getAuthUser } from "@/lib/services/user.service";
 
-export const Route = createFileRoute("/_authenticated")({
-	beforeLoad: async ({ location }) => {
+export const getCurrentUserQueryKeys = ["current-user"] as const;
+
+const getCurrentUser = createServerFn()
+	.inputValidator((d: { pathname: string }) => d)
+	.handler(async ({ data: { pathname } }) => {
 		const auth = await getAuth();
 		if (!auth.user) {
-			const path = location.pathname;
-			const href = await getSignInUrl({ data: path });
+			const href = await getSignInUrl({ data: pathname });
 			throw redirect({ href });
 		}
 
@@ -21,7 +25,25 @@ export const Route = createFileRoute("/_authenticated")({
 			throw redirect({ to: "/setup-account" });
 		}
 
-		return { user: result.data };
+		return result.data;
+	});
+
+const getCurrentUserQueryOptions = (pathname: string) =>
+	queryOptions({
+		queryKey: getCurrentUserQueryKeys,
+		queryFn: () => {
+			console.log("queryFn");
+			return getCurrentUser({ data: { pathname } });
+		},
+	});
+
+export const Route = createFileRoute("/_authenticated")({
+	beforeLoad: async ({ location, context }) => {
+		const user = await context.queryClient.fetchQuery(
+			getCurrentUserQueryOptions(location.pathname),
+		);
+
+		return { user };
 	},
 	loader: async ({ context }) => {
 		return { user: context.user };
