@@ -3,27 +3,27 @@ import { XIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils/cn";
 
-type DialogProps = ComponentProps<typeof DialogPrimitive.Root>;
-const Root = (props: DialogProps) => {
+export type DialogRootProps = ComponentProps<typeof DialogPrimitive.Root>;
+const Root = (props: DialogRootProps) => {
 	return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 };
 
-type DialogTriggerProps = ComponentProps<typeof DialogPrimitive.Trigger>;
+export type DialogTriggerProps = ComponentProps<typeof DialogPrimitive.Trigger>;
 const Trigger = (props: DialogTriggerProps) => {
 	return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 };
 
-type DialogPortalProps = ComponentProps<typeof DialogPrimitive.Portal>;
+export type DialogPortalProps = ComponentProps<typeof DialogPrimitive.Portal>;
 const Portal = (props: DialogPortalProps) => {
 	return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 };
 
-type DialogCloseProps = ComponentProps<typeof DialogPrimitive.Close>;
+export type DialogCloseProps = ComponentProps<typeof DialogPrimitive.Close>;
 const Close = (props: DialogCloseProps) => {
 	return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 };
 
-type DialogOverlayProps = ComponentProps<typeof DialogPrimitive.Overlay>;
+export type DialogOverlayProps = ComponentProps<typeof DialogPrimitive.Overlay>;
 const Overlay = ({ className, ...props }: DialogOverlayProps) => {
 	return (
 		<DialogPrimitive.Overlay
@@ -37,7 +37,7 @@ const Overlay = ({ className, ...props }: DialogOverlayProps) => {
 	);
 };
 
-type DialogContentProps = React.ComponentProps<
+export type DialogContentProps = React.ComponentProps<
 	typeof DialogPrimitive.Content
 > & {
 	showCloseButton?: boolean;
@@ -54,7 +54,8 @@ const Content = ({
 			<DialogPrimitive.Content
 				data-slot="dialog-content"
 				className={cn(
-					"bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
+					"bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200",
+					"flex flex-col",
 					className,
 				)}
 				{...props}
@@ -74,7 +75,7 @@ const Content = ({
 	);
 };
 
-type DialogHeaderProps = ComponentProps<"div">;
+export type DialogHeaderProps = ComponentProps<"div">;
 const Header = ({ className, ...props }: DialogHeaderProps) => {
 	return (
 		<div
@@ -85,7 +86,7 @@ const Header = ({ className, ...props }: DialogHeaderProps) => {
 	);
 };
 
-type DialogFooterProps = ComponentProps<"div">;
+export type DialogFooterProps = ComponentProps<"div">;
 const Footer = ({ className, ...props }: DialogFooterProps) => {
 	return (
 		<div
@@ -99,7 +100,7 @@ const Footer = ({ className, ...props }: DialogFooterProps) => {
 	);
 };
 
-type DialogTitleProps = ComponentProps<typeof DialogPrimitive.Title>;
+export type DialogTitleProps = ComponentProps<typeof DialogPrimitive.Title>;
 const Title = ({ className, ...props }: DialogTitleProps) => {
 	return (
 		<DialogPrimitive.Title
@@ -110,7 +111,7 @@ const Title = ({ className, ...props }: DialogTitleProps) => {
 	);
 };
 
-type DialogDescriptionProps = ComponentProps<
+export type DialogDescriptionProps = ComponentProps<
 	typeof DialogPrimitive.Description
 >;
 const Description = ({ className, ...props }: DialogDescriptionProps) => {

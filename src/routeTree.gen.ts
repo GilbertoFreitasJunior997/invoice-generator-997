@@ -13,10 +13,10 @@ import { Route as SetupAccountRouteImport } from './routes/setup-account'
 import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedInvoicesRouteImport } from './routes/_authenticated/invoices'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedServicesIndexRouteImport } from './routes/_authenticated/services/index'
+import { Route as AuthenticatedInvoicesIndexRouteImport } from './routes/_authenticated/invoices/index'
 import { Route as AuthenticatedClientsIndexRouteImport } from './routes/_authenticated/clients/index'
 import { Route as ApiAuthCallbackRouteImport } from './routes/api/auth/callback'
 
@@ -39,11 +39,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedInvoicesRoute = AuthenticatedInvoicesRouteImport.update({
-  id: '/invoices',
-  path: '/invoices',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -58,6 +53,12 @@ const AuthenticatedServicesIndexRoute =
   AuthenticatedServicesIndexRouteImport.update({
     id: '/services/',
     path: '/services/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInvoicesIndexRoute =
+  AuthenticatedInvoicesIndexRouteImport.update({
+    id: '/invoices/',
+    path: '/invoices/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedClientsIndexRoute =
@@ -78,9 +79,9 @@ export interface FileRoutesByFullPath {
   '/setup-account': typeof SetupAccountRoute
   '/account': typeof AuthenticatedAccountRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/invoices': typeof AuthenticatedInvoicesRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/clients': typeof AuthenticatedClientsIndexRoute
+  '/invoices': typeof AuthenticatedInvoicesIndexRoute
   '/services': typeof AuthenticatedServicesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -89,9 +90,9 @@ export interface FileRoutesByTo {
   '/setup-account': typeof SetupAccountRoute
   '/account': typeof AuthenticatedAccountRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/invoices': typeof AuthenticatedInvoicesRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/clients': typeof AuthenticatedClientsIndexRoute
+  '/invoices': typeof AuthenticatedInvoicesIndexRoute
   '/services': typeof AuthenticatedServicesIndexRoute
 }
 export interface FileRoutesById {
@@ -102,9 +103,9 @@ export interface FileRoutesById {
   '/setup-account': typeof SetupAccountRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/invoices': typeof AuthenticatedInvoicesRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/_authenticated/clients/': typeof AuthenticatedClientsIndexRoute
+  '/_authenticated/invoices/': typeof AuthenticatedInvoicesIndexRoute
   '/_authenticated/services/': typeof AuthenticatedServicesIndexRoute
 }
 export interface FileRouteTypes {
@@ -115,9 +116,9 @@ export interface FileRouteTypes {
     | '/setup-account'
     | '/account'
     | '/dashboard'
-    | '/invoices'
     | '/api/auth/callback'
     | '/clients'
+    | '/invoices'
     | '/services'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -126,9 +127,9 @@ export interface FileRouteTypes {
     | '/setup-account'
     | '/account'
     | '/dashboard'
-    | '/invoices'
     | '/api/auth/callback'
     | '/clients'
+    | '/invoices'
     | '/services'
   id:
     | '__root__'
@@ -138,9 +139,9 @@ export interface FileRouteTypes {
     | '/setup-account'
     | '/_authenticated/account'
     | '/_authenticated/dashboard'
-    | '/_authenticated/invoices'
     | '/api/auth/callback'
     | '/_authenticated/clients/'
+    | '/_authenticated/invoices/'
     | '/_authenticated/services/'
   fileRoutesById: FileRoutesById
 }
@@ -182,13 +183,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/invoices': {
-      id: '/_authenticated/invoices'
-      path: '/invoices'
-      fullPath: '/invoices'
-      preLoaderRoute: typeof AuthenticatedInvoicesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -208,6 +202,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof AuthenticatedServicesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/invoices/': {
+      id: '/_authenticated/invoices/'
+      path: '/invoices'
+      fullPath: '/invoices'
+      preLoaderRoute: typeof AuthenticatedInvoicesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/clients/': {
@@ -230,16 +231,16 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedInvoicesRoute: typeof AuthenticatedInvoicesRoute
   AuthenticatedClientsIndexRoute: typeof AuthenticatedClientsIndexRoute
+  AuthenticatedInvoicesIndexRoute: typeof AuthenticatedInvoicesIndexRoute
   AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedInvoicesRoute: AuthenticatedInvoicesRoute,
   AuthenticatedClientsIndexRoute: AuthenticatedClientsIndexRoute,
+  AuthenticatedInvoicesIndexRoute: AuthenticatedInvoicesIndexRoute,
   AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
 }
 
