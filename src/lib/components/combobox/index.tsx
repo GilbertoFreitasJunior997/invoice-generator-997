@@ -17,7 +17,18 @@ export const Combobox = <TValue extends ComboboxBaseValue = string>({
 	const [open, setOpen] = useState(false);
 
 	const hasValue = !!value && value.length > 0;
-	const valueDisplay = value?.join(", ") ?? "";
+	let valueDisplay = "";
+
+	for (let i = 0; i < value.length; i++) {
+		const selected = value[i];
+		const item = items?.find((item) => item.value === selected);
+		if (!item) {
+			continue;
+		}
+		const isLastItem = i === value.length - 1;
+
+		valueDisplay += item.label + (isLastItem ? "" : ", ");
+	}
 
 	const handleValueChange = (selectedItem: TValue) => {
 		const hasValue = value.some((value) => value === selectedItem);
@@ -40,7 +51,7 @@ export const Combobox = <TValue extends ComboboxBaseValue = string>({
 					role="combobox"
 					aria-expanded={open}
 					{...triggerProps}
-					className={cn("w-[200px] justify-between", triggerProps?.className)}
+					className={cn("w-full justify-between", triggerProps?.className)}
 				>
 					{hasValue ? valueDisplay : placeholder}
 
@@ -48,7 +59,7 @@ export const Combobox = <TValue extends ComboboxBaseValue = string>({
 				</Button>
 			</Popover.Trigger>
 
-			<Popover.Content className="w-[200px] p-0">
+			<Popover.Content className="max-w-[500px] w-[var(--radix-popover-trigger-width)] p-0">
 				<Command.Root>
 					<Command.Input placeholder="Search..." className="h-9" />
 
@@ -60,7 +71,8 @@ export const Combobox = <TValue extends ComboboxBaseValue = string>({
 								<div className="p-1.5 text-sm text-muted-foreground text-center">
 									Loading...
 								</div>
-							) : items?.length ? (
+							) : (
+								!!items?.length &&
 								items.map((item) => {
 									const isSelected = value.some(
 										(value) => value === item.value,
@@ -82,10 +94,6 @@ export const Combobox = <TValue extends ComboboxBaseValue = string>({
 										</Command.Item>
 									);
 								})
-							) : (
-								<div className="p-1.5 text-sm text-muted-foreground text-center">
-									No items found.
-								</div>
 							)}
 						</Command.Group>
 					</Command.List>

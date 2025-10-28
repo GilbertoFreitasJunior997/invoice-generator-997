@@ -9,7 +9,7 @@ import {
 	useServerQuery,
 } from "@/lib/hooks/use-server-query";
 import {
-	checkHasClientWithSameCompanyNameQueryOptions,
+	checkHasClientWithSameNameQueryOptions,
 	getClientByIdQueryOptions,
 	upsertClientMutationOptions,
 } from "@/lib/query-options/client.query-options";
@@ -50,9 +50,15 @@ export const ClientsForm = () => {
 
 	const form = useAppForm({
 		defaultValues: {
-			companyName: client?.companyName ?? "",
+			name: client?.name ?? "",
+			email: client?.email ?? "",
 			addressLine1: client?.addressLine1 ?? "",
 			addressLine2: client?.addressLine2 ?? "",
+			country: client?.country ?? "",
+			state: client?.state ?? "",
+			city: client?.city ?? "",
+			zip: client?.zip ?? "",
+			taxId: client?.taxId ?? "",
 		},
 		validators: {
 			onChange: clientUpsertFormSchema,
@@ -62,16 +68,16 @@ export const ClientsForm = () => {
 		},
 	});
 
-	const companyName = useStore(form.store, (s) => s.values.companyName);
+	const name = useStore(form.store, (s) => s.values.name);
 	const {
 		data: hasClientWithSameName,
 		isFetching: isLoadingHasClientWithSameName,
 	} = useServerQuery({
-		...checkHasClientWithSameCompanyNameQueryOptions({
+		...checkHasClientWithSameNameQueryOptions({
 			userId: user.id,
-			companyName,
+			name: name,
 		}),
-		enabled: !!companyName,
+		enabled: !!name,
 	});
 
 	const handleOpenChange = (open: boolean) => {
@@ -101,8 +107,8 @@ export const ClientsForm = () => {
 			...errorMap,
 			onChange: {
 				fields: {
-					companyName: hasClientWithSameName
-						? "Company name already exists"
+					name: hasClientWithSameName
+						? "You already have a client with this name"
 						: undefined,
 					...form.getAllErrors().form.errorMap.onChange,
 				},
@@ -120,8 +126,7 @@ export const ClientsForm = () => {
 
 					{isEditing && (
 						<Sheet.Description>
-							Edit <span className="font-bold">{client?.companyName}</span>{" "}
-							details
+							Edit <span className="font-bold">{client?.name}</span> details
 						</Sheet.Description>
 					)}
 				</Sheet.Header>
@@ -139,11 +144,34 @@ export const ClientsForm = () => {
 					) : (
 						<Form.Group className="px-4">
 							<form.AppField
-								name="companyName"
+								name="name"
 								children={(field) => (
 									<field.TextInput
-										label="Company Name"
+										label="Name"
 										inputProps={{ placeholder: "Acme Inc." }}
+									/>
+								)}
+							/>
+
+							<form.AppField
+								name="email"
+								children={(field) => (
+									<field.TextInput
+										label="Email"
+										inputProps={{
+											placeholder: "accounting@acmeinc.com",
+										}}
+									/>
+								)}
+							/>
+
+							<form.AppField
+								name="taxId"
+								children={(field) => (
+									<field.TextInput
+										label="Tax ID"
+										inputProps={{ placeholder: "1234567890" }}
+										description="If provided, it will be displayed on the invoice."
 									/>
 								)}
 							/>
@@ -176,6 +204,25 @@ export const ClientsForm = () => {
 									)}
 								/>
 							</Form.Group>
+
+							<form.AppField
+								name="country"
+								children={(field) => <field.TextInput label="Country" />}
+							/>
+
+							<form.AppField
+								name="zip"
+								children={(field) => <field.TextInput label="Zip" />}
+							/>
+
+							<form.AppField
+								name="state"
+								children={(field) => <field.TextInput label="State" />}
+							/>
+							<form.AppField
+								name="city"
+								children={(field) => <field.TextInput label="City" />}
+							/>
 						</Form.Group>
 					)}
 

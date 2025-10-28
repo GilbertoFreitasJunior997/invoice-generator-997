@@ -1,12 +1,10 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { snapshotDate } from "@/lib/utils/db.utils";
-import { getUsersColumns, usersTable } from "./user.table";
+import { sqliteTable } from "drizzle-orm/sqlite-core";
+import { snapshotDate, userId } from "@/lib/utils/db.utils";
+import { getUsersColumns } from "./user.table";
 
 export const userSnapshotsTable = sqliteTable("user_snapshots", {
 	...getUsersColumns(),
 
-	userId: text("user_id")
-		.notNull()
-		.references(() => usersTable.id),
+	userId: userId(),
 	snapshotDate: snapshotDate(),
 });

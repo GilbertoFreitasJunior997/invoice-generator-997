@@ -67,12 +67,14 @@ export default function SetupAccountPage() {
 			city: "",
 			state: "",
 			country: "",
-		},
-		onSubmit: async ({ value }) => {
-			await setupUserAccountMutation(value);
+			zip: "",
+			taxId: "",
 		},
 		validators: {
 			onChange: userSetupAccountFormSchema,
+		},
+		onSubmit: async ({ value }) => {
+			await setupUserAccountMutation(value);
 		},
 	});
 
@@ -112,6 +114,19 @@ export default function SetupAccountPage() {
 								)}
 							/>
 
+							<form.AppField
+								name="taxId"
+								children={(field) => (
+									<field.TextInput
+										label="Tax ID"
+										inputProps={{
+											placeholder: "1234567890",
+										}}
+										description="If provided, it will be displayed on the invoices"
+									/>
+								)}
+							/>
+
 							<Form.Group className="grid grid-cols-3">
 								<form.AppField
 									name="addressLine1"
@@ -145,6 +160,12 @@ export default function SetupAccountPage() {
 								name="country"
 								children={(field) => <field.TextInput label="Country" />}
 							/>
+
+							<form.AppField
+								name="zip"
+								children={(field) => <field.TextInput label="Zip" />}
+							/>
+
 							<form.AppField
 								name="state"
 								children={(field) => <field.TextInput label="State" />}

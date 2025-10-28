@@ -19,7 +19,7 @@ export const NumberInput = ({
 					<NumberFormat
 						id={field.name}
 						name={field.name}
-						value={field.state.value}
+						value={field.state.value ?? undefined}
 						onBlur={field.handleBlur}
 						onValueChange={(value) => field.handleChange(value ?? undefined)}
 						aria-invalid={isInvalid}

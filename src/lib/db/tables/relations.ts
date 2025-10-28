@@ -1,25 +1,16 @@
 import { relations } from "drizzle-orm";
 import { clientSnapshotsTable } from "./client-snapshots.table";
 import { clientsTable } from "./clients.table";
+import { invoiceItemsTable } from "./invoice-item.table";
 import { invoicesTable } from "./invoices.table";
 import { servicesTable } from "./services.table";
-import { servicesSnapshotsTable } from "./services-snapshots.table";
 import { usersTable } from "./user.table";
 import { userSnapshotsTable } from "./user-snapshots.table";
 
 export const usersRelations = relations(usersTable, ({ many }) => ({
-	snapshots: many(userSnapshotsTable),
 	invoices: many(invoicesTable),
 	clients: many(clientsTable),
-}));
-
-export const clientsRelations = relations(clientsTable, ({ many, one }) => ({
-	snapshots: many(clientSnapshotsTable),
-	invoices: many(invoicesTable),
-	user: one(usersTable, {
-		fields: [clientsTable.userId],
-		references: [usersTable.id],
-	}),
+	services: many(servicesTable),
 }));
 
 export const userSnapshotsRelations = relations(
@@ -33,6 +24,14 @@ export const userSnapshotsRelations = relations(
 	}),
 );
 
+export const clientsRelations = relations(clientsTable, ({ one, many }) => ({
+	user: one(usersTable, {
+		fields: [clientsTable.userId],
+		references: [usersTable.id],
+	}),
+	snapshots: many(clientSnapshotsTable),
+}));
+
 export const clientSnapshotsRelations = relations(
 	clientSnapshotsTable,
 	({ one, many }) => ({
@@ -44,15 +43,24 @@ export const clientSnapshotsRelations = relations(
 	}),
 );
 
-export const invoicesRelations = relations(invoicesTable, ({ one }) => ({
+export const servicesRelations = relations(servicesTable, ({ one }) => ({
 	user: one(usersTable, {
-		fields: [invoicesTable.userId],
+		fields: [servicesTable.userId],
 		references: [usersTable.id],
 	}),
-	client: one(clientsTable, {
-		fields: [invoicesTable.clientId],
-		references: [clientsTable.id],
+}));
+
+export const invoiceItemsRelations = relations(
+	invoiceItemsTable,
+	({ one }) => ({
+		invoice: one(invoicesTable, {
+			fields: [invoiceItemsTable.invoiceId],
+			references: [invoicesTable.id],
+		}),
 	}),
+);
+
+export const invoicesRelations = relations(invoicesTable, ({ one, many }) => ({
 	userSnapshot: one(userSnapshotsTable, {
 		fields: [invoicesTable.userSnapshotId],
 		references: [userSnapshotsTable.id],
@@ -61,24 +69,5 @@ export const invoicesRelations = relations(invoicesTable, ({ one }) => ({
 		fields: [invoicesTable.clientSnapshotId],
 		references: [clientSnapshotsTable.id],
 	}),
+	items: many(invoiceItemsTable),
 }));
-
-export const servicesRelations = relations(servicesTable, ({ one, many }) => ({
-	user: one(usersTable, {
-		fields: [servicesTable.userId],
-		references: [usersTable.id],
-	}),
-	snapshots: many(servicesSnapshotsTable),
-	invoices: many(invoicesTable),
-}));
-
-export const servicesSnapshotsRelations = relations(
-	servicesSnapshotsTable,
-	({ one, many }) => ({
-		service: one(servicesTable, {
-			fields: [servicesSnapshotsTable.serviceId],
-			references: [servicesTable.id],
-		}),
-		invoices: many(invoicesTable),
-	}),
-);

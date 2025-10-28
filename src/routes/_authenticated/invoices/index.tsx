@@ -6,6 +6,7 @@ import { InvoiceGenerationForm } from "./-components/invoice-generation-form";
 
 export const Route = createFileRoute("/_authenticated/invoices/")({
 	validateSearch: entitySearchParamsSchema.pick({ isCreating: true }),
+	ssr: false,
 	loader: async ({ context }) => {
 		return {
 			user: context.user,

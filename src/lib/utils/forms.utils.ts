@@ -9,7 +9,7 @@ import { ComboboxInput } from "../components/combobox-input";
 export const { formContext, fieldContext, useFieldContext, useFormContext } =
 	createFormHookContexts();
 
-export const { useAppForm } = createFormHook({
+export const { useAppForm, withForm, withFieldGroup } = createFormHook({
 	formContext,
 	fieldContext,
 	fieldComponents: {

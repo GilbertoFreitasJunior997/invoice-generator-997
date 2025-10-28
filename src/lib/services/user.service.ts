@@ -55,6 +55,8 @@ export const setupUserAccount = createServerFn({ method: "POST" })
 				state: data.state,
 				country: data.country,
 				avatarUrl: data.avatarUrl,
+				zip: data.zip,
+				taxId: data.taxId,
 			});
 
 			return createServerSuccessResponse();

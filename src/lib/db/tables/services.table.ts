@@ -12,12 +12,14 @@ export function getServicesColumns() {
 		currency: text("currency", {
 			enum: currencies as [Currency, ...Currency[]],
 		}).notNull(),
-
-		userId: userId(),
-
-		createdAt: createdAt(),
-		updatedAt: updatedAt(),
 	} as const;
 }
 
-export const servicesTable = sqliteTable("services", getServicesColumns());
+export const servicesTable = sqliteTable("services", {
+	...getServicesColumns(),
+
+	userId: userId(),
+
+	createdAt: createdAt(),
+	updatedAt: updatedAt(),
+});

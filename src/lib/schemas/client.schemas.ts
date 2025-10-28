@@ -7,9 +7,15 @@ export type ClientSelect = z.infer<typeof clientSelectSchema>;
 
 export const clientUpsertFormSchema = z.object({
 	id: z.string().optional(),
-	companyName: z.string().min(1),
+	name: z.string().min(1),
+	email: z.email().min(1),
 	addressLine1: z.string().min(1),
 	addressLine2: z.string(),
+	country: z.string().min(1),
+	state: z.string().min(1),
+	city: z.string().min(1),
+	zip: z.string().min(1),
+	taxId: z.string(),
 });
 export type ClientUpsertForm = z.infer<typeof clientUpsertFormSchema>;
 

@@ -10,16 +10,16 @@ import {
 	HTTP_STATUS,
 } from "../utils/server-fns.utils";
 
-export const checkHasClientWithSameCompanyName = createServerFn()
-	.inputValidator((d: { userId: string; companyName: string }) => d)
+export const checkHasClientWithSameName = createServerFn()
+	.inputValidator((d: { userId: string; name: string }) => d)
 	.handler(async ({ data }) => {
 		try {
-			const { userId, companyName } = data;
+			const { userId, name } = data;
 
 			const client = await db.query.clientsTable.findFirst({
 				where: and(
 					eq(clientsTable.userId, userId),
-					eq(clientsTable.companyName, companyName),
+					eq(clientsTable.name, name),
 				),
 			});
 			const hasClientWithSameName = !!client;
@@ -76,7 +76,13 @@ export const upsertClient = createServerFn()
 					.set({
 						addressLine1: data.addressLine1,
 						addressLine2: data.addressLine2,
-						companyName: data.companyName,
+						name: data.name,
+						city: data.city,
+						state: data.state,
+						country: data.country,
+						zip: data.zip,
+						email: data.email,
+						taxId: data.taxId,
 						updatedAt: new Date(),
 					})
 					.where(eq(clientsTable.id, data.id))
@@ -84,7 +90,7 @@ export const upsertClient = createServerFn()
 
 				return createServerSuccessResponse({
 					data: client,
-					message: `${data.companyName} updated successfully`,
+					message: `${data.name} updated successfully`,
 				});
 			}
 
@@ -94,13 +100,19 @@ export const upsertClient = createServerFn()
 					userId: data.userId,
 					addressLine1: data.addressLine1,
 					addressLine2: data.addressLine2,
-					companyName: data.companyName,
+					name: data.name,
+					city: data.city,
+					state: data.state,
+					country: data.country,
+					zip: data.zip,
+					email: data.email,
+					taxId: data.taxId,
 				})
 				.returning();
 
 			return createServerSuccessResponse({
 				data: client,
-				message: `${data.companyName} created successfully`,
+				message: `${data.name} created successfully`,
 				status: HTTP_STATUS.CREATED,
 			});
 		} catch (error) {
@@ -121,7 +133,7 @@ export const removeClient = createServerFn()
 
 			return createServerSuccessResponse({
 				data: client,
-				message: `${client.companyName} deleted successfully`,
+				message: `${client.name} deleted successfully`,
 			});
 		} catch (error) {
 			return createServerErrorResponse({ error });

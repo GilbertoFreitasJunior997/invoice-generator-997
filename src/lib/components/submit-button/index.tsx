@@ -5,6 +5,7 @@ import type { SubmitButtonProps } from "./types";
 
 export const SubmitButton = ({
 	label,
+	showLabel = true,
 	className,
 	buttonProps: buttonPropsProp,
 	isDisabled,
@@ -44,7 +45,7 @@ export const SubmitButton = ({
 					}
 					className={cn(className, buttonPropsClassName)}
 				>
-					{label ?? "Submit"}
+					{showLabel ? (label ?? "Submit") : buttonProps?.children}
 				</Button>
 			)}
 		/>

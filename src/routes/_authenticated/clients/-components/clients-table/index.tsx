@@ -8,7 +8,11 @@ import { Route } from "@/routes/_authenticated/clients";
 const columns: DataTableColumn<ClientSelect>[] = [
 	{
 		header: "Name",
-		accessorKey: "companyName",
+		accessorKey: "name",
+	},
+	{
+		header: "Email",
+		accessorKey: "email",
 	},
 	{
 		header: "Address",
