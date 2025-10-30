@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { getAuth, getSignInUrl } from "@/lib/authkit/serverFunctions";
+import { Button } from "@/lib/components/button";
 
 export const Route = createFileRoute("/_guest/")({
 	component: App,
@@ -19,10 +20,10 @@ function App() {
 	const { signInUrl } = Route.useLoaderData();
 
 	return (
-		<div>
-			<button type="button">
-				<a href={signInUrl}> sign in</a>
-			</button>
+		<div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-background via-background to-muted/20">
+			<Button asChild>
+				<a href={signInUrl}> Sign in </a>
+			</Button>
 		</div>
 	)
 }
