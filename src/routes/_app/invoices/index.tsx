@@ -1,12 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/lib/components/button";
-import { entitySearchParamsSchema } from "@/lib/utils/search-params.utils";
-import { InvoiceGenerationForm } from "./-components/invoice-generation-form";
 
-export const Route = createFileRoute("/_authenticated/invoices/")({
-	validateSearch: entitySearchParamsSchema.pick({ isCreating: true }),
-	ssr: false,
+export const Route = createFileRoute("/_app/invoices/")({
 	loader: async ({ context }) => {
 		return {
 			user: context.user,
@@ -23,7 +19,9 @@ function RouteComponent() {
 			<div className="flex justify-end mb-3">
 				<Button
 					onClick={() => {
-						navigate({ search: { isCreating: true } });
+						navigate({
+							to: "/invoices/new",
+						});
 					}}
 					size="sm"
 				>
@@ -31,8 +29,6 @@ function RouteComponent() {
 					Create Invoice
 				</Button>
 			</div>
-
-			<InvoiceGenerationForm />
 		</div>
 	);
 }

@@ -19,26 +19,26 @@ const getCurrentUser = createServerFn()
 
 		const result = await getAuthUser({
 			data: auth.user,
-		});
+		})
 
 		if (!result?.success) {
 			throw redirect({ to: "/setup-account" });
 		}
 
 		return result.data;
-	});
+	})
 
 const getCurrentUserQueryOptions = (pathname: string) =>
 	queryOptions({
 		queryKey: getCurrentUserQueryKeys,
 		queryFn: () => getCurrentUser({ data: { pathname } }),
-	});
+	})
 
-export const Route = createFileRoute("/_authenticated")({
+export const Route = createFileRoute("/_app")({
 	beforeLoad: async ({ location, context }) => {
 		const user = await context.queryClient.fetchQuery(
 			getCurrentUserQueryOptions(location.pathname),
-		);
+		)
 
 		return { user };
 	},
@@ -61,5 +61,5 @@ function AuthenticatedRouteLayout() {
 				</main>
 			</div>
 		</Sidebar.Provider>
-	);
+	)
 }

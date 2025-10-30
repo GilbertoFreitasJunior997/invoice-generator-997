@@ -13,7 +13,7 @@ import {
 import { getAuthUser, setupUserAccount } from "@/lib/services/user.service";
 import { useAppForm } from "@/lib/utils/forms.utils";
 
-export const Route = createFileRoute("/setup-account")({
+export const Route = createFileRoute("/_guest/setup-account")({
 	component: SetupAccountPage,
 	beforeLoad: async () => {
 		const auth = await getAuth();

@@ -20,7 +20,7 @@ import {
 } from "@/lib/schemas/currency.schemas";
 import { serviceUpsertFormSchema } from "@/lib/schemas/service.schemas";
 import { useAppForm } from "@/lib/utils/forms.utils";
-import { Route } from "@/routes/_authenticated/services";
+import { Route } from "@/routes/_app/services";
 
 export const ServicesForm = () => {
 	const { user } = Route.useLoaderData();

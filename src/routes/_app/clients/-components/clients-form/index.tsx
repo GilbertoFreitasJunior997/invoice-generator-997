@@ -15,7 +15,7 @@ import {
 } from "@/lib/query-options/client.query-options";
 import { clientUpsertFormSchema } from "@/lib/schemas/client.schemas";
 import { useAppForm } from "@/lib/utils/forms.utils";
-import { Route } from "@/routes/_authenticated/clients";
+import { Route } from "@/routes/_app/clients";
 
 export const ClientsForm = () => {
 	const { user } = Route.useLoaderData();

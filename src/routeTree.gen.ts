@@ -9,214 +9,235 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SetupAccountRouteImport } from './routes/setup-account'
-import { Route as LogoutRouteImport } from './routes/logout'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
-import { Route as AuthenticatedServicesIndexRouteImport } from './routes/_authenticated/services/index'
-import { Route as AuthenticatedInvoicesIndexRouteImport } from './routes/_authenticated/invoices/index'
-import { Route as AuthenticatedClientsIndexRouteImport } from './routes/_authenticated/clients/index'
+import { Route as GuestRouteRouteImport } from './routes/_guest/route'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as GuestIndexRouteImport } from './routes/_guest/index'
+import { Route as GuestSetupAccountRouteImport } from './routes/_guest/setup-account'
+import { Route as GuestLogoutRouteImport } from './routes/_guest/logout'
+import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppAccountRouteImport } from './routes/_app/account'
+import { Route as AppServicesIndexRouteImport } from './routes/_app/services/index'
+import { Route as AppInvoicesIndexRouteImport } from './routes/_app/invoices/index'
+import { Route as AppClientsIndexRouteImport } from './routes/_app/clients/index'
 import { Route as ApiAuthCallbackRouteImport } from './routes/api/auth/callback'
+import { Route as AppInvoicesNewIndexRouteImport } from './routes/_app/invoices/new/index'
 
-const SetupAccountRoute = SetupAccountRouteImport.update({
-  id: '/setup-account',
-  path: '/setup-account',
+const GuestRouteRoute = GuestRouteRouteImport.update({
+  id: '/_guest',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LogoutRoute = LogoutRouteImport.update({
-  id: '/logout',
-  path: '/logout',
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
+const GuestIndexRoute = GuestIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => GuestRouteRoute,
 } as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+const GuestSetupAccountRoute = GuestSetupAccountRouteImport.update({
+  id: '/setup-account',
+  path: '/setup-account',
+  getParentRoute: () => GuestRouteRoute,
+} as any)
+const GuestLogoutRoute = GuestLogoutRouteImport.update({
+  id: '/logout',
+  path: '/logout',
+  getParentRoute: () => GuestRouteRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
-const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+const AppAccountRoute = AppAccountRouteImport.update({
   id: '/account',
   path: '/account',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
-const AuthenticatedServicesIndexRoute =
-  AuthenticatedServicesIndexRouteImport.update({
-    id: '/services/',
-    path: '/services/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedInvoicesIndexRoute =
-  AuthenticatedInvoicesIndexRouteImport.update({
-    id: '/invoices/',
-    path: '/invoices/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedClientsIndexRoute =
-  AuthenticatedClientsIndexRouteImport.update({
-    id: '/clients/',
-    path: '/clients/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
+const AppServicesIndexRoute = AppServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppInvoicesIndexRoute = AppInvoicesIndexRouteImport.update({
+  id: '/invoices/',
+  path: '/invoices/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppClientsIndexRoute = AppClientsIndexRouteImport.update({
+  id: '/clients/',
+  path: '/clients/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const ApiAuthCallbackRoute = ApiAuthCallbackRouteImport.update({
   id: '/api/auth/callback',
   path: '/api/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppInvoicesNewIndexRoute = AppInvoicesNewIndexRouteImport.update({
+  id: '/invoices/new/',
+  path: '/invoices/new/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/logout': typeof LogoutRoute
-  '/setup-account': typeof SetupAccountRoute
-  '/account': typeof AuthenticatedAccountRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/account': typeof AppAccountRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/logout': typeof GuestLogoutRoute
+  '/setup-account': typeof GuestSetupAccountRoute
+  '/': typeof GuestIndexRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
-  '/clients': typeof AuthenticatedClientsIndexRoute
-  '/invoices': typeof AuthenticatedInvoicesIndexRoute
-  '/services': typeof AuthenticatedServicesIndexRoute
+  '/clients': typeof AppClientsIndexRoute
+  '/invoices': typeof AppInvoicesIndexRoute
+  '/services': typeof AppServicesIndexRoute
+  '/invoices/new': typeof AppInvoicesNewIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/logout': typeof LogoutRoute
-  '/setup-account': typeof SetupAccountRoute
-  '/account': typeof AuthenticatedAccountRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/account': typeof AppAccountRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/logout': typeof GuestLogoutRoute
+  '/setup-account': typeof GuestSetupAccountRoute
+  '/': typeof GuestIndexRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
-  '/clients': typeof AuthenticatedClientsIndexRoute
-  '/invoices': typeof AuthenticatedInvoicesIndexRoute
-  '/services': typeof AuthenticatedServicesIndexRoute
+  '/clients': typeof AppClientsIndexRoute
+  '/invoices': typeof AppInvoicesIndexRoute
+  '/services': typeof AppServicesIndexRoute
+  '/invoices/new': typeof AppInvoicesNewIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/logout': typeof LogoutRoute
-  '/setup-account': typeof SetupAccountRoute
-  '/_authenticated/account': typeof AuthenticatedAccountRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_app': typeof AppRouteRouteWithChildren
+  '/_guest': typeof GuestRouteRouteWithChildren
+  '/_app/account': typeof AppAccountRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_guest/logout': typeof GuestLogoutRoute
+  '/_guest/setup-account': typeof GuestSetupAccountRoute
+  '/_guest/': typeof GuestIndexRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
-  '/_authenticated/clients/': typeof AuthenticatedClientsIndexRoute
-  '/_authenticated/invoices/': typeof AuthenticatedInvoicesIndexRoute
-  '/_authenticated/services/': typeof AuthenticatedServicesIndexRoute
+  '/_app/clients/': typeof AppClientsIndexRoute
+  '/_app/invoices/': typeof AppInvoicesIndexRoute
+  '/_app/services/': typeof AppServicesIndexRoute
+  '/_app/invoices/new/': typeof AppInvoicesNewIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/logout'
-    | '/setup-account'
     | '/account'
     | '/dashboard'
+    | '/logout'
+    | '/setup-account'
+    | '/'
     | '/api/auth/callback'
     | '/clients'
     | '/invoices'
     | '/services'
+    | '/invoices/new'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/logout'
-    | '/setup-account'
     | '/account'
     | '/dashboard'
+    | '/logout'
+    | '/setup-account'
+    | '/'
     | '/api/auth/callback'
     | '/clients'
     | '/invoices'
     | '/services'
+    | '/invoices/new'
   id:
     | '__root__'
-    | '/'
-    | '/_authenticated'
-    | '/logout'
-    | '/setup-account'
-    | '/_authenticated/account'
-    | '/_authenticated/dashboard'
+    | '/_app'
+    | '/_guest'
+    | '/_app/account'
+    | '/_app/dashboard'
+    | '/_guest/logout'
+    | '/_guest/setup-account'
+    | '/_guest/'
     | '/api/auth/callback'
-    | '/_authenticated/clients/'
-    | '/_authenticated/invoices/'
-    | '/_authenticated/services/'
+    | '/_app/clients/'
+    | '/_app/invoices/'
+    | '/_app/services/'
+    | '/_app/invoices/new/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  LogoutRoute: typeof LogoutRoute
-  SetupAccountRoute: typeof SetupAccountRoute
+  AppRouteRoute: typeof AppRouteRouteWithChildren
+  GuestRouteRoute: typeof GuestRouteRouteWithChildren
   ApiAuthCallbackRoute: typeof ApiAuthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/setup-account': {
-      id: '/setup-account'
-      path: '/setup-account'
-      fullPath: '/setup-account'
-      preLoaderRoute: typeof SetupAccountRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/logout': {
-      id: '/logout'
-      path: '/logout'
-      fullPath: '/logout'
-      preLoaderRoute: typeof LogoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
+    '/_guest': {
+      id: '/_guest'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      preLoaderRoute: typeof GuestRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_guest/': {
+      id: '/_guest/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof GuestIndexRouteImport
+      parentRoute: typeof GuestRouteRoute
     }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
+    '/_guest/setup-account': {
+      id: '/_guest/setup-account'
+      path: '/setup-account'
+      fullPath: '/setup-account'
+      preLoaderRoute: typeof GuestSetupAccountRouteImport
+      parentRoute: typeof GuestRouteRoute
+    }
+    '/_guest/logout': {
+      id: '/_guest/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof GuestLogoutRouteImport
+      parentRoute: typeof GuestRouteRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRouteRoute
     }
-    '/_authenticated/account': {
-      id: '/_authenticated/account'
+    '/_app/account': {
+      id: '/_app/account'
       path: '/account'
       fullPath: '/account'
-      preLoaderRoute: typeof AuthenticatedAccountRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof AppAccountRouteImport
+      parentRoute: typeof AppRouteRoute
     }
-    '/_authenticated/services/': {
-      id: '/_authenticated/services/'
+    '/_app/services/': {
+      id: '/_app/services/'
       path: '/services'
       fullPath: '/services'
-      preLoaderRoute: typeof AuthenticatedServicesIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof AppServicesIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
-    '/_authenticated/invoices/': {
-      id: '/_authenticated/invoices/'
+    '/_app/invoices/': {
+      id: '/_app/invoices/'
       path: '/invoices'
       fullPath: '/invoices'
-      preLoaderRoute: typeof AuthenticatedInvoicesIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof AppInvoicesIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
-    '/_authenticated/clients/': {
-      id: '/_authenticated/clients/'
+    '/_app/clients/': {
+      id: '/_app/clients/'
       path: '/clients'
       fullPath: '/clients'
-      preLoaderRoute: typeof AuthenticatedClientsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof AppClientsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/api/auth/callback': {
       id: '/api/auth/callback'
@@ -225,33 +246,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/invoices/new/': {
+      id: '/_app/invoices/new/'
+      path: '/invoices/new'
+      fullPath: '/invoices/new'
+      preLoaderRoute: typeof AppInvoicesNewIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
   }
 }
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedClientsIndexRoute: typeof AuthenticatedClientsIndexRoute
-  AuthenticatedInvoicesIndexRoute: typeof AuthenticatedInvoicesIndexRoute
-  AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
+interface AppRouteRouteChildren {
+  AppAccountRoute: typeof AppAccountRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppClientsIndexRoute: typeof AppClientsIndexRoute
+  AppInvoicesIndexRoute: typeof AppInvoicesIndexRoute
+  AppServicesIndexRoute: typeof AppServicesIndexRoute
+  AppInvoicesNewIndexRoute: typeof AppInvoicesNewIndexRoute
 }
 
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedClientsIndexRoute: AuthenticatedClientsIndexRoute,
-  AuthenticatedInvoicesIndexRoute: AuthenticatedInvoicesIndexRoute,
-  AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppAccountRoute: AppAccountRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppClientsIndexRoute: AppClientsIndexRoute,
+  AppInvoicesIndexRoute: AppInvoicesIndexRoute,
+  AppServicesIndexRoute: AppServicesIndexRoute,
+  AppInvoicesNewIndexRoute: AppInvoicesNewIndexRoute,
 }
 
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
+
+interface GuestRouteRouteChildren {
+  GuestLogoutRoute: typeof GuestLogoutRoute
+  GuestSetupAccountRoute: typeof GuestSetupAccountRoute
+  GuestIndexRoute: typeof GuestIndexRoute
+}
+
+const GuestRouteRouteChildren: GuestRouteRouteChildren = {
+  GuestLogoutRoute: GuestLogoutRoute,
+  GuestSetupAccountRoute: GuestSetupAccountRoute,
+  GuestIndexRoute: GuestIndexRoute,
+}
+
+const GuestRouteRouteWithChildren = GuestRouteRoute._addFileChildren(
+  GuestRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  LogoutRoute: LogoutRoute,
-  SetupAccountRoute: SetupAccountRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
+  GuestRouteRoute: GuestRouteRouteWithChildren,
   ApiAuthCallbackRoute: ApiAuthCallbackRoute,
 }
 export const routeTree = rootRouteImport

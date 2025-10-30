@@ -3,7 +3,7 @@ import type { DataTableColumn } from "@/lib/components/data-table/types";
 import { useServerQuery } from "@/lib/hooks/use-server-query";
 import { getAllServicesQueryOptions } from "@/lib/query-options/service.query-options";
 import type { ServiceSelect } from "@/lib/schemas/service.schemas";
-import { Route } from "@/routes/_authenticated/services";
+import { Route } from "@/routes/_app/services";
 
 const columns: DataTableColumn<ServiceSelect>[] = [
 	{

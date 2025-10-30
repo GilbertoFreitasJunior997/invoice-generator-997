@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { getAuth, getSignInUrl } from "@/lib/authkit/serverFunctions";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_guest/")({
 	component: App,
 	beforeLoad: async () => {
 		const auth = await getAuth();
@@ -24,5 +24,5 @@ function App() {
 				<a href={signInUrl}> sign in</a>
 			</button>
 		</div>
-	);
+	)
 }

@@ -4,10 +4,10 @@ import {
 	PackageIcon,
 	UsersIcon,
 } from "lucide-react";
-import { Route as ClientsRoute } from "@/routes/_authenticated/clients";
-import { Route as DashboardRoute } from "@/routes/_authenticated/dashboard";
-import { Route as InvoicesRoute } from "@/routes/_authenticated/invoices";
-import { Route as ServicesRoute } from "@/routes/_authenticated/services";
+import { Route as ClientsRoute } from "@/routes/_app/clients";
+import { Route as DashboardRoute } from "@/routes/_app/dashboard";
+import { Route as InvoicesRoute } from "@/routes/_app/invoices";
+import { Route as ServicesRoute } from "@/routes/_app/services";
 
 export const appSidebarItems = [
 	{
