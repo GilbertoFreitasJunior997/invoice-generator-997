@@ -28,7 +28,7 @@ const getErrors = (baseErrors: unknown[]) => {
 	return errors;
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: "<explanation>"
+// biome-ignore lint/suspicious/noExplicitAny: need to support any input value
 export const FormInputWrapper = <TProps extends BaseInputProps<any>>(
 	Input: ComponentType<TProps>,
 ) => {

@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import type { User } from "@workos-inc/node";
 import { getAuth } from "@/lib/authkit/serverFunctions";
+import { AddressForm } from "@/lib/components/address-form";
 import { Button } from "@/lib/components/button";
 import { Card } from "@/lib/components/card";
 import { Logo } from "@/lib/components/logo";
@@ -10,6 +11,7 @@ import {
 	userSetupAccountFormSchema,
 } from "@/lib/schemas/user.schemas";
 import { getAuthUser, setupUserAccount } from "@/lib/services/user.service";
+import { defaultCountry } from "@/lib/utils/address.utils";
 import { useAppForm } from "@/lib/utils/forms.utils";
 
 export const Route = createFileRoute("/_guest/setup-account")({
@@ -65,7 +67,7 @@ export default function SetupAccountPage() {
 			addressLine2: "",
 			city: "",
 			state: "",
-			country: "",
+			country: defaultCountry,
 			zip: "",
 			taxId: "",
 		},
@@ -76,14 +78,14 @@ export default function SetupAccountPage() {
 	});
 
 	return (
-		<div className="h-full bg-linear-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
-			<div className="w-full max-w-xl">
+		<div className="h-screen bg-linear-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
+			<div className="w-full max-w-2xl">
 				<div className="mb-8 text-center space-y-4">
 					<div className="w-full flex items-center justify-center">
 						<Logo size="lg" />
 					</div>
 
-					<h1 className="text-4xl font-bold text-foreground text-balance tracking-tight">
+					<h1 className="text-3xl font-bold text-foreground text-balance tracking-tight">
 						Complete Your Account Setup
 					</h1>
 					<p className="text-muted-foreground text-base leading-relaxed max-w-md mx-auto">
@@ -95,74 +97,25 @@ export default function SetupAccountPage() {
 				<Card.Root className="p-8 shadow-lg border-2">
 					<form.Root form={form}>
 						<form.Group>
-							<form.AppField
-								name="name"
-								children={(field) => <field.TextInput label="Name" />}
-							/>
-
-							<form.AppField
-								name="email"
-								children={(field) => (
-									<field.TextInput
-										label="Email"
-										description="Your email is linked to the account you are using to login"
-										isDisabled={true}
-									/>
-								)}
-							/>
-
-							<form.AppField
-								name="taxId"
-								children={(field) => (
-									<field.TextInput
-										label="Tax ID"
-										placeholder="1234567890"
-										description="If provided, it will be displayed on the invoices"
-									/>
-								)}
-							/>
-
-							<form.Group className="grid grid-cols-3">
+							<form.Group className="grid grid-cols-2">
 								<form.AppField
-									name="addressLine1"
-									children={(field) => (
-										<field.TextInput
-											label="Address line 1"
-											placeholder="123 Main Street"
-											rootClassName="col-span-2"
-										/>
-									)}
+									name="name"
+									children={(field) => <field.TextInput label="Name" />}
 								/>
 
 								<form.AppField
-									name="addressLine2"
+									name="email"
 									children={(field) => (
 										<field.TextInput
-											label="Address line 2"
-											placeholder="Apt 123"
+											label="Email"
+											description="Linked account you are using to login"
+											isDisabled={true}
 										/>
 									)}
 								/>
 							</form.Group>
 
-							<form.AppField
-								name="country"
-								children={(field) => <field.TextInput label="Country" />}
-							/>
-
-							<form.AppField
-								name="zip"
-								children={(field) => <field.TextInput label="Zip" />}
-							/>
-
-							<form.AppField
-								name="state"
-								children={(field) => <field.TextInput label="State" />}
-							/>
-							<form.AppField
-								name="city"
-								children={(field) => <field.TextInput label="City" />}
-							/>
+							<AddressForm form={form} />
 
 							<form.SubmitButton className="w-full py-5">
 								Let's go!

@@ -138,7 +138,7 @@ export const InvoiceDefaultLayout = ({
 	client,
 	services,
 }: InvoiceDefaultLayoutProps) => {
-	const quantity = 10;
+	const quantity = 1;
 	const servicesWithQuantity = services.map((service) => ({
 		...service,
 		quantity,
@@ -217,7 +217,7 @@ export const InvoiceDefaultLayout = ({
 								</Text>
 							</View>
 							<View style={styles.tableColQuantity}>
-								<Text style={styles.tableCellText}>{service.quantity} hrs</Text>
+								<Text style={styles.tableCellText}>{service.quantity}</Text>
 							</View>
 							<View style={styles.tableColAmount}>
 								<Text style={styles.tableCellText}>

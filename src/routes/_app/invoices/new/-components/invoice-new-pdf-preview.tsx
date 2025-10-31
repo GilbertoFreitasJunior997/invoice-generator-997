@@ -45,7 +45,7 @@ export const InvoiceNewPDFPreview = withForm({
 				<PDFViewer
 					showToolbar={false}
 					key={count.current}
-					className="max-w-3xl w-full h-full"
+					className="max-w-3xl w-full h-full rounded-lg"
 				>
 					<InvoiceDefaultLayout
 						user={user}

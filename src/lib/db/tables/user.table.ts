@@ -1,4 +1,5 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { type Country, countries } from "@/lib/schemas/countries.schemas";
 import { createdAt, id, updatedAt } from "@/lib/utils/db.utils";
 
 export function getUsersColumns() {
@@ -15,7 +16,9 @@ export function getUsersColumns() {
 		addressLine2: text("address_line_2"),
 		city: text("city").notNull(),
 		state: text("state").notNull(),
-		country: text("country").notNull(),
+		country: text("country", {
+			enum: countries as [Country, ...Country[]],
+		}).notNull(),
 		zip: text("zip").notNull(),
 	} as const;
 }

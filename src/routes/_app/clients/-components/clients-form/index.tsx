@@ -1,5 +1,6 @@
 import { useStore } from "@tanstack/react-form";
 import { useEffect } from "react";
+import { AddressForm } from "@/lib/components/address-form";
 import { Button } from "@/lib/components/button";
 import { Sheet } from "@/lib/components/sheet";
 import { Skeleton } from "@/lib/components/skeleton";
@@ -13,6 +14,7 @@ import {
 	upsertClientMutationOptions,
 } from "@/lib/query-options/client.query-options";
 import { clientUpsertFormSchema } from "@/lib/schemas/client.schemas";
+import { defaultCountry } from "@/lib/utils/address.utils";
 import { useAppForm } from "@/lib/utils/forms.utils";
 import { Route } from "@/routes/_app/clients";
 
@@ -53,7 +55,7 @@ export const ClientsForm = () => {
 			email: client?.email ?? "",
 			addressLine1: client?.addressLine1 ?? "",
 			addressLine2: client?.addressLine2 ?? "",
-			country: client?.country ?? "",
+			country: client?.country ?? defaultCountry,
 			state: client?.state ?? "",
 			city: client?.city ?? "",
 			zip: client?.zip ?? "",
@@ -117,7 +119,7 @@ export const ClientsForm = () => {
 
 	return (
 		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange} modal={true}>
-			<Sheet.Content>
+			<Sheet.Content className="w-md">
 				<Sheet.Header>
 					<Sheet.Title>
 						{isEditing ? "Edit Client" : "Add New Client"}
@@ -159,58 +161,7 @@ export const ClientsForm = () => {
 								)}
 							/>
 
-							<form.AppField
-								name="taxId"
-								children={(field) => (
-									<field.TextInput
-										label="Tax ID"
-										placeholder="1234567890"
-										description="If provided, it will be displayed on the invoice."
-									/>
-								)}
-							/>
-
-							<form.Group className="grid grid-cols-3">
-								<form.AppField
-									name="addressLine1"
-									children={(field) => (
-										<field.TextInput
-											label="Address line 1"
-											placeholder="123 Main Street"
-											rootClassName="col-span-2"
-										/>
-									)}
-								/>
-
-								<form.AppField
-									name="addressLine2"
-									children={(field) => (
-										<field.TextInput
-											label="Address line 2"
-											placeholder="Apt 123"
-										/>
-									)}
-								/>
-							</form.Group>
-
-							<form.AppField
-								name="country"
-								children={(field) => <field.TextInput label="Country" />}
-							/>
-
-							<form.AppField
-								name="zip"
-								children={(field) => <field.TextInput label="Zip" />}
-							/>
-
-							<form.AppField
-								name="state"
-								children={(field) => <field.TextInput label="State" />}
-							/>
-							<form.AppField
-								name="city"
-								children={(field) => <field.TextInput label="City" />}
-							/>
+							<AddressForm form={form} layout="stacked" />
 						</form.Group>
 					)}
 

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { signOut } from "@/lib/authkit/serverFunctions";
 
 export const Route = createFileRoute("/_guest/logout")({
@@ -7,5 +7,7 @@ export const Route = createFileRoute("/_guest/logout")({
 		queryClient.clear();
 
 		await signOut();
+
+		throw redirect({ to: "/" });
 	},
 });

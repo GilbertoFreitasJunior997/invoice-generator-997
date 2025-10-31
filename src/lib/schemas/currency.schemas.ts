@@ -24,7 +24,4 @@ export const currencyDecimalSeparators: Record<Currency, string> = {
 export const currenciesSelectOptions = currencies.map((currency) => ({
 	label: currency,
 	value: currency,
-	prefix: currencyPrefixes[currency],
-	decimalSeparator: currencyDecimalSeparators[currency],
-	thousandSeparator: currencyThousandSeparators[currency],
 })) satisfies SelectInputItem[];

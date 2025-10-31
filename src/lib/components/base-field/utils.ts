@@ -1,7 +1,7 @@
 import { useId } from "react";
 import type { BaseInputProps } from "./types";
 
-// biome-ignore lint/suspicious/noExplicitAny: ""
+// biome-ignore lint/suspicious/noExplicitAny: need to support any input value
 export const useInputProps = <TProps extends BaseInputProps<any>>({
 	errors: propsErrors,
 	name,
