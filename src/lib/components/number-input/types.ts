@@ -1,6 +1,14 @@
-import type { CommonInputProps } from "../base-input/types";
-import type { NumberFormatProps } from "../number-format/types";
+import type { BaseInputProps } from "../base-field/types";
 
-export type NumberInputProps = CommonInputProps & {
-	numberInputProps?: NumberFormatProps;
+export type NumberInputProps = BaseInputProps<number | undefined> & {
+	thousandSeparator?: string;
+	decimalSeparator?: string;
+	allowNegative?: boolean;
+	placeholder?: string;
+	min?: number;
+	max?: number;
+	suffix?: string;
+	prefix?: string;
+	fixedDecimalScale?: boolean;
+	decimalScale?: number;
 };

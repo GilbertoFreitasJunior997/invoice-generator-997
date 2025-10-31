@@ -8,10 +8,9 @@ import tailwindcss from '@tailwindcss/vite'
 const config = defineConfig({
   plugins: [
     netlify(),
-    // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
-    }),
+    }) as never,
     tailwindcss(),
     tanstackStart(),
     viteReact(),

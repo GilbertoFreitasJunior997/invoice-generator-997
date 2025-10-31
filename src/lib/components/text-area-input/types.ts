@@ -1,6 +1,3 @@
-import type { CommonInputProps } from "../base-input/types";
-import type { TextAreaProps } from "../text-area/types";
+import type { BaseInputProps } from "../base-field/types";
 
-export type TextAreaInputProps = CommonInputProps & {
-	textAreaProps?: TextAreaProps;
-};
+export type TextAreaProps = BaseInputProps<string | undefined>;

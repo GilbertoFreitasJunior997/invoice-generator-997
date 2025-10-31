@@ -27,4 +27,4 @@ export const currenciesSelectOptions = currencies.map((currency) => ({
 	prefix: currencyPrefixes[currency],
 	decimalSeparator: currencyDecimalSeparators[currency],
 	thousandSeparator: currencyThousandSeparators[currency],
-})) satisfies SelectInputItem<Currency>[];
+})) satisfies SelectInputItem[];

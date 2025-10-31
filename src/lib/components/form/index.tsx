@@ -1,6 +1,9 @@
-import type { ComponentProps, FormEvent } from "react";
+import type { FormEvent } from "react";
 import { Separator as SeparatorComponent } from "@/lib/components/separator";
 import { cn } from "@/lib/utils/cn";
+import { useFormContext } from "@/lib/utils/forms.utils";
+import { Button } from "../button";
+import type { ButtonProps } from "../button/types";
 import type {
 	FormGroupProps,
 	FormLegendProps,
@@ -8,35 +11,27 @@ import type {
 	FormSeparatorProps,
 } from "./types";
 
-const BaseRootForm = (props: ComponentProps<"form">) => {
-	return <form data-slot="form" {...props} />;
-};
-
-const Root = ({ form, onSubmit, ...props }: FormRootProps) => {
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		event.stopPropagation();
-
-		onSubmit?.(event);
+export const FormRoot = ({ form, className, children }: FormRootProps) => {
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		e.stopPropagation();
 	};
 
-	if (form) {
-		return (
-			<form.AppForm>
-				<BaseRootForm onSubmit={handleSubmit} {...props} />
-			</form.AppForm>
-		);
-	}
-
-	return <BaseRootForm onSubmit={handleSubmit} {...props} />;
+	return (
+		<form.AppForm>
+			<form onSubmit={handleSubmit} className={className}>
+				{children}
+			</form>
+		</form.AppForm>
+	);
 };
 
-const Group = ({ className, ...props }: FormGroupProps) => {
+export const FormGroup = ({ className, ...props }: FormGroupProps) => {
 	return (
 		<div
 			data-slot="field-group"
 			className={cn(
-				"group/field-group @container/field-group flex w-full flex-col gap-4 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4",
+				"group/field-group @container/field-group flex w-full flex-col gap-4 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4",
 				className,
 			)}
 			{...props}
@@ -44,7 +39,7 @@ const Group = ({ className, ...props }: FormGroupProps) => {
 	);
 };
 
-const Legend = ({
+export const FormLegend = ({
 	className,
 	variant = "legend",
 	...props
@@ -64,7 +59,11 @@ const Legend = ({
 	);
 };
 
-const Separator = ({ children, className, ...props }: FormSeparatorProps) => {
+export const FormSeparator = ({
+	children,
+	className,
+	...props
+}: FormSeparatorProps) => {
 	return (
 		<div
 			data-slot="field-separator"
@@ -88,9 +87,33 @@ const Separator = ({ children, className, ...props }: FormSeparatorProps) => {
 	);
 };
 
-export const Form = {
-	Root,
-	Group,
-	Legend,
-	Separator,
+export const FormSubmitButton = (props: ButtonProps) => {
+	const form = useFormContext();
+
+	return (
+		<form.Subscribe
+			selector={(state) => ({
+				isSubmitting: state.isSubmitting,
+				isDefaultValue: state.isDefaultValue,
+				canSubmit: state.canSubmit,
+			})}
+			children={({ isSubmitting, isDefaultValue, canSubmit }) => (
+				<Button
+					type="submit"
+					onClick={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+
+						void form.handleSubmit();
+					}}
+					{...props}
+					disabled={
+						isSubmitting || props.disabled || isDefaultValue || !canSubmit
+					}
+				>
+					{props.children ?? "Submit"}
+				</Button>
+			)}
+		/>
+	);
 };

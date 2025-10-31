@@ -1,7 +1,6 @@
 import { useStore } from "@tanstack/react-form";
 import { useEffect } from "react";
 import { Button } from "@/lib/components/button";
-import { Form } from "@/lib/components/form";
 import { Sheet } from "@/lib/components/sheet";
 import { Skeleton } from "@/lib/components/skeleton";
 import {
@@ -131,7 +130,7 @@ export const ClientsForm = () => {
 					)}
 				</Sheet.Header>
 
-				<Form.Root form={form}>
+				<form.Root form={form}>
 					{isClientLoading ? (
 						<div className="px-4">
 							<Skeleton className="h-9 w-full mt-6" />
@@ -142,14 +141,11 @@ export const ClientsForm = () => {
 							</div>
 						</div>
 					) : (
-						<Form.Group className="px-4">
+						<form.Group className="px-4">
 							<form.AppField
 								name="name"
 								children={(field) => (
-									<field.TextInput
-										label="Name"
-										inputProps={{ placeholder: "Acme Inc." }}
-									/>
+									<field.TextInput label="Name" placeholder="Acme Inc." />
 								)}
 							/>
 
@@ -158,9 +154,7 @@ export const ClientsForm = () => {
 								children={(field) => (
 									<field.TextInput
 										label="Email"
-										inputProps={{
-											placeholder: "accounting@acmeinc.com",
-										}}
+										placeholder="accounting@acmeinc.com"
 									/>
 								)}
 							/>
@@ -170,24 +164,20 @@ export const ClientsForm = () => {
 								children={(field) => (
 									<field.TextInput
 										label="Tax ID"
-										inputProps={{ placeholder: "1234567890" }}
+										placeholder="1234567890"
 										description="If provided, it will be displayed on the invoice."
 									/>
 								)}
 							/>
 
-							<Form.Group className="grid grid-cols-3">
+							<form.Group className="grid grid-cols-3">
 								<form.AppField
 									name="addressLine1"
 									children={(field) => (
 										<field.TextInput
 											label="Address line 1"
-											inputProps={{
-												placeholder: "123 Main Street",
-											}}
-											fieldRootProps={{
-												className: "col-span-2",
-											}}
+											placeholder="123 Main Street"
+											rootClassName="col-span-2"
 										/>
 									)}
 								/>
@@ -197,13 +187,11 @@ export const ClientsForm = () => {
 									children={(field) => (
 										<field.TextInput
 											label="Address line 2"
-											inputProps={{
-												placeholder: "Apt 123",
-											}}
+											placeholder="Apt 123"
 										/>
 									)}
 								/>
-							</Form.Group>
+							</form.Group>
 
 							<form.AppField
 								name="country"
@@ -223,7 +211,7 @@ export const ClientsForm = () => {
 								name="city"
 								children={(field) => <field.TextInput label="City" />}
 							/>
-						</Form.Group>
+						</form.Group>
 					)}
 
 					<Sheet.Footer className="flex flex-row justify-end gap-2">
@@ -232,11 +220,12 @@ export const ClientsForm = () => {
 						</Sheet.Close>
 
 						<form.SubmitButton
-							label={`${isEditing ? "Update" : "Add"} Client`}
-							isDisabled={isClientLoading || isLoadingHasClientWithSameName}
-						/>
+							disabled={isClientLoading || isLoadingHasClientWithSameName}
+						>
+							{isEditing ? "Update" : "Add"} Client
+						</form.SubmitButton>
 					</Sheet.Footer>
-				</Form.Root>
+				</form.Root>
 			</Sheet.Content>
 		</Sheet.Root>
 	);

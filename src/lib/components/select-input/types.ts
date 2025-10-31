@@ -1,17 +1,15 @@
 import type { ReactNode } from "react";
-import type { CommonInputProps } from "../base-input/types";
-import type { SelectRootProps } from "../select/types";
+import type { BaseInputProps } from "../base-field/types";
 
-export type SelectInputBaseValue = string | number;
-
-export type SelectInputItem<TValue extends SelectInputBaseValue = string> = {
+export type SelectInputItem = {
+	value: string;
 	label: ReactNode;
-	value: TValue;
 };
 
-export type SelectInputProps<TValue extends SelectInputBaseValue = string> =
-	CommonInputProps & {
-		selectProps?: SelectRootProps;
-		items?: SelectInputItem<TValue>[];
-		isLoading?: boolean;
-	};
+export type SelectInputCommonProps = {
+	items?: SelectInputItem[];
+	isLoading?: boolean;
+};
+
+export type SelectInputProps = BaseInputProps<string | undefined> &
+	SelectInputCommonProps;

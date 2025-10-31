@@ -1,25 +1,16 @@
-import { cva } from "class-variance-authority";
+import { cn } from "@/lib/utils/cn";
 
-export const fieldVariants = cva(
-	"group/field flex w-full gap-1.5 data-[invalid=true]:text-destructive min-w-[unset] overflow-clip",
-	{
-		variants: {
-			orientation: {
-				vertical: ["flex-col [&>*]:w-full [&>.sr-only]:w-auto"],
-				horizontal: [
-					"flex-row items-center",
-					"[&>[data-slot=field-label]]:flex-auto",
-					"has-[>[data-slot=field-content]]:items-start has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
-				],
-				responsive: [
-					"flex-col [&>*]:w-full [&>.sr-only]:w-auto @md/field-group:flex-row @md/field-group:items-center @md/field-group:[&>*]:w-auto",
-					"@md/field-group:[&>[data-slot=field-label]]:flex-auto",
-					"@md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
-				],
-			},
-		},
-		defaultVariants: {
-			orientation: "vertical",
-		},
-	},
+export const inputBorderStateClassNames = cn(
+	"border",
+	"focus-visible:border-ring",
+	"aria-invalid:border-destructive",
+);
+
+export const inputBoxClassNames = cn(
+	inputBorderStateClassNames,
+	"text-sm",
+	"min-h-9 h-9 min-w-0 w-full px-3 py-1",
+	"dark:bg-input/30 rounded-md bg-transparent shadow-xs transition-[box-shadow] outline-none",
+	"placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground",
+	"disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
 );

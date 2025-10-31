@@ -1,72 +1,74 @@
-import { useFieldContext } from "@/lib/utils/forms.utils";
-import { BaseInput } from "../base-input";
+import { useInputProps } from "../base-field/utils";
+import { Field } from "../field";
 import { Select } from "../select";
-import type { SelectInputBaseValue, SelectInputProps } from "./types";
+import type { SelectInputProps } from "./types";
 
-export const SelectInput = <TValue extends SelectInputBaseValue = string>({
-	selectProps,
-	items,
-	isLoading = false,
-	...props
-}: SelectInputProps<TValue>) => {
-	const { disabled } = props;
+export const SelectInput = (props: SelectInputProps) => {
+	const {
+		id,
+		errors,
+		label,
+		inputProps,
+		description,
+		isRequired,
+		value,
+		onChange,
+		placeholder,
+		rootClassName,
+		items,
+		isLoading,
+	} = useInputProps(props);
 
-	const field = useFieldContext<TValue | undefined>();
+	const selectedItem = items?.find((item) => item.value === value);
 
-	const selectedItem = items?.find((item) => item.value === field.state.value);
+	const handleChange = (newValue: string) => {
+		console.log("newValue", newValue);
+
+		if (!newValue || !items?.length) {
+			onChange?.(undefined);
+			return;
+		}
+
+		onChange?.(newValue);
+	};
 
 	return (
-		<BaseInput
-			{...props}
-			children={({ isInvalid }) => {
-				return (
-					<Select.Root
-						{...selectProps}
-						aria-invalid={isInvalid}
-						aria-disabled={disabled}
-						disabled={disabled}
-						value={String(field.state.value)}
-						onValueChange={(baseValue) => {
-							if (!baseValue || !items?.length) {
-								field.handleChange(undefined);
-								return;
-							}
+		<Field.Root className={rootClassName}>
+			<Field.Label htmlFor={id} label={label} isRequired={isRequired} />
 
-							const isNumber = typeof items[0].value === "number";
-							const newValue = (
-								isNumber ? Number(baseValue) : baseValue
-							) as TValue;
+			<Select.Root
+				value={value ?? ""}
+				disabled={inputProps.disabled}
+				onValueChange={handleChange}
+			>
+				<Select.Trigger {...inputProps}>
+					<Select.Value placeholder={placeholder}>
+						<span>{selectedItem?.label}</span>
+					</Select.Value>
+				</Select.Trigger>
 
-							field.handleChange(newValue);
-						}}
-					>
-						<Select.Trigger disabled={disabled} aria-disabled={disabled}>
-							<Select.Value>{selectedItem?.label}</Select.Value>
-						</Select.Trigger>
+				<Select.Content>
+					{isLoading ? (
+						<div className="p-1.5 text-sm text-muted-foreground text-center">
+							Loading...
+						</div>
+					) : !!items && items.length > 0 ? (
+						items.map((item) => (
+							<Select.Item key={item.value} value={item.value}>
+								{item.label}
+							</Select.Item>
+						))
+					) : (
+						<div className="p-1.5 text-sm text-muted-foreground text-center">
+							No items found.
+						</div>
+					)}
+				</Select.Content>
+			</Select.Root>
 
-						<Select.Content>
-							{isLoading ? (
-								<div className="p-1.5 text-sm text-muted-foreground text-center">
-									Loading...
-								</div>
-							) : !!items && items.length > 0 ? (
-								items.map((item) => (
-									<Select.Item
-										key={String(item.value)}
-										value={String(item.value)}
-									>
-										{item.label}
-									</Select.Item>
-								))
-							) : (
-								<div className="p-1.5 text-sm text-muted-foreground text-center">
-									No items found.
-								</div>
-							)}
-						</Select.Content>
-					</Select.Root>
-				);
-			}}
-		/>
+			<Field.Description description={description} />
+
+			<Field.Error errors={errors} />
+		</Field.Root>
 	);
 };

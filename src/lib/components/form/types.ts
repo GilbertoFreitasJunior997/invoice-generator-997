@@ -6,8 +6,10 @@ type FormApiWithAppForm = {
 	}>;
 };
 
-export type FormRootProps = ComponentProps<"form"> & {
-	form?: FormApiWithAppForm;
+export type FormRootProps = {
+	form: FormApiWithAppForm;
+	className?: string;
+	children?: ReactNode;
 };
 
 export type FormGroupProps = ComponentProps<"div">;

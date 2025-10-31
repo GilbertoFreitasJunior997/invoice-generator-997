@@ -1,15 +1,22 @@
-import type { VariantProps } from "class-variance-authority";
-import type { ComponentProps } from "react";
-import type { Label as LabelComponent } from "@/lib/components/label";
-import type { fieldVariants } from "./consts";
+import type { PropsWithChildren, ReactNode } from "react";
 
-export type FieldRootProps = ComponentProps<"fieldset"> &
-	VariantProps<typeof fieldVariants>;
-
-export type FieldLabelProps = ComponentProps<typeof LabelComponent>;
-
-export type FieldErrorProps = ComponentProps<"div"> & {
-	errors?: Array<{ message?: string } | undefined>;
+export type FieldRootProps = PropsWithChildren & {
+	className?: string;
 };
 
-export type FieldDescriptionProps = ComponentProps<"p">;
+export type FieldLabelProps = {
+	htmlFor: string;
+	label?: ReactNode;
+	isRequired?: boolean;
+	className?: string;
+};
+
+export type FieldErrorProps = {
+	errors?: string[];
+	className?: string;
+};
+
+export type FieldDescriptionProps = {
+	description?: ReactNode;
+	className?: string;
+};

@@ -1,6 +1,5 @@
-import type { CommonInputProps } from "../base-input/types";
-import type { InputProps } from "../input/types";
+import type { ComponentProps } from "react";
+import type { BaseInputProps } from "../base-field/types";
 
-export type TextInputProps = CommonInputProps & {
-	inputProps?: InputProps;
-};
+export type TextInputProps = BaseInputProps<string | undefined> &
+	Pick<ComponentProps<"input">, "type">;

@@ -1,31 +1,45 @@
-import { useFieldContext } from "@/lib/utils/forms.utils";
-import { BaseInput } from "../base-input";
-import { Input } from "../input";
+import type { ChangeEvent } from "react";
+import { useInputProps } from "../base-field/utils";
+import { Field } from "../field";
+import { inputBoxClassNames } from "../field/consts";
 import type { TextInputProps } from "./types";
 
-export const TextInput = ({ inputProps, ...props }: TextInputProps) => {
-	const { disabled } = props;
+export const TextInput = ({ type, ...props }: TextInputProps) => {
+	const {
+		id,
+		errors,
+		label,
+		inputProps,
+		description,
+		isRequired,
+		value,
+		onChange,
+		onBlur,
+		placeholder,
+		rootClassName,
+	} = useInputProps(props);
 
-	const field = useFieldContext<string>();
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		onChange?.(e?.target?.value);
+	};
 
 	return (
-		<BaseInput
-			{...props}
-			children={({ isInvalid }) => {
-				return (
-					<Input
-						id={field.name}
-						name={field.name}
-						value={field.state.value ?? ""}
-						onBlur={field.handleBlur}
-						onChange={(e) => field.handleChange(e.target.value)}
-						aria-invalid={isInvalid}
-						aria-disabled={disabled}
-						disabled={disabled}
-						{...inputProps}
-					/>
-				);
-			}}
-		/>
+		<Field.Root className={rootClassName}>
+			<Field.Label htmlFor={id} label={label} isRequired={isRequired} />
+
+			<input
+				type={type}
+				className={inputBoxClassNames}
+				value={value || ""}
+				onChange={handleChange}
+				onBlur={onBlur}
+				placeholder={placeholder}
+				{...inputProps}
+			/>
+
+			<Field.Description description={description} />
+
+			<Field.Error errors={errors} />
+		</Field.Root>
 	);
 };

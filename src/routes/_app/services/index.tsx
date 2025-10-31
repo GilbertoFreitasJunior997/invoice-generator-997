@@ -37,5 +37,5 @@ function RouteComponent() {
 
 			<ServicesRemoveModal />
 		</div>
-	)
+	);
 }

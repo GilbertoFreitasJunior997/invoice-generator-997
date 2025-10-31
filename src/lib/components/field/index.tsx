@@ -1,7 +1,5 @@
-import { useMemo } from "react";
-import { Label as LabelComponent } from "@/lib/components/label";
+import * as LabelPrimitive from "@radix-ui/react-label";
 import { cn } from "@/lib/utils/cn";
-import { fieldVariants } from "./consts";
 import type {
 	FieldDescriptionProps,
 	FieldErrorProps,
@@ -9,81 +7,47 @@ import type {
 	FieldRootProps,
 } from "./types";
 
-const Root = ({
-	className,
-	orientation = "vertical",
-	...props
-}: FieldRootProps) => {
+const Root = ({ className, children }: FieldRootProps) => {
 	return (
 		<fieldset
 			data-slot="field"
-			data-orientation={orientation}
-			className={cn(fieldVariants({ orientation }), className)}
-			{...props}
-		/>
+			className={cn(
+				"group/field flex w-full gap-1.5 data-[invalid=true]:text-destructive min-w-[unset] overflow-clip flex-col *:w-full [&>.sr-only]:w-auto",
+				className,
+			)}
+		>
+			{children}
+		</fieldset>
 	);
 };
 
-const Label = ({ className, ...props }: FieldLabelProps) => {
+const Label = ({ className, label, isRequired, ...props }: FieldLabelProps) => {
+	if (!label) {
+		return null;
+	}
+
 	return (
-		<LabelComponent
+		<LabelPrimitive.Root
 			data-slot="field-label"
 			className={cn(
 				"group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50",
-				"has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-4",
+				"has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:border *:data-[slot=field]:p-4",
 				"has-data-[state=checked]:bg-primary/5 has-data-[state=checked]:border-primary dark:has-data-[state=checked]:bg-primary/10",
 				className,
 			)}
 			{...props}
-		/>
+		>
+			<span className="flex items-center gap-0.5">
+				{label}
+				{isRequired && <span className="text-destructive">*</span>}
+			</span>
+		</LabelPrimitive.Root>
 	);
 };
 
-const getErrorMessage = (error: { message?: string } | string | undefined) => {
-	if (typeof error === "string") {
-		return error;
-	}
-
-	return error?.message ?? undefined;
-};
-
 // named "FieldError" to avoid shadowing the global "Error" property
-const FieldError = ({
-	className,
-	children,
-	errors,
-	...props
-}: FieldErrorProps) => {
-	const content = useMemo(() => {
-		if (children) {
-			return children;
-		}
-
-		if (!errors) {
-			return null;
-		}
-
-		const firstError = getErrorMessage(errors[0]);
-		if (errors.length === 1 && firstError) {
-			return firstError;
-		}
-
-		return (
-			<ul className="ml-4 flex list-disc flex-col gap-1">
-				{errors.map((error) => {
-					const errorMessage = getErrorMessage(error);
-
-					if (!errorMessage) {
-						return null;
-					}
-
-					return <li key={errorMessage}>{errorMessage}</li>;
-				})}
-			</ul>
-		);
-	}, [children, errors]);
-
-	if (!content) {
+const FieldError = ({ errors, className }: FieldErrorProps) => {
+	if (!errors?.length) {
 		return null;
 	}
 
@@ -92,25 +56,35 @@ const FieldError = ({
 			role="alert"
 			data-slot="field-error"
 			className={cn("text-destructive text-sm font-normal", className)}
-			{...props}
 		>
-			{content}
+			{errors.length === 1 ? (
+				<span>{errors[0]}</span>
+			) : (
+				<ul className="ml-4 flex list-disc flex-col gap-1">
+					{errors.map((error) => {
+						return <li key={error}>{error}</li>;
+					})}
+				</ul>
+			)}
 		</div>
 	);
 };
 
-const Description = ({ className, ...props }: FieldDescriptionProps) => {
+const Description = ({ description, className }: FieldDescriptionProps) => {
+	if (!description) {
+		return null;
+	}
+
 	return (
 		<p
 			data-slot="field-description"
 			className={cn(
-				"text-muted-foreground text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance",
-				"last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&]:-mt-1.5",
-				"[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
+				"text-muted-foreground text-sm leading-normal font-normal",
 				className,
 			)}
-			{...props}
-		/>
+		>
+			{description}
+		</p>
 	);
 };
 

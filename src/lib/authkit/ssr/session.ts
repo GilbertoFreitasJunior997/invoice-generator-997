@@ -164,7 +164,7 @@ export async function updateSession(
 
 	if (!session) {
 		if (options.debug) {
-			console.log("No session found from cookie");
+			console.debug("No session found from cookie");
 		}
 
 		return {
@@ -212,7 +212,7 @@ export async function updateSession(
 	try {
 		if (options.debug) {
 			// istanbul ignore next
-			console.log(
+			console.debug(
 				`Session invalid. ${session.accessToken ? `Refreshing access token that ends in ${session.accessToken.slice(-10)}` : "Access token missing."}`,
 			);
 		}
@@ -229,7 +229,7 @@ export async function updateSession(
 			});
 
 		if (options.debug) {
-			console.log("Session successfully refreshed");
+			console.debug("Session successfully refreshed");
 		}
 		// Encrypt session with new access and refresh tokens
 		const encryptedSession = await encryptSession({
@@ -268,7 +268,7 @@ export async function updateSession(
 		};
 	} catch (e) {
 		if (options.debug) {
-			console.log("Failed to refresh. Deleting cookie.", e);
+			console.debug("Failed to refresh. Deleting cookie.", e);
 		}
 
 		// When we need to delete a cookie, return it as a header as you can't delete cookies from edge middleware

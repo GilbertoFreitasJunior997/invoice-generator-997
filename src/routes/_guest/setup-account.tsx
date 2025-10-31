@@ -4,7 +4,6 @@ import type { User } from "@workos-inc/node";
 import { getAuth } from "@/lib/authkit/serverFunctions";
 import { Button } from "@/lib/components/button";
 import { Card } from "@/lib/components/card";
-import { Form } from "@/lib/components/form";
 import { Logo } from "@/lib/components/logo";
 import {
 	type UserSetupAccountForm,
@@ -73,13 +72,11 @@ export default function SetupAccountPage() {
 		validators: {
 			onChange: userSetupAccountFormSchema,
 		},
-		onSubmit: async ({ value }) => {
-			await setupUserAccountMutation(value);
-		},
+		onSubmit: ({ value }) => setupUserAccountMutation(value),
 	});
 
 	return (
-		<div className="h-full bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
+		<div className="h-full bg-linear-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
 			<div className="w-full max-w-xl">
 				<div className="mb-8 text-center space-y-4">
 					<div className="w-full flex items-center justify-center">
@@ -96,8 +93,8 @@ export default function SetupAccountPage() {
 				</div>
 
 				<Card.Root className="p-8 shadow-lg border-2">
-					<Form.Root form={form}>
-						<Form.Group>
+					<form.Root form={form}>
+						<form.Group>
 							<form.AppField
 								name="name"
 								children={(field) => <field.TextInput label="Name" />}
@@ -109,7 +106,7 @@ export default function SetupAccountPage() {
 									<field.TextInput
 										label="Email"
 										description="Your email is linked to the account you are using to login"
-										disabled
+										isDisabled={true}
 									/>
 								)}
 							/>
@@ -119,26 +116,20 @@ export default function SetupAccountPage() {
 								children={(field) => (
 									<field.TextInput
 										label="Tax ID"
-										inputProps={{
-											placeholder: "1234567890",
-										}}
+										placeholder="1234567890"
 										description="If provided, it will be displayed on the invoices"
 									/>
 								)}
 							/>
 
-							<Form.Group className="grid grid-cols-3">
+							<form.Group className="grid grid-cols-3">
 								<form.AppField
 									name="addressLine1"
 									children={(field) => (
 										<field.TextInput
 											label="Address line 1"
-											inputProps={{
-												placeholder: "123 Main Street",
-											}}
-											fieldRootProps={{
-												className: "col-span-2",
-											}}
+											placeholder="123 Main Street"
+											rootClassName="col-span-2"
 										/>
 									)}
 								/>
@@ -148,13 +139,11 @@ export default function SetupAccountPage() {
 									children={(field) => (
 										<field.TextInput
 											label="Address line 2"
-											inputProps={{
-												placeholder: "Apt 123",
-											}}
+											placeholder="Apt 123"
 										/>
 									)}
 								/>
-							</Form.Group>
+							</form.Group>
 
 							<form.AppField
 								name="country"
@@ -175,9 +164,11 @@ export default function SetupAccountPage() {
 								children={(field) => <field.TextInput label="City" />}
 							/>
 
-							<form.SubmitButton label="Let's go!" className="w-full py-5" />
-						</Form.Group>
-					</Form.Root>
+							<form.SubmitButton className="w-full py-5">
+								Let's go!
+							</form.SubmitButton>
+						</form.Group>
+					</form.Root>
 				</Card.Root>
 
 				<div className="mt-6 text-center space-y-3">

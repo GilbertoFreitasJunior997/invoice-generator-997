@@ -108,10 +108,10 @@ const handleServerResponse = async <T extends Promise<unknown>>({
 			toast.error(message);
 		}
 
-		console.log("--------------------------------");
-		console.log(`ERROR ON ${isMutation ? "MUTATION" : "QUERY"}`);
-		console.log(error);
-		console.log("--------------------------------");
+		console.error("--------------------------------");
+		console.error(`ERROR ON ${isMutation ? "MUTATION" : "QUERY"}`);
+		console.error(error);
+		console.error("--------------------------------");
 
 		throw error;
 	}

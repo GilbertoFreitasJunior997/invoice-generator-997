@@ -1,34 +1,45 @@
-import { useFieldContext } from "@/lib/utils/forms.utils";
-import { BaseInput } from "../base-input";
-import { TextArea } from "../text-area";
-import type { TextAreaInputProps } from "./types";
+import type { ChangeEvent } from "react";
+import { cn } from "@/lib/utils/cn";
+import { useInputProps } from "../base-field/utils";
+import { Field } from "../field";
+import { inputBoxClassNames } from "../field/consts";
+import type { TextAreaProps } from "./types";
 
-export const TextAreaInput = ({
-	textAreaProps,
-	...props
-}: TextAreaInputProps) => {
-	const { disabled } = props;
+export const TextArea = (props: TextAreaProps) => {
+	const {
+		id,
+		errors,
+		label,
+		inputProps,
+		description,
+		isRequired,
+		value,
+		onChange,
+		onBlur,
+		placeholder,
+		rootClassName,
+	} = useInputProps(props);
 
-	const field = useFieldContext<string>();
+	const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+		onChange?.(e.target.value);
+	};
 
 	return (
-		<BaseInput
-			{...props}
-			children={({ isInvalid }) => {
-				return (
-					<TextArea
-						id={field.name}
-						name={field.name}
-						value={field.state.value ?? ""}
-						onBlur={field.handleBlur}
-						onChange={(e) => field.handleChange(e.target.value)}
-						aria-invalid={isInvalid}
-						aria-disabled={disabled}
-						disabled={disabled}
-						{...textAreaProps}
-					/>
-				);
-			}}
-		/>
+		<Field.Root className={rootClassName}>
+			<Field.Label htmlFor={id} label={label} isRequired={isRequired} />
+
+			<textarea
+				className={cn(inputBoxClassNames, "h-11 max-h-48")}
+				value={value ?? ""}
+				onChange={handleChange}
+				onBlur={onBlur}
+				placeholder={placeholder}
+				{...inputProps}
+			/>
+
+			<Field.Description description={description} />
+
+			<Field.Error errors={errors} />
+		</Field.Root>
 	);
 };

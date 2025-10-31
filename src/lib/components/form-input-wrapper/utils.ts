@@ -1,18 +1,19 @@
 import type z from "zod";
 
-type isInputRequiredParams = {
-	formSchema: z.ZodObject;
-	fieldName: string;
-};
-
-const isString = (fieldSchema: z.ZodType): fieldSchema is z.ZodString => {
+export const isString = (
+	fieldSchema: z.ZodType,
+): fieldSchema is z.ZodString => {
 	return fieldSchema.type === "string";
 };
 
+type IsInputRequiredParams = {
+	formSchema: z.ZodObject;
+	fieldName: string;
+};
 export const isInputRequired = ({
 	formSchema,
 	fieldName,
-}: isInputRequiredParams) => {
+}: IsInputRequiredParams) => {
 	const fieldSchema = formSchema.shape[fieldName];
 
 	if (!fieldSchema) {

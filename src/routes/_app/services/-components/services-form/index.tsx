@@ -1,7 +1,6 @@
 import { useStore } from "@tanstack/react-form";
 import { useEffect } from "react";
 import { Button } from "@/lib/components/button";
-import { Form } from "@/lib/components/form";
 import { Sheet } from "@/lib/components/sheet";
 import { Skeleton } from "@/lib/components/skeleton";
 import {
@@ -113,7 +112,7 @@ export const ServicesForm = () => {
 					)}
 				</Sheet.Header>
 
-				<Form.Root form={form}>
+				<form.Root form={form}>
 					{isServiceLoading ? (
 						<div className="px-4">
 							<Skeleton className="h-9 w-full mt-6" />
@@ -124,33 +123,27 @@ export const ServicesForm = () => {
 							</div>
 						</div>
 					) : (
-						<Form.Group className="px-4">
+						<form.Group className="px-4">
 							<form.AppField
 								name="name"
 								children={(field) => (
 									<field.TextInput
 										label="Name"
-										inputProps={{
-											placeholder: "Website Design, Acme Inc. Contract, etc.",
-										}}
+										placeholder="Website Design, Acme Inc. Contract, etc."
 										description="This will not be displayed on the invoice. Used for organizational purposes."
 									/>
 								)}
 							/>
 
-							<Form.Group className="grid grid-cols-3">
+							<form.Group className="grid grid-cols-3">
 								<form.AppField
 									name="description"
 									children={(field) => (
-										<field.TextAreaInput
+										<field.TextArea
 											label="Description"
 											description="Describe the service you are offering. This will be displayed to your clients."
-											textAreaProps={{
-												placeholder: "Software Development, Design, etc.",
-											}}
-											fieldRootProps={{
-												className: "col-span-3",
-											}}
+											placeholder="Software Development, Design, etc."
+											rootClassName="col-span-3"
 										/>
 									)}
 								/>
@@ -160,18 +153,14 @@ export const ServicesForm = () => {
 									children={(field) => (
 										<field.NumberInput
 											label="Rate"
-											numberInputProps={{
-												thousandSeparator: currencyThousandSeparator,
-												decimalSeparator: currencyDecimalSeparator,
-												decimalScale: 2,
-												fixedDecimalScale: true,
-												prefix: currencyPrefix,
-												min: 0,
-												allowNegative: false,
-											}}
-											fieldRootProps={{
-												className: "col-span-2",
-											}}
+											thousandSeparator={currencyThousandSeparator}
+											decimalSeparator={currencyDecimalSeparator}
+											decimalScale={2}
+											fixedDecimalScale={true}
+											prefix={currencyPrefix}
+											min={0}
+											allowNegative={false}
+											rootClassName="col-span-2"
 										/>
 									)}
 								/>
@@ -182,14 +171,12 @@ export const ServicesForm = () => {
 										<field.SelectInput
 											label="Currency"
 											items={currenciesSelectOptions}
-											fieldRootProps={{
-												className: "col-span-1",
-											}}
+											rootClassName="col-span-1"
 										/>
 									)}
 								/>
-							</Form.Group>
-						</Form.Group>
+							</form.Group>
+						</form.Group>
 					)}
 
 					<Sheet.Footer className="flex flex-row justify-end gap-2">
@@ -197,12 +184,11 @@ export const ServicesForm = () => {
 							<Button variant="outline">Cancel</Button>
 						</Sheet.Close>
 
-						<form.SubmitButton
-							label={`${isEditing ? "Update" : "Add"} Service`}
-							isDisabled={isServiceLoading}
-						/>
+						<form.SubmitButton disabled={isServiceLoading}>
+							${isEditing ? "Update" : "Add"} Service
+						</form.SubmitButton>
 					</Sheet.Footer>
-				</Form.Root>
+				</form.Root>
 			</Sheet.Content>
 		</Sheet.Root>
 	);
