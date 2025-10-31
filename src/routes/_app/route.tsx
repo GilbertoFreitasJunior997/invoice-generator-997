@@ -53,10 +53,10 @@ function AuthenticatedRouteLayout() {
 		<Sidebar.Provider>
 			<AppSidebar />
 
-			<div className="flex flex-col w-full h-dvh overflow-hidden">
+			<div className="grow h-full flex flex-col p-3">
 				<Sidebar.Trigger />
 
-				<main className="p-4 w-full grow">
+				<main className="pt-1 pl-2 w-full grow">
 					<Outlet />
 				</main>
 			</div>

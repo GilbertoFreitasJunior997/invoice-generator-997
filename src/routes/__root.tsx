@@ -48,7 +48,7 @@ function RootDocument({ children }: PropsWithChildren) {
 				<HeadContent />
 			</head>
 			<body className="dark">
-				<div className="w-full min-h-screen">{children}</div>
+				{children}
 
 				<Toaster />
 

@@ -2,14 +2,9 @@ import { withForm } from "@/lib/utils/forms.utils";
 import { useInvoiceNewQueries } from "../-lib/use-invoice-new-queries/useInvoiceNewQueries";
 import { invoiceNewFormDefaultValues } from "./consts";
 
-type InvoiceNewFormProps = {
-	onChange: (params: Partial<typeof invoiceNewFormDefaultValues>) => void;
-};
-
 export const InvoiceNewForm = withForm({
 	defaultValues: invoiceNewFormDefaultValues,
-	props: {} as InvoiceNewFormProps,
-	render: function Render({ form, onChange }) {
+	render: function Render({ form }) {
 		const { clientsQuery, servicesQuery } = useInvoiceNewQueries();
 		const { data: clients, isFetching: isClientsLoading } = clientsQuery;
 		const { data: services, isFetching: isServicesLoading } = servicesQuery;
@@ -19,9 +14,6 @@ export const InvoiceNewForm = withForm({
 				<form.Group className="">
 					<form.AppField
 						name="clientId"
-						listeners={{
-							onChange: ({ value }) => onChange({ clientId: value }),
-						}}
 						children={(field) => (
 							<field.SelectInput
 								label="Client"
@@ -35,9 +27,6 @@ export const InvoiceNewForm = withForm({
 					/>
 					<form.AppField
 						name="servicesIds"
-						listeners={{
-							onChange: ({ value }) => onChange({ servicesIds: value }),
-						}}
 						children={(field) => (
 							<field.SelectMultipleInput
 								label="Services"

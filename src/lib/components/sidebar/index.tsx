@@ -66,7 +66,7 @@ const Provider = ({
 						...style,
 					} as CSSProperties
 				}
-				className={cn("flex min-h-svh w-full", className)}
+				className={cn("flex h-dvh w-full overflow-hidden", className)}
 				{...props}
 			>
 				{children}
