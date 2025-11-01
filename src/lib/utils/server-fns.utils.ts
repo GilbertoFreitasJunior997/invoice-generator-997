@@ -69,6 +69,9 @@ export const createServerErrorResponse = ({
 		}
 	}
 
+	console.error("--------------------------------");
+	console.error("createServerErrorResponse", error);
+	console.error("--------------------------------");
 	setResponseStatus(status);
 
 	return {

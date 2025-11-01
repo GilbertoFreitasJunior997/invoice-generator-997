@@ -23,8 +23,6 @@ export const SelectInput = (props: SelectInputProps) => {
 	const selectedItem = items?.find((item) => item.value === value);
 
 	const handleChange = (newValue: string) => {
-		console.log("newValue", newValue);
-
 		if (!newValue || !items?.length) {
 			onChange?.(undefined);
 			return;
