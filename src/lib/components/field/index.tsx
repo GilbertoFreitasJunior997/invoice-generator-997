@@ -1,5 +1,7 @@
 import * as LabelPrimitive from "@radix-ui/react-label";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils/cn";
+import { inputBoxSizeClassNames } from "./consts";
 import type {
 	FieldDescriptionProps,
 	FieldErrorProps,
@@ -88,9 +90,36 @@ const Description = ({ description, className }: FieldDescriptionProps) => {
 	);
 };
 
+type LoadingContainerProps = {
+	children: ReactNode;
+	isLoading?: boolean;
+	className?: string;
+};
+const LoadingContainer = ({
+	children,
+	isLoading,
+	className,
+}: LoadingContainerProps) => {
+	if (!isLoading) {
+		return children;
+	}
+
+	return (
+		<div
+			className={cn(
+				inputBoxSizeClassNames,
+				"relative",
+				"bg-input/60 animate-pulse",
+				className,
+			)}
+		/>
+	);
+};
+
 export const Field = {
 	Root,
 	Label,
 	Error: FieldError,
 	Description,
+	LoadingContainer,
 };

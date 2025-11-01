@@ -61,6 +61,10 @@ export const invoiceItemsRelations = relations(
 );
 
 export const invoicesRelations = relations(invoicesTable, ({ one, many }) => ({
+	user: one(usersTable, {
+		fields: [invoicesTable.userId],
+		references: [usersTable.id],
+	}),
 	userSnapshot: one(userSnapshotsTable, {
 		fields: [invoicesTable.userSnapshotId],
 		references: [userSnapshotsTable.id],

@@ -6,6 +6,7 @@ export type BaseInputProps<TValue = unknown> = {
 	description?: ReactNode;
 	placeholder?: string;
 
+	isLoading?: boolean;
 	isReadOnly?: boolean;
 	isRequired?: boolean;
 	isDisabled?: boolean;

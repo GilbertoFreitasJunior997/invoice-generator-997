@@ -6,11 +6,16 @@ export const inputBorderStateClassNames = cn(
 	"aria-invalid:border-destructive",
 );
 
+export const inputBoxSizeClassNames = cn(
+	"min-h-9 h-9 min-w-0 w-full px-3 py-1",
+	"rounded-md shadow-xs transition-[box-shadow]",
+);
+
 export const inputBoxClassNames = cn(
 	inputBorderStateClassNames,
 	"text-sm",
-	"min-h-9 h-9 min-w-0 w-full px-3 py-1",
-	"dark:bg-input/30 rounded-md bg-transparent shadow-xs transition-[box-shadow] outline-none",
+	inputBoxSizeClassNames,
+	"dark:bg-input/30 bg-transparent outline-none",
 	"placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground",
 	"disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
 );

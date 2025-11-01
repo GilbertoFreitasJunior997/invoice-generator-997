@@ -64,3 +64,23 @@ export const setupUserAccount = createServerFn({ method: "POST" })
 			return createServerErrorResponse({ error });
 		}
 	});
+
+export const getUserNextInvoiceNumber = createServerFn({ method: "GET" })
+	.inputValidator((d: { userId: string }) => d)
+	.handler(async ({ data }) => {
+		try {
+			const user = await db.query.usersTable.findFirst({
+				where: eq(usersTable.id, data.userId),
+			});
+
+			if (!user) {
+				throw new ServerBadRequestError("User not found");
+			}
+
+			const nextInvoiceNumber = user.currentInvoiceNumber + 1;
+
+			return createServerSuccessResponse({ data: nextInvoiceNumber });
+		} catch (error) {
+			return createServerErrorResponse({ error });
+		}
+	});

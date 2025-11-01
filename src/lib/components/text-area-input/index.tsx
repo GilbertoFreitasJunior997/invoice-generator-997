@@ -18,6 +18,7 @@ export const TextArea = (props: TextAreaProps) => {
 		onBlur,
 		placeholder,
 		rootClassName,
+		isLoading,
 	} = useInputProps(props);
 
 	const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -28,14 +29,16 @@ export const TextArea = (props: TextAreaProps) => {
 		<Field.Root className={rootClassName}>
 			<Field.Label htmlFor={id} label={label} isRequired={isRequired} />
 
-			<textarea
-				className={cn(inputBoxClassNames, "h-11 max-h-48")}
-				value={value ?? ""}
-				onChange={handleChange}
-				onBlur={onBlur}
-				placeholder={placeholder}
-				{...inputProps}
-			/>
+			<Field.LoadingContainer isLoading={isLoading} className="h-11 max-h-48">
+				<textarea
+					className={cn(inputBoxClassNames, "h-11 max-h-48")}
+					value={value ?? ""}
+					onChange={handleChange}
+					onBlur={onBlur}
+					placeholder={placeholder}
+					{...inputProps}
+				/>
+			</Field.LoadingContainer>
 
 			<Field.Description description={description} />
 

@@ -6,5 +6,6 @@ export const userSnapshotsTable = sqliteTable("user_snapshots", {
 	...getUsersColumns(),
 
 	userId: userId(),
+
 	snapshotDate: snapshotDate(),
 });

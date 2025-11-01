@@ -16,6 +16,7 @@ export const TextInput = ({ type, ...props }: TextInputProps) => {
 		onChange,
 		onBlur,
 		placeholder,
+		isLoading,
 		rootClassName,
 	} = useInputProps(props);
 
@@ -27,15 +28,17 @@ export const TextInput = ({ type, ...props }: TextInputProps) => {
 		<Field.Root className={rootClassName}>
 			<Field.Label htmlFor={id} label={label} isRequired={isRequired} />
 
-			<input
-				type={type}
-				className={inputBoxClassNames}
-				value={value || ""}
-				onChange={handleChange}
-				onBlur={onBlur}
-				placeholder={placeholder}
-				{...inputProps}
-			/>
+			<Field.LoadingContainer isLoading={isLoading}>
+				<input
+					type={type}
+					className={inputBoxClassNames}
+					value={value || ""}
+					onChange={handleChange}
+					onBlur={onBlur}
+					placeholder={placeholder}
+					{...inputProps}
+				/>
+			</Field.LoadingContainer>
 
 			<Field.Description description={description} />
 

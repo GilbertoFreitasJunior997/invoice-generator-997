@@ -21,7 +21,8 @@ export const SelectMultipleInput = (props: SelectMultipleInputProps) => {
 		onChange,
 		onBlur,
 		items,
-		isLoading = false,
+		isItemsLoading,
+		isLoading,
 		placeholder = "Select an option",
 		rootClassName,
 	} = useInputProps(props);
@@ -52,20 +53,22 @@ export const SelectMultipleInput = (props: SelectMultipleInputProps) => {
 			<Field.Label htmlFor={id} label={label} isRequired={isRequired} />
 
 			<Popover.Root open={open} onOpenChange={setOpen}>
-				<Popover.Trigger asChild>
-					<Button
-						variant="outline"
-						role="combobox"
-						aria-expanded={open}
-						className={cn(inputBoxClassNames, "justify-between")}
-						onBlur={onBlur}
-						{...inputProps}
-					>
-						{hasValue ? valueDisplay : placeholder}
+				<Field.LoadingContainer isLoading={isLoading}>
+					<Popover.Trigger asChild>
+						<Button
+							variant="outline"
+							role="combobox"
+							aria-expanded={open}
+							className={cn(inputBoxClassNames, "justify-between")}
+							onBlur={onBlur}
+							{...inputProps}
+						>
+							{hasValue ? valueDisplay : placeholder}
 
-						<ChevronsUpDown className="opacity-50" />
-					</Button>
-				</Popover.Trigger>
+							<ChevronsUpDown className="opacity-50" />
+						</Button>
+					</Popover.Trigger>
+				</Field.LoadingContainer>
 
 				<Popover.Content className="max-w-[500px] w-(--radix-popover-trigger-width) p-0">
 					<Command.Root>
@@ -75,7 +78,7 @@ export const SelectMultipleInput = (props: SelectMultipleInputProps) => {
 							<Command.Empty>No items found.</Command.Empty>
 
 							<Command.Group>
-								{isLoading ? (
+								{isItemsLoading ? (
 									<div className="p-1.5 text-sm text-muted-foreground text-center">
 										Loading...
 									</div>

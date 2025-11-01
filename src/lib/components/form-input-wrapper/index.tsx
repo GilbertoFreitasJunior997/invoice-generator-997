@@ -3,6 +3,7 @@ import type { ComponentType } from "react";
 import type z from "zod";
 import { useFieldContext, useFormContext } from "@/lib/utils/forms.utils";
 import type { BaseInputProps } from "../base-field/types";
+import { useFormRootContext } from "../form/providers";
 import { isInputRequired } from "./utils";
 
 const getErrors = (baseErrors: unknown[]) => {
@@ -35,6 +36,7 @@ export const FormInputWrapper = <TProps extends BaseInputProps<any>>(
 	return function Render(props: TProps) {
 		const field = useFieldContext();
 		const form = useFormContext();
+		const { isLoading } = useFormRootContext();
 
 		const showErrors = field.state.meta.isTouched && !field.state.meta.isValid;
 
@@ -51,6 +53,7 @@ export const FormInputWrapper = <TProps extends BaseInputProps<any>>(
 				showErrors={showErrors}
 				errors={getErrors(field.state.meta.errors)}
 				isRequired={isRequired || props.isRequired}
+				isLoading={isLoading || props.isLoading}
 			/>
 		);
 	};

@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { getRouteApi, Link } from "@tanstack/react-router";
 import { LogOutIcon, MoreVerticalIcon, UserCircleIcon } from "lucide-react";
 import { DropdownMenu } from "@/lib/components/dropdown-menu";
 import { Sidebar } from "@/lib/components/sidebar";
@@ -6,10 +6,11 @@ import { useIsMobile } from "@/lib/hooks/use-is-mobile";
 import type { UserSelect } from "@/lib/schemas/user.schemas";
 import { useSidebar } from "@/lib/stores/sidebar.store";
 import { cn } from "@/lib/utils/cn";
-import { Route } from "@/routes/_app/route";
 import { Avatar } from "../avatar";
 import { Logo } from "../logo";
 import { appSidebarItems } from "./consts";
+
+const Route = getRouteApi("/_app");
 
 const UserInfo = ({ user }: { user: UserSelect }) => {
 	return (

@@ -2,7 +2,6 @@ import { useStore } from "@tanstack/react-form";
 import { useEffect } from "react";
 import { Button } from "@/lib/components/button";
 import { Sheet } from "@/lib/components/sheet";
-import { Skeleton } from "@/lib/components/skeleton";
 import {
 	useServerMutation,
 	useServerQuery,
@@ -99,7 +98,7 @@ export const ServicesForm = () => {
 
 	return (
 		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange} modal={true}>
-			<Sheet.Content>
+			<Sheet.Content className="w-md">
 				<Sheet.Header>
 					<Sheet.Title>
 						{isEditing ? "Edit Service" : "Add New Service"}
@@ -112,72 +111,61 @@ export const ServicesForm = () => {
 					)}
 				</Sheet.Header>
 
-				<form.Root form={form}>
-					{isServiceLoading ? (
-						<div className="px-4">
-							<Skeleton className="h-9 w-full mt-6" />
+				<form.Root form={form} isLoading={isServiceLoading}>
+					<form.Group className="px-4">
+						<form.AppField
+							name="name"
+							children={(field) => (
+								<field.TextInput
+									label="Name"
+									placeholder="Website Design, Acme Inc. Contract, etc."
+									description="This will not be displayed on the invoice. Used for organizational purposes."
+								/>
+							)}
+						/>
 
-							<div className="grid grid-cols-3 gap-2 mt-11">
-								<Skeleton className="h-9 w-full col-span-2" />
-								<Skeleton className="h-9 w-full" />
-							</div>
-						</div>
-					) : (
-						<form.Group className="px-4">
+						<form.Group className="grid grid-cols-3">
 							<form.AppField
-								name="name"
+								name="description"
 								children={(field) => (
-									<field.TextInput
-										label="Name"
-										placeholder="Website Design, Acme Inc. Contract, etc."
-										description="This will not be displayed on the invoice. Used for organizational purposes."
+									<field.TextArea
+										label="Description"
+										description="Describe the service you are offering. This will be displayed to your clients."
+										placeholder="Software Development, Design, etc."
+										rootClassName="col-span-3"
 									/>
 								)}
 							/>
 
-							<form.Group className="grid grid-cols-3">
-								<form.AppField
-									name="description"
-									children={(field) => (
-										<field.TextArea
-											label="Description"
-											description="Describe the service you are offering. This will be displayed to your clients."
-											placeholder="Software Development, Design, etc."
-											rootClassName="col-span-3"
-										/>
-									)}
-								/>
+							<form.AppField
+								name="rate"
+								children={(field) => (
+									<field.NumberInput
+										label="Rate"
+										thousandSeparator={currencyThousandSeparator}
+										decimalSeparator={currencyDecimalSeparator}
+										decimalScale={2}
+										fixedDecimalScale={true}
+										prefix={currencyPrefix}
+										min={0}
+										allowNegative={false}
+										rootClassName="col-span-2"
+									/>
+								)}
+							/>
 
-								<form.AppField
-									name="rate"
-									children={(field) => (
-										<field.NumberInput
-											label="Rate"
-											thousandSeparator={currencyThousandSeparator}
-											decimalSeparator={currencyDecimalSeparator}
-											decimalScale={2}
-											fixedDecimalScale={true}
-											prefix={currencyPrefix}
-											min={0}
-											allowNegative={false}
-											rootClassName="col-span-2"
-										/>
-									)}
-								/>
-
-								<form.AppField
-									name="currency"
-									children={(field) => (
-										<field.SelectInput
-											label="Currency"
-											items={currenciesSelectOptions}
-											rootClassName="col-span-1"
-										/>
-									)}
-								/>
-							</form.Group>
+							<form.AppField
+								name="currency"
+								children={(field) => (
+									<field.SelectInput
+										label="Currency"
+										items={currenciesSelectOptions}
+										rootClassName="col-span-1"
+									/>
+								)}
+							/>
 						</form.Group>
-					)}
+					</form.Group>
 
 					<Sheet.Footer className="flex flex-row justify-end gap-2">
 						<Sheet.Close asChild>
@@ -185,7 +173,7 @@ export const ServicesForm = () => {
 						</Sheet.Close>
 
 						<form.SubmitButton disabled={isServiceLoading}>
-							${isEditing ? "Update" : "Add"} Service
+							{isEditing ? "Update" : "Add"} Service
 						</form.SubmitButton>
 					</Sheet.Footer>
 				</form.Root>

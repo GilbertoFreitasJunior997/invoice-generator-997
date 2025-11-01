@@ -8,9 +8,22 @@ import {
 	upsertClient,
 } from "../services/client.service";
 
+const baseKeys = ["clients"] as const;
+export const clientQueryKeys = {
+	base: baseKeys,
+	all: (userId: string) => [...baseKeys, userId],
+	byId: (userId: string, id: string) => [...baseKeys, userId, id],
+	checkHasClientWithSameName: (userId: string, name: string) => [
+		...baseKeys,
+		userId,
+		"check-has-client-with-same-name",
+		name,
+	],
+};
+
 export const getAllClientsQueryOptions = (data: { userId: string }) =>
 	queryOptions({
-		queryKey: ["clients", data.userId],
+		queryKey: clientQueryKeys.all(data.userId),
 		queryFn: () =>
 			getAllClients({
 				data: { userId: data.userId },
@@ -22,7 +35,7 @@ export const getClientByIdQueryOptions = (data: {
 	id: string;
 }) =>
 	queryOptions({
-		queryKey: ["clients", data.userId, data.id],
+		queryKey: clientQueryKeys.byId(data.userId, data.id),
 		queryFn: () =>
 			getClientById({
 				data: { userId: data.userId, id: data.id },
@@ -46,7 +59,7 @@ export const upsertClientMutationOptions = (data: {
 		},
 		onSuccess: (_a, _b, _c, context) => {
 			context.client.invalidateQueries({
-				queryKey: ["clients"],
+				queryKey: clientQueryKeys.base,
 				exact: false,
 			});
 
@@ -59,12 +72,10 @@ export const checkHasClientWithSameNameQueryOptions = (data: {
 	name: string;
 }) =>
 	queryOptions({
-		queryKey: [
-			"clients",
+		queryKey: clientQueryKeys.checkHasClientWithSameName(
 			data.userId,
-			"check-has-client-with-same-name",
 			data.name,
-		],
+		),
 		queryFn: () =>
 			checkHasClientWithSameName({
 				data: {
@@ -86,7 +97,7 @@ export const removeClientMutationOptions = (data: {
 			}),
 		onSuccess: (_a, _b, _c, context) => {
 			context.client.invalidateQueries({
-				queryKey: ["clients"],
+				queryKey: clientQueryKeys.base,
 				exact: false,
 			});
 

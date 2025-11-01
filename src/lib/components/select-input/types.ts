@@ -8,7 +8,7 @@ export type SelectInputItem = {
 
 export type SelectInputCommonProps = {
 	items?: SelectInputItem[];
-	isLoading?: boolean;
+	isItemsLoading?: boolean;
 };
 
 export type SelectInputProps = BaseInputProps<string | undefined> &

@@ -16,6 +16,7 @@ export const SelectInput = (props: SelectInputProps) => {
 		placeholder,
 		rootClassName,
 		items,
+		isItemsLoading,
 		isLoading,
 	} = useInputProps(props);
 
@@ -41,14 +42,16 @@ export const SelectInput = (props: SelectInputProps) => {
 				disabled={inputProps.disabled}
 				onValueChange={handleChange}
 			>
-				<Select.Trigger {...inputProps}>
-					<Select.Value placeholder={placeholder}>
-						<span>{selectedItem?.label}</span>
-					</Select.Value>
-				</Select.Trigger>
+				<Field.LoadingContainer isLoading={isLoading}>
+					<Select.Trigger {...inputProps}>
+						<Select.Value placeholder={placeholder}>
+							<span>{selectedItem?.label}</span>
+						</Select.Value>
+					</Select.Trigger>
+				</Field.LoadingContainer>
 
 				<Select.Content>
-					{isLoading ? (
+					{isItemsLoading ? (
 						<div className="p-1.5 text-sm text-muted-foreground text-center">
 							Loading...
 						</div>

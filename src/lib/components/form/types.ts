@@ -8,6 +8,7 @@ type FormApiWithAppForm = {
 
 export type FormRootProps = {
 	form: FormApiWithAppForm;
+	isLoading?: boolean;
 	className?: string;
 	children?: ReactNode;
 };

@@ -27,10 +27,10 @@ export const { useAppForm, withForm, withFieldGroup } = createFormHook({
 		SelectMultipleInput: FormInputWrapper(SelectMultipleInput),
 	},
 	formComponents: {
-		SubmitButton: FormSubmitButton,
 		Root: FormRoot,
 		Group: FormGroup,
 		Legend: FormLegend,
 		Separator: FormSeparator,
+		SubmitButton: FormSubmitButton,
 	},
 });

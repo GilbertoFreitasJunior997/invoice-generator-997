@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/lib/components/button";
+import { InvoiceList } from "./-lib/components/invoice-list";
 
 export const Route = createFileRoute("/_app/invoices/")({
 	loader: async ({ context }) => {
@@ -29,6 +30,8 @@ function RouteComponent() {
 					Create Invoice
 				</Button>
 			</div>
+
+			<InvoiceList />
 		</div>
 	);
 }

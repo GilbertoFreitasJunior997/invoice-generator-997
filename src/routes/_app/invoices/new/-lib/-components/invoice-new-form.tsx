@@ -1,19 +1,38 @@
 import { withForm } from "@/lib/utils/forms.utils";
-import { useInvoiceNewQueries } from "../-lib/use-invoice-new-queries/useInvoiceNewQueries";
+import { useInvoiceNewQueries } from "../hooks/use-invoice-new-queries";
 import { invoiceNewFormDefaultValues } from "./consts";
 
 export const InvoiceNewForm = withForm({
 	defaultValues: invoiceNewFormDefaultValues,
 	render: function Render({ form }) {
-		const { clientsQuery, servicesQuery } = useInvoiceNewQueries();
+		const { clientsQuery, servicesQuery, nextInvoiceNumberQuery } =
+			useInvoiceNewQueries();
 		const { data: clients, isFetching: isClientsLoading } = clientsQuery;
 		const { data: services, isFetching: isServicesLoading } = servicesQuery;
+		const { data: nextInvoiceNumber, isFetching: isNextInvoiceNumberLoading } =
+			nextInvoiceNumberQuery;
+
+		const handleClientChange = (clientId: string) => {
+			const client = clients?.find((client) => client.id === clientId);
+			if (!client) {
+				return;
+			}
+
+			form.setFieldValue("fileName", `INV${nextInvoiceNumber}-${client.name}`);
+		};
 
 		return (
-			<form.Root form={form} className="w-[30%] max-w-[400px]">
+			<form.Root
+				form={form}
+				className="w-full"
+				isLoading={isNextInvoiceNumberLoading}
+			>
 				<form.Group className="">
 					<form.AppField
 						name="clientId"
+						listeners={{
+							onChange: ({ value }) => handleClientChange(value),
+						}}
 						children={(field) => (
 							<field.SelectInput
 								label="Client"
@@ -37,6 +56,11 @@ export const InvoiceNewForm = withForm({
 								isLoading={isServicesLoading}
 							/>
 						)}
+					/>
+
+					<form.AppField
+						name="fileName"
+						children={(field) => <field.TextInput label="File Name" />}
 					/>
 				</form.Group>
 			</form.Root>

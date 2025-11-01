@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "d3883108-899f-47e5-b37b-4e252a33b05b",
+  "id": "132723cb-29ac-4ef2-9dfc-be3f52704784",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "client_snapshots": {
@@ -27,14 +27,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "current_invoice_number": {
-          "name": "current_invoice_number",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 1
         },
         "tax_id": {
           "name": "tax_id",
@@ -144,14 +136,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "current_invoice_number": {
-          "name": "current_invoice_number",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 1
         },
         "tax_id": {
           "name": "tax_id",
@@ -339,37 +323,23 @@
         },
         "invoice_number": {
           "name": "invoice_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "issue_date": {
-          "name": "issue_date",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "amount": {
-          "name": "amount",
+        "file_name": {
+          "name": "file_name",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "currency": {
-          "name": "currency",
+        "user_id": {
+          "name": "user_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
           "autoincrement": false
         },
         "user_snapshot_id": {
@@ -393,14 +363,6 @@
           "notNull": true,
           "autoincrement": false,
           "default": "(unixepoch())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(unixepoch())"
         }
       },
       "indexes": {
@@ -413,6 +375,19 @@
         }
       },
       "foreignKeys": {
+        "invoices_user_id_users_id_fk": {
+          "name": "invoices_user_id_users_id_fk",
+          "tableFrom": "invoices",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
         "invoices_user_snapshot_id_user_snapshots_id_fk": {
           "name": "invoices_user_snapshot_id_user_snapshots_id_fk",
           "tableFrom": "invoices",
@@ -557,6 +532,14 @@
           "notNull": true,
           "autoincrement": false
         },
+        "current_invoice_number": {
+          "name": "current_invoice_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 1
+        },
         "tax_id": {
           "name": "tax_id",
           "type": "text",
@@ -622,15 +605,7 @@
           "default": "(unixepoch())"
         }
       },
-      "indexes": {
-        "user_snapshots_email_unique": {
-          "name": "user_snapshots_email_unique",
-          "columns": [
-            "email"
-          ],
-          "isUnique": true
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "user_snapshots_user_id_users_id_fk": {
           "name": "user_snapshots_user_id_users_id_fk",
@@ -680,6 +655,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "current_invoice_number": {
+          "name": "current_invoice_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 1
         },
         "tax_id": {
           "name": "tax_id",
@@ -755,17 +738,17 @@
         }
       },
       "indexes": {
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "columns": [
-            "email"
-          ],
-          "isUnique": true
-        },
         "users_work_os_id_unique": {
           "name": "users_work_os_id_unique",
           "columns": [
             "work_os_id"
+          ],
+          "isUnique": true
+        },
+        "unique_email": {
+          "name": "unique_email",
+          "columns": [
+            "email"
           ],
           "isUnique": true
         }

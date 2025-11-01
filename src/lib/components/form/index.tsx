@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils/cn";
 import { useFormContext } from "@/lib/utils/forms.utils";
 import { Button } from "../button";
 import type { ButtonProps } from "../button/types";
+import { FormRootProvider } from "./providers";
 import type {
 	FormGroupProps,
 	FormLegendProps,
@@ -11,7 +12,12 @@ import type {
 	FormSeparatorProps,
 } from "./types";
 
-export const FormRoot = ({ form, className, children }: FormRootProps) => {
+export const FormRoot = ({
+	form,
+	className,
+	children,
+	isLoading,
+}: FormRootProps) => {
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -19,9 +25,11 @@ export const FormRoot = ({ form, className, children }: FormRootProps) => {
 
 	return (
 		<form.AppForm>
-			<form onSubmit={handleSubmit} className={className}>
-				{children}
-			</form>
+			<FormRootProvider isLoading={isLoading}>
+				<form onSubmit={handleSubmit} className={className}>
+					{children}
+				</form>
+			</FormRootProvider>
 		</form.AppForm>
 	);
 };

@@ -63,9 +63,6 @@ const styles = StyleSheet.create({
 	},
 	tableRow: {
 		flexDirection: "row",
-		paddingVertical: 10,
-		borderBottomWidth: 1,
-		borderBottomColor: "#e5e5e5",
 	},
 	tableColDescription: {
 		flex: 3,
@@ -134,6 +131,7 @@ const styles = StyleSheet.create({
 });
 
 export const InvoiceDefaultLayout = ({
+	invoiceNumber,
 	user,
 	client,
 	services,
@@ -161,9 +159,7 @@ export const InvoiceDefaultLayout = ({
 			<Page size="A4" style={styles.page}>
 				<View style={styles.header}>
 					<Text style={styles.title}>INVOICE</Text>
-					<Text style={styles.invoiceNumber}>
-						Invoice #{client.currentInvoiceNumber}
-					</Text>
+					<Text style={styles.invoiceNumber}>Invoice #{invoiceNumber}</Text>
 					<Text style={styles.invoiceNumber}>{invoiceDate}</Text>
 				</View>
 

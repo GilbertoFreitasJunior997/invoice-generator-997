@@ -7,9 +7,16 @@ import {
 	upsertService,
 } from "../services/service.service";
 
+const baseKeys = ["services"] as const;
+export const serviceQueryKeys = {
+	base: baseKeys,
+	all: (userId: string) => [...baseKeys, userId],
+	byId: (userId: string, id: string) => [...baseKeys, userId, id],
+};
+
 export const getAllServicesQueryOptions = (data: { userId: string }) =>
 	queryOptions({
-		queryKey: ["services", data.userId],
+		queryKey: serviceQueryKeys.all(data.userId),
 		queryFn: () =>
 			getAllServices({
 				data: { userId: data.userId },
@@ -21,7 +28,7 @@ export const getServiceByIdQueryOptions = (data: {
 	id: string;
 }) =>
 	queryOptions({
-		queryKey: ["services", data.userId, data.id],
+		queryKey: serviceQueryKeys.byId(data.userId, data.id),
 		queryFn: () =>
 			getServiceById({
 				data: { userId: data.userId, id: data.id },
@@ -40,7 +47,7 @@ export const upsertServiceMutationOptions = (data: {
 			}),
 		onSuccess: (_a, _b, _c, context) => {
 			context.client.invalidateQueries({
-				queryKey: ["services"],
+				queryKey: serviceQueryKeys.base,
 				exact: false,
 			});
 
@@ -58,7 +65,7 @@ export const deleteServiceMutationOptions = (data: {
 			deleteService({ data: { userId: data.userId, id: data.id } }),
 		onSuccess: (_a, _b, _c, context) => {
 			context.client.invalidateQueries({
-				queryKey: ["services"],
+				queryKey: serviceQueryKeys.base,
 				exact: false,
 			});
 

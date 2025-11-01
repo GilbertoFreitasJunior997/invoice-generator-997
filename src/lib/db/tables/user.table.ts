@@ -1,4 +1,9 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+	integer,
+	sqliteTable,
+	text,
+	uniqueIndex,
+} from "drizzle-orm/sqlite-core";
 import { type Country, countries } from "@/lib/schemas/countries.schemas";
 import { createdAt, id, updatedAt } from "@/lib/utils/db.utils";
 
@@ -8,7 +13,11 @@ export function getUsersColumns() {
 
 		name: text("name").notNull(),
 		avatarUrl: text("avatar_url").notNull(),
-		email: text("email").notNull().unique(),
+		email: text("email").notNull(),
+
+		currentInvoiceNumber: integer("current_invoice_number", { mode: "number" })
+			.notNull()
+			.default(1),
 
 		taxId: text("tax_id"),
 
@@ -23,11 +32,15 @@ export function getUsersColumns() {
 	} as const;
 }
 
-export const usersTable = sqliteTable("users", {
-	...getUsersColumns(),
+export const usersTable = sqliteTable(
+	"users",
+	{
+		...getUsersColumns(),
 
-	workOsId: text("work_os_id").notNull().unique(),
+		workOsId: text("work_os_id").notNull().unique(),
 
-	createdAt: createdAt(),
-	updatedAt: updatedAt(),
-});
+		createdAt: createdAt(),
+		updatedAt: updatedAt(),
+	},
+	(table) => [uniqueIndex("unique_email").on(table.email)],
+);

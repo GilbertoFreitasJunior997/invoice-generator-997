@@ -18,7 +18,7 @@ function RouteComponent() {
 	const navigate = Route.useNavigate();
 
 	return (
-		<div className="w-full">
+		<div>
 			<div className="flex justify-end mb-3">
 				<Button
 					onClick={() => {

@@ -1,5 +1,5 @@
 import { setResponseStatus } from "@tanstack/react-start/server";
-import { ServerBadRequestError } from "../errors/server-fns.errors";
+import { ServerError } from "../errors/server-fns.errors";
 
 export const DEFAULT_ERROR_MESSAGE = "Something went wrong! Please try again.";
 
@@ -64,8 +64,8 @@ export const createServerErrorResponse = ({
 	if (error instanceof Error) {
 		message = error.message;
 
-		if (error instanceof ServerBadRequestError) {
-			status = HTTP_STATUS.BAD_REQUEST;
+		if (error instanceof ServerError) {
+			status = error.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
 		}
 	}
 

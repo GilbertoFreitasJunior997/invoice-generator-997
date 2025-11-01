@@ -28,6 +28,7 @@ export const NumberInput = (props: NumberInputProps) => {
 		decimalScale = 0,
 		suffix,
 		prefix,
+		isLoading,
 	} = useInputProps(props);
 
 	const ref = useRef<HTMLInputElement>(null);
@@ -66,26 +67,28 @@ export const NumberInput = (props: NumberInputProps) => {
 		<Field.Root className={rootClassName}>
 			<Field.Label htmlFor={id} label={label} isRequired={isRequired} />
 
-			<NumericFormat
-				decimalSeparator={decimalSeparator}
-				thousandSeparator={thousandSeparator}
-				decimalScale={decimalScale}
-				fixedDecimalScale={fixedDecimalScale}
-				allowNegative={allowNegative || min < 0}
-				valueIsNumericString
-				max={max}
-				min={min}
-				suffix={suffix}
-				prefix={prefix}
-				className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none relative"
-				getInputRef={ref}
-				value={value}
-				customInput={CustomInput}
-				onValueChange={handleChange}
-				onBlur={handleBlur}
-				placeholder={placeholder}
-				{...inputProps}
-			/>
+			<Field.LoadingContainer isLoading={isLoading}>
+				<NumericFormat
+					decimalSeparator={decimalSeparator}
+					thousandSeparator={thousandSeparator}
+					decimalScale={decimalScale}
+					fixedDecimalScale={fixedDecimalScale}
+					allowNegative={allowNegative || min < 0}
+					valueIsNumericString
+					max={max}
+					min={min}
+					suffix={suffix}
+					prefix={prefix}
+					className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none relative"
+					getInputRef={ref}
+					value={value}
+					customInput={CustomInput}
+					onValueChange={handleChange}
+					onBlur={handleBlur}
+					placeholder={placeholder}
+					{...inputProps}
+				/>
+			</Field.LoadingContainer>
 
 			<Field.Description description={description} />
 

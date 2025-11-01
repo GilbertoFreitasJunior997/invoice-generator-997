@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { type Country, countries } from "@/lib/schemas/countries.schemas";
 import { createdAt, id, updatedAt, userId } from "@/lib/utils/db.utils";
 
@@ -8,9 +8,6 @@ export function getClientsColumns() {
 
 		name: text("name").notNull(),
 		email: text("email"),
-		currentInvoiceNumber: integer("current_invoice_number", { mode: "number" })
-			.notNull()
-			.default(1),
 
 		taxId: text("tax_id"),
 
