@@ -1,6 +1,6 @@
 [build]
-  command = "bun run build"
+  command = "vite build"
   dir = "dist/client"
+  
 [dev]
-  command = "bun run dev"
-  port = 3000
+  command = "vite dev"
