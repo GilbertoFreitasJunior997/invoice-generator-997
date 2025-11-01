@@ -28,6 +28,10 @@
 				"noUnknownAtRules": "off",
 				"noArrayIndexKey": "off"
 			},
+			"a11y": {
+				"useKeyWithClickEvents": "off",
+				"useSemanticElements": "off"
+			},
 			"correctness": {
 				"noChildrenProp": "off"
 			}

@@ -126,10 +126,14 @@ export const removeClient = createServerFn()
 		try {
 			const { userId, id } = data;
 
-			const [client] = await db
-				.delete(clientsTable)
-				.where(and(eq(clientsTable.userId, userId), eq(clientsTable.id, id)))
-				.returning();
+			const client = await db.transaction(async (tx) => {
+				const [client] = await tx
+					.delete(clientsTable)
+					.where(and(eq(clientsTable.userId, userId), eq(clientsTable.id, id)))
+					.returning();
+
+				return client;
+			});
 
 			return createServerSuccessResponse({
 				data: client,

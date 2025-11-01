@@ -8,7 +8,6 @@ export function getClientsColumns() {
 
 		name: text("name").notNull(),
 		email: text("email"),
-
 		taxId: text("tax_id"),
 
 		addressLine1: text("address_line_1").notNull(),

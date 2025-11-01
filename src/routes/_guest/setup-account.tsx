@@ -1,12 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import type { User } from "@workos-inc/node";
+import { useState } from "react";
 import { getAuth } from "@/lib/authkit/serverFunctions";
 import { AddressForm } from "@/lib/components/address-form";
 import { Button } from "@/lib/components/button";
 import { Card } from "@/lib/components/card";
 import { Logo } from "@/lib/components/logo";
+import { LogoInput } from "@/lib/components/logo-input";
+import type { LogoInputValue } from "@/lib/components/logo-input/types";
+import { uploadLogoToStorage } from "@/lib/components/logo-input/utils";
 import {
+	type UserSelect,
 	type UserSetupAccountForm,
 	userSetupAccountFormSchema,
 } from "@/lib/schemas/user.schemas";
@@ -43,8 +48,13 @@ export default function SetupAccountPage() {
 	const { authUser } = Route.useLoaderData();
 	const navigate = Route.useNavigate();
 
+	const [logoValue, setLogoValue] = useState<LogoInputValue>();
+	const [isLogoLoading, setIsLogoLoading] = useState(false);
+
 	const { mutateAsync: setupUserAccountMutation } = useMutation({
-		mutationFn: async (data: UserSetupAccountForm) => {
+		mutationFn: async (
+			data: UserSetupAccountForm & Pick<UserSelect, "logoKey">,
+		) => {
 			await setupUserAccount({
 				data: {
 					...data,
@@ -74,7 +84,14 @@ export default function SetupAccountPage() {
 		validators: {
 			onChange: userSetupAccountFormSchema,
 		},
-		onSubmit: ({ value }) => setupUserAccountMutation(value),
+		onSubmit: async ({ value }) => {
+			const logoKey = (await uploadLogoToStorage(logoValue?.file)) ?? null;
+
+			await setupUserAccountMutation({
+				...value,
+				logoKey,
+			});
+		},
 	});
 
 	return (
@@ -88,7 +105,7 @@ export default function SetupAccountPage() {
 					<h1 className="text-3xl font-bold text-foreground text-balance tracking-tight">
 						Complete Your Account Setup
 					</h1>
-					<p className="text-muted-foreground text-base leading-relaxed max-w-md mx-auto">
+					<p className="text-muted-foreground text-base leading-relaxed mx-auto">
 						We need your business details to generate professional invoices for
 						you.
 					</p>
@@ -97,27 +114,38 @@ export default function SetupAccountPage() {
 				<Card.Root className="p-8 shadow-lg border-2">
 					<form.Root form={form}>
 						<form.Group>
-							<form.Group className="grid grid-cols-2">
-								<form.AppField
-									name="name"
-									children={(field) => <field.TextInput label="Name" />}
+							<form.Group className="grid grid-cols-[auto_1fr] gap-2 ">
+								<LogoInput
+									onChange={setLogoValue}
+									isLoading={isLogoLoading}
+									setIsLoading={setIsLogoLoading}
 								/>
 
-								<form.AppField
-									name="email"
-									children={(field) => (
-										<field.TextInput
-											label="Email"
-											description="Linked account you are using to login"
-											isDisabled={true}
-										/>
-									)}
-								/>
+								<form.Group className="justify-between">
+									<form.AppField
+										name="name"
+										children={(field) => <field.TextInput label="Name" />}
+									/>
+
+									<form.AppField
+										name="email"
+										children={(field) => (
+											<field.TextInput
+												label="Email"
+												description="Linked account you are using to login"
+												isDisabled={true}
+											/>
+										)}
+									/>
+								</form.Group>
 							</form.Group>
 
 							<AddressForm form={form} />
 
-							<form.SubmitButton className="w-full py-5">
+							<form.SubmitButton
+								className="w-full py-5"
+								disabled={isLogoLoading}
+							>
 								Let's go!
 							</form.SubmitButton>
 						</form.Group>

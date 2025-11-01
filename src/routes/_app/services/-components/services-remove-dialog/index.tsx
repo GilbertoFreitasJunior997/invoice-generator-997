@@ -3,10 +3,10 @@ import { Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/lib/components/button";
 import { Dialog } from "@/lib/components/dialog";
-import { removeClientMutationOptions } from "@/lib/query-options/client.query-options";
+import { deleteServiceMutationOptions } from "@/lib/query-options/service.query-options";
 import { Route } from "../../index";
 
-export const ClientsRemoveModal = () => {
+export const ServicesRemoveDialog = () => {
 	const { removeId } = Route.useSearch();
 	const { user } = Route.useLoaderData();
 	const navigate = Route.useNavigate();
@@ -21,8 +21,8 @@ export const ClientsRemoveModal = () => {
 		}
 	};
 
-	const { mutateAsync: removeClientMutation, isPending } = useMutation(
-		removeClientMutationOptions({
+	const { mutateAsync: removeServiceMutation, isPending } = useMutation(
+		deleteServiceMutationOptions({
 			userId: user.id,
 			id: removeId ?? "",
 			onSuccess: () => {
@@ -39,12 +39,12 @@ export const ClientsRemoveModal = () => {
 	}, [isOpen]);
 
 	return (
-		<Dialog.Root open={isOpen} onOpenChange={handleOpenChange} modal={true}>
+		<Dialog.Root open={isOpen} onOpenChange={handleOpenChange}>
 			<Dialog.Content>
-				<Dialog.Title>Remove client</Dialog.Title>
+				<Dialog.Title>Remove service</Dialog.Title>
 
 				<div className="text-muted-foreground">
-					<p>Are you sure you want to remove this client?</p>
+					<p>Are you sure you want to remove this service?</p>
 					<p>This action cannot be undone.</p>
 				</div>
 
@@ -59,7 +59,7 @@ export const ClientsRemoveModal = () => {
 						variant="destructive"
 						size="sm"
 						className="w-[100px]"
-						onClick={() => removeClientMutation()}
+						onClick={() => removeServiceMutation()}
 						disabled={isPending || isSuccess}
 					>
 						{isPending || isSuccess ? (

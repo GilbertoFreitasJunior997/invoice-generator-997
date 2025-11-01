@@ -14,6 +14,7 @@ export function getUsersColumns() {
 		name: text("name").notNull(),
 		avatarUrl: text("avatar_url").notNull(),
 		email: text("email").notNull(),
+		logoKey: text("logo_key"),
 
 		currentInvoiceNumber: integer("current_invoice_number", { mode: "number" })
 			.notNull()

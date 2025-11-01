@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "d7cc0713-3f78-4159-8f1d-5b6847fb1588",
+  "id": "7a68a2f1-c619-45d1-976d-340ce22d79c9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "client_snapshots": {
@@ -532,6 +532,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "logo_key": {
+          "name": "logo_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "current_invoice_number": {
           "name": "current_invoice_number",
           "type": "integer",
@@ -654,6 +661,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "logo_key": {
+          "name": "logo_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "current_invoice_number": {

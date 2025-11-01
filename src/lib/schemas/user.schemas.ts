@@ -20,5 +20,6 @@ export const userSetupAccountFormSchema = z
 export type UserSetupAccountForm = z.infer<typeof userSetupAccountFormSchema>;
 
 export const userSetupAccountSchema = userSetupAccountFormSchema.extend(
-	userSelectSchema.pick({ workOsId: true, avatarUrl: true }).shape,
+	userSelectSchema.pick({ workOsId: true, avatarUrl: true, logoKey: true })
+		.shape,
 );

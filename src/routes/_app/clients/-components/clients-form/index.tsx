@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { AddressForm } from "@/lib/components/address-form";
 import { Button } from "@/lib/components/button";
 import { Sheet } from "@/lib/components/sheet";
-import { Skeleton } from "@/lib/components/skeleton";
 import {
 	useServerMutation,
 	useServerQuery,
@@ -64,21 +63,21 @@ export const ClientsForm = () => {
 		validators: {
 			onChange: clientUpsertFormSchema,
 		},
-		onSubmit: async ({ value }) => {
-			await upsertClientMutation(value);
-		},
+		onSubmit: async ({ value }) => upsertClientMutation(value),
 	});
 
 	const name = useStore(form.store, (s) => s.values.name);
+	const shouldCheckSameName =
+		!!name && (!isEditing || (isEditing && name !== client?.name));
 	const {
 		data: hasClientWithSameName,
 		isFetching: isLoadingHasClientWithSameName,
 	} = useServerQuery({
 		...checkHasClientWithSameNameQueryOptions({
 			userId: user.id,
-			name: name,
+			name,
 		}),
-		enabled: !!name,
+		enabled: shouldCheckSameName,
 	});
 
 	const handleOpenChange = (open: boolean) => {
@@ -102,6 +101,10 @@ export const ClientsForm = () => {
 	}, [isOpen, form]);
 
 	useEffect(() => {
+		if (!shouldCheckSameName) {
+			return;
+		}
+
 		const errorMap = form.getAllErrors().form.errorMap;
 
 		form.setErrorMap({
@@ -115,34 +118,19 @@ export const ClientsForm = () => {
 				},
 			},
 		});
-	}, [hasClientWithSameName, form]);
+	}, [shouldCheckSameName, hasClientWithSameName, form]);
 
 	return (
-		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange} modal={true}>
+		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange}>
 			<Sheet.Content className="w-md">
 				<Sheet.Header>
 					<Sheet.Title>
-						{isEditing ? "Edit Client" : "Add New Client"}
+						{isEditing ? `Edit ${client?.name} Details` : "Add New Client"}
 					</Sheet.Title>
-
-					{isEditing && (
-						<Sheet.Description>
-							Edit <span className="font-bold">{client?.name}</span> details
-						</Sheet.Description>
-					)}
 				</Sheet.Header>
 
-				<form.Root form={form}>
-					{isClientLoading ? (
-						<div className="px-4">
-							<Skeleton className="h-9 w-full mt-6" />
-
-							<div className="grid grid-cols-3 gap-2 mt-11">
-								<Skeleton className="h-9 w-full col-span-2" />
-								<Skeleton className="h-9 w-full" />
-							</div>
-						</div>
-					) : (
+				<form.Root form={form} isLoading={isClientLoading}>
+					<Sheet.Body>
 						<form.Group className="px-4">
 							<form.AppField
 								name="name"
@@ -163,7 +151,7 @@ export const ClientsForm = () => {
 
 							<AddressForm form={form} layout="stacked" />
 						</form.Group>
-					)}
+					</Sheet.Body>
 
 					<Sheet.Footer className="flex flex-row justify-end gap-2">
 						<Sheet.Close asChild>

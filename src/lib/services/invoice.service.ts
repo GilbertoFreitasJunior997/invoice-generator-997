@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { and, eq, inArray } from "drizzle-orm";
+import { cloneLogoToStorage } from "../components/logo-input/utils";
 import { db } from "../db";
 import {
 	clientSnapshotsTable,
@@ -63,6 +64,11 @@ export const createInvoice = createServerFn()
 					})
 					.returning();
 
+				let snapshotUserLogoKey: string | undefined;
+				if (user.logoKey) {
+					snapshotUserLogoKey = await cloneLogoToStorage(user.logoKey);
+				}
+
 				const [snapshotUser] = await tx
 					.insert(userSnapshotsTable)
 					.values({
@@ -79,6 +85,7 @@ export const createInvoice = createServerFn()
 						country: user.country,
 						zip: user.zip,
 						userId: user.id,
+						logoKey: snapshotUserLogoKey,
 					})
 					.returning();
 

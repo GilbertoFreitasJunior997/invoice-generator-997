@@ -48,15 +48,14 @@ export const upsertClientMutationOptions = (data: {
 	onSuccess?: () => void;
 }) =>
 	mutationOptions({
-		mutationFn: (formData: ClientUpsertForm) => {
-			return upsertClient({
+		mutationFn: (formData: ClientUpsertForm) =>
+			upsertClient({
 				data: {
 					...formData,
 					userId: data.userId,
-					id: data.editId ?? undefined,
+					id: data.editId,
 				},
-			});
-		},
+			}),
 		onSuccess: (_a, _b, _c, context) => {
 			context.client.invalidateQueries({
 				queryKey: clientQueryKeys.base,

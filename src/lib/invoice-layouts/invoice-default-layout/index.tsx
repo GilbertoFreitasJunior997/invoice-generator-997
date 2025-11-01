@@ -1,4 +1,11 @@
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import {
+	Document,
+	Image,
+	Page,
+	StyleSheet,
+	Text,
+	View,
+} from "@react-pdf/renderer";
 import type { InvoiceDefaultLayoutProps } from "./types";
 
 const styles = StyleSheet.create({
@@ -8,7 +15,14 @@ const styles = StyleSheet.create({
 		color: "#1a1a1a",
 	},
 	header: {
-		marginBottom: 40,
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	headerDetails: {
+		display: "flex",
+		flexDirection: "column",
+		gap: 8,
 	},
 	title: {
 		fontSize: 28,
@@ -128,6 +142,15 @@ const styles = StyleSheet.create({
 		color: "#888",
 		textAlign: "center",
 	},
+	userLogo: {
+		width: 100,
+		height: 100,
+		aspectRatio: 1,
+		objectFit: "cover",
+		objectPosition: "center",
+		borderRadius: 8,
+		marginRight: 8,
+	},
 });
 
 export const InvoiceDefaultLayout = ({
@@ -135,6 +158,7 @@ export const InvoiceDefaultLayout = ({
 	user,
 	client,
 	services,
+	userLogo,
 }: InvoiceDefaultLayoutProps) => {
 	const quantity = 1;
 	const servicesWithQuantity = services.map((service) => ({
@@ -158,9 +182,17 @@ export const InvoiceDefaultLayout = ({
 		<Document>
 			<Page size="A4" style={styles.page}>
 				<View style={styles.header}>
-					<Text style={styles.title}>INVOICE</Text>
-					<Text style={styles.invoiceNumber}>Invoice #{invoiceNumber}</Text>
-					<Text style={styles.invoiceNumber}>{invoiceDate}</Text>
+					<View
+						render={() =>
+							!!userLogo && <Image src={userLogo} style={styles.userLogo} />
+						}
+					/>
+
+					<View style={styles.headerDetails}>
+						<Text style={styles.title}>INVOICE</Text>
+						<Text style={styles.invoiceNumber}>Invoice #{invoiceNumber}</Text>
+						<Text style={styles.invoiceNumber}>{invoiceDate}</Text>
+					</View>
 				</View>
 
 				<View style={styles.row}>

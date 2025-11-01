@@ -1,7 +1,9 @@
 import { usePDF } from "@react-pdf/renderer";
 import { getRouteApi } from "@tanstack/react-router";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getLogoFromStorage } from "@/lib/components/logo-input/utils";
 import { InvoiceDefaultLayout } from "@/lib/invoice-layouts/invoice-default-layout";
+import { blobToBase64 } from "@/lib/utils/blobs.utils";
 import { useInvoiceNewQueries } from "../use-invoice-new-queries";
 
 const Route = getRouteApi("/_app/invoices/new/");
@@ -16,6 +18,7 @@ export const useInvoiceNewPDF = ({
 }: UseInvoiceNewPDFProps) => {
 	const { user } = Route.useLoaderData();
 
+	const [isLoading, setIsLoading] = useState(false);
 	const [pdfInstance, updatePDF] = usePDF({
 		document: undefined,
 	});
@@ -42,15 +45,31 @@ export const useInvoiceNewPDF = ({
 			return;
 		}
 
-		updatePDF(
-			<InvoiceDefaultLayout
-				invoiceNumber={nextInvoiceNumber}
-				user={user}
-				client={selectedClient}
-				services={selectedServices}
-			/>,
-		);
+		(async () => {
+			try {
+				setIsLoading(true);
+				let userLogo: string | undefined;
+
+				if (user.logoKey) {
+					const file = await getLogoFromStorage(user.logoKey);
+					const base64 = await blobToBase64(file);
+					userLogo = base64;
+				}
+
+				updatePDF(
+					<InvoiceDefaultLayout
+						userLogo={userLogo}
+						invoiceNumber={nextInvoiceNumber}
+						user={user}
+						client={selectedClient}
+						services={selectedServices}
+					/>,
+				);
+			} finally {
+				setIsLoading(false);
+			}
+		})();
 	}, [selectedClient, selectedServices, updatePDF, user, nextInvoiceNumber]);
 
-	return { pdfInstance };
+	return { pdfInstance, isLoading };
 };

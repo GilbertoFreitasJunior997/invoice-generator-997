@@ -1,5 +1,6 @@
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
+import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils/cn";
 import type {
 	SheetCloseProps,
@@ -49,6 +50,12 @@ const Content = ({
 	side = "right",
 	...props
 }: SheetContentProps) => {
+	const handleEscapeKeyDown = (e: KeyboardEvent) => {
+		e.preventDefault();
+
+		props.onEscapeKeyDown?.(e);
+	};
+
 	return (
 		<Portal>
 			<Overlay />
@@ -68,6 +75,7 @@ const Content = ({
 					className,
 				)}
 				{...props}
+				onEscapeKeyDown={handleEscapeKeyDown}
 			>
 				{children}
 				<SheetPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
@@ -79,11 +87,27 @@ const Content = ({
 	);
 };
 
+type SheetBodyProps = ComponentProps<"section">;
+const Body = ({ className, children, ...props }: SheetBodyProps) => {
+	return (
+		<section
+			data-slot="sheet-body"
+			className={cn(
+				"flex-1 flex flex-col grow overflow-y-auto overflow-x-hidden",
+				className,
+			)}
+			{...props}
+		>
+			{children}
+		</section>
+	);
+};
+
 const Header = ({ className, ...props }: SheetHeaderProps) => {
 	return (
 		<div
 			data-slot="sheet-header"
-			className={cn("flex flex-col gap-1.5 p-4", className)}
+			className={cn("flex flex-col gap-1.5 p-4 pb-0", className)}
 			{...props}
 		/>
 	);
@@ -124,6 +148,7 @@ export const Sheet = {
 	Trigger,
 	Close,
 	Content,
+	Body,
 	Header,
 	Footer,
 	Title,

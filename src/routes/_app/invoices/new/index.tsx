@@ -7,7 +7,7 @@ import { Button } from "@/lib/components/button";
 import { useServerMutation } from "@/lib/hooks/use-server-query";
 import { createInvoiceMutationOptions } from "@/lib/query-options/invoice.query-options";
 import { invoiceGenerationFormSchema } from "@/lib/schemas/invoice.schemas";
-import { downloadFile } from "@/lib/utils/download-blob";
+import { downloadFile } from "@/lib/utils/blobs.utils";
 import { useAppForm } from "@/lib/utils/forms.utils";
 import { invoiceNewFormDefaultValues } from "./-lib/-components/consts";
 import { InvoiceNewForm } from "./-lib/-components/invoice-new-form";

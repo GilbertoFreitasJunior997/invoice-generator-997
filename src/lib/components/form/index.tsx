@@ -26,7 +26,10 @@ export const FormRoot = ({
 	return (
 		<form.AppForm>
 			<FormRootProvider isLoading={isLoading}>
-				<form onSubmit={handleSubmit} className={className}>
+				<form
+					onSubmit={handleSubmit}
+					className={cn("flex flex-col overflow-hidden grow", className)}
+				>
 					{children}
 				</form>
 			</FormRootProvider>
@@ -102,26 +105,31 @@ export const FormSubmitButton = (props: ButtonProps) => {
 		<form.Subscribe
 			selector={(state) => ({
 				isSubmitting: state.isSubmitting,
-				isDefaultValue: state.isDefaultValue,
 				canSubmit: state.canSubmit,
 			})}
-			children={({ isSubmitting, isDefaultValue, canSubmit }) => (
-				<Button
-					type="submit"
-					onClick={(e) => {
-						e.preventDefault();
-						e.stopPropagation();
+			children={({ isSubmitting, canSubmit }) => {
+				const isDisabled = isSubmitting || props.disabled || !canSubmit;
 
-						void form.handleSubmit();
-					}}
-					{...props}
-					disabled={
-						isSubmitting || props.disabled || isDefaultValue || !canSubmit
-					}
-				>
-					{props.children ?? "Submit"}
-				</Button>
-			)}
+				return (
+					<Button
+						type="submit"
+						onClick={(e) => {
+							e.preventDefault();
+							e.stopPropagation();
+
+							if (isDisabled) {
+								return;
+							}
+
+							void form.handleSubmit();
+						}}
+						{...props}
+						disabled={isDisabled}
+					>
+						{props.children ?? "Submit"}
+					</Button>
+				);
+			}}
 		/>
 	);
 };

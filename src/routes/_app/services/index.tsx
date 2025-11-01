@@ -3,7 +3,7 @@ import { PlusIcon } from "lucide-react";
 import { Button } from "@/lib/components/button";
 import { entitySearchParamsSchema } from "@/lib/utils/search-params.utils";
 import { ServicesForm } from "./-components/services-form";
-import { ServicesRemoveModal } from "./-components/services-remove-modal";
+import { ServicesRemoveDialog } from "./-components/services-remove-dialog";
 import { ServicesTable } from "./-components/services-table";
 
 export const Route = createFileRoute("/_app/services/")({
@@ -35,7 +35,7 @@ function RouteComponent() {
 
 			<ServicesForm />
 
-			<ServicesRemoveModal />
+			<ServicesRemoveDialog />
 		</div>
 	);
 }

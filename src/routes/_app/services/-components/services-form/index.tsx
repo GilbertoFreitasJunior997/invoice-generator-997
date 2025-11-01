@@ -97,75 +97,71 @@ export const ServicesForm = () => {
 	}, [isOpen, form]);
 
 	return (
-		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange} modal={true}>
+		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange}>
 			<Sheet.Content className="w-md">
 				<Sheet.Header>
 					<Sheet.Title>
-						{isEditing ? "Edit Service" : "Add New Service"}
+						{isEditing ? `Edit ${service?.name} Details` : "Add New Service"}
 					</Sheet.Title>
-
-					{isEditing && (
-						<Sheet.Description>
-							Edit <span className="font-bold">{service?.name}</span> details
-						</Sheet.Description>
-					)}
 				</Sheet.Header>
 
 				<form.Root form={form} isLoading={isServiceLoading}>
-					<form.Group className="px-4">
-						<form.AppField
-							name="name"
-							children={(field) => (
-								<field.TextInput
-									label="Name"
-									placeholder="Website Design, Acme Inc. Contract, etc."
-									description="This will not be displayed on the invoice. Used for organizational purposes."
+					<Sheet.Body>
+						<form.Group className="px-4">
+							<form.AppField
+								name="name"
+								children={(field) => (
+									<field.TextInput
+										label="Name"
+										placeholder="Website Design, Acme Inc. Contract, etc."
+										description="This will not be displayed on the invoice. Used for organizational purposes."
+									/>
+								)}
+							/>
+
+							<form.Group className="grid grid-cols-3">
+								<form.AppField
+									name="description"
+									children={(field) => (
+										<field.TextArea
+											label="Description"
+											description="Describe the service you are offering. This will be displayed to your clients."
+											placeholder="Software Development, Design, etc."
+											rootClassName="col-span-3"
+										/>
+									)}
 								/>
-							)}
-						/>
 
-						<form.Group className="grid grid-cols-3">
-							<form.AppField
-								name="description"
-								children={(field) => (
-									<field.TextArea
-										label="Description"
-										description="Describe the service you are offering. This will be displayed to your clients."
-										placeholder="Software Development, Design, etc."
-										rootClassName="col-span-3"
-									/>
-								)}
-							/>
+								<form.AppField
+									name="rate"
+									children={(field) => (
+										<field.NumberInput
+											label="Rate"
+											thousandSeparator={currencyThousandSeparator}
+											decimalSeparator={currencyDecimalSeparator}
+											decimalScale={2}
+											fixedDecimalScale={true}
+											prefix={currencyPrefix}
+											min={0}
+											allowNegative={false}
+											rootClassName="col-span-2"
+										/>
+									)}
+								/>
 
-							<form.AppField
-								name="rate"
-								children={(field) => (
-									<field.NumberInput
-										label="Rate"
-										thousandSeparator={currencyThousandSeparator}
-										decimalSeparator={currencyDecimalSeparator}
-										decimalScale={2}
-										fixedDecimalScale={true}
-										prefix={currencyPrefix}
-										min={0}
-										allowNegative={false}
-										rootClassName="col-span-2"
-									/>
-								)}
-							/>
-
-							<form.AppField
-								name="currency"
-								children={(field) => (
-									<field.SelectInput
-										label="Currency"
-										items={currenciesSelectOptions}
-										rootClassName="col-span-1"
-									/>
-								)}
-							/>
+								<form.AppField
+									name="currency"
+									children={(field) => (
+										<field.SelectInput
+											label="Currency"
+											items={currenciesSelectOptions}
+											rootClassName="col-span-1"
+										/>
+									)}
+								/>
+							</form.Group>
 						</form.Group>
-					</form.Group>
+					</Sheet.Body>
 
 					<Sheet.Footer className="flex flex-row justify-end gap-2">
 						<Sheet.Close asChild>
