@@ -4,8 +4,6 @@ import { DropdownMenu } from "@/lib/components/dropdown-menu";
 import { Sidebar } from "@/lib/components/sidebar";
 import { useIsMobile } from "@/lib/hooks/use-is-mobile";
 import type { UserSelect } from "@/lib/schemas/user.schemas";
-import { useSidebar } from "@/lib/stores/sidebar.store";
-import { cn } from "@/lib/utils/cn";
 import { Avatar } from "../avatar";
 import { Logo } from "../logo";
 import { appSidebarItems } from "./consts";
@@ -104,11 +102,6 @@ const NavMain = () => {
 export const AppSidebar = () => {
 	const { user } = Route.useLoaderData();
 
-	const isOpen = useSidebar((s) => s.isOpen);
-	const isOpenMobile = useSidebar((s) => s.isOpenMobile);
-
-	const isSidebarOpen = isOpen || isOpenMobile;
-
 	return (
 		<Sidebar.Root collapsible="icon">
 			<Sidebar.Header>
@@ -116,10 +109,7 @@ export const AppSidebar = () => {
 					<Sidebar.MenuItem>
 						<Sidebar.MenuButton asChild size="noPadding">
 							<Link to="/dashboard">
-								<Logo
-									size={isSidebarOpen ? "default" : "sm"}
-									className={cn(isSidebarOpen && "text-xs w-full text-center")}
-								/>
+								<Logo isSmall={true} />
 							</Link>
 						</Sidebar.MenuButton>
 					</Sidebar.MenuItem>

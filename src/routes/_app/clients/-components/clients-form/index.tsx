@@ -67,8 +67,10 @@ export const ClientsForm = () => {
 	});
 
 	const name = useStore(form.store, (s) => s.values.name);
+
 	const shouldCheckSameName =
 		!!name && (!isEditing || (isEditing && name !== client?.name));
+
 	const {
 		data: hasClientWithSameName,
 		isFetching: isLoadingHasClientWithSameName,

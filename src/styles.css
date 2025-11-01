@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -10,7 +11,7 @@
 	--card-foreground: oklch(0.2046 0 0);
 	--popover: oklch(0.9911 0 0);
 	--popover-foreground: oklch(0.4386 0 0);
-	--primary: oklch(0.8348 0.1302 160.908);
+	--primary: oklch(58.8% 0.158 241.966);
 	--primary-foreground: oklch(0.2626 0.0147 166.4589);
 	--secondary: oklch(0.994 0 0);
 	--secondary-foreground: oklch(0.2046 0 0);
@@ -22,7 +23,7 @@
 	--destructive-foreground: oklch(0.577 0.245 27.325);
 	--border: oklch(0.9037 0 0);
 	--input: oklch(0.9731 0 0);
-	--ring: oklch(0.67 0.17 153.85);
+	--ring: oklch(45.405% 0.17749 264.263);
 	--chart-1: oklch(0.8348 0.1302 160.908);
 	--chart-2: oklch(0.6231 0.188 259.8145);
 	--chart-3: oklch(0.6056 0.2189 292.7172);
@@ -36,9 +37,6 @@
 	--sidebar-accent-foreground: oklch(0.2435 0 0);
 	--sidebar-border: oklch(0.9037 0 0);
 	--sidebar-ring: oklch(0.8348 0.1302 160.908);
-	--font-sans: Outfit, sans-serif;
-	--font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-	--font-mono: monospace;
 	--radius: 0.5rem;
 	--shadow-x: 0px;
 	--shadow-y: 1px;
@@ -70,7 +68,7 @@
 	--card-foreground: oklch(0.9288 0.0126 255.5078);
 	--popover: oklch(0.2603 0 0);
 	--popover-foreground: oklch(0.7348 0 0);
-	--primary: oklch(0.67 0.17 153.85);
+	--primary: oklch(58.8% 0.158 241.966);
 	--primary-foreground: oklch(0.15 0.02 269.18);
 	--secondary: oklch(0.2603 0 0);
 	--secondary-foreground: oklch(0.9851 0 0);
@@ -82,8 +80,8 @@
 	--destructive-foreground: oklch(0.9368 0.0045 34.3092);
 	--border: oklch(0.2809 0 0);
 	--input: oklch(0.2603 0 0);
-	--ring: oklch(0.67 0.17 153.85);
-	--chart-1: oklch(0.8003 0.1821 151.711);
+	--ring: oklch(45.405% 0.17749 264.263);
+	--chart-1: oklch(45.405% 0.17749 264.263);
 	--chart-2: oklch(0.7137 0.1434 254.624);
 	--chart-3: oklch(0.709 0.1592 293.5412);
 	--chart-4: oklch(0.8369 0.1644 84.4286);
@@ -96,10 +94,7 @@
 	--sidebar-accent: oklch(0.269 0 0);
 	--sidebar-accent-foreground: oklch(0.9851 0 0);
 	--sidebar-border: oklch(0.2809 0 0);
-	--sidebar-ring: oklch(0.8003 0.1821 151.711);
-	--font-sans: Outfit, sans-serif;
-	--font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-	--font-mono: monospace;
+	--sidebar-ring: oklch(45.405% 0.17749 264.263);
 	--radius: 0.5rem;
 	--shadow-x: 0px;
 	--shadow-y: 1px;
@@ -156,9 +151,7 @@
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
 
-	--font-sans: var(--font-sans);
-	--font-mono: var(--font-mono);
-	--font-serif: var(--font-serif);
+	--font-poppins: "Poppins", sans-serif;
 
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
@@ -184,6 +177,7 @@
 
 body {
 	letter-spacing: var(--tracking-normal);
+	font-family: var(--font-poppins);
 }
 
 @layer base {

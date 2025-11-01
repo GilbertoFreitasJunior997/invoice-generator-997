@@ -1,3 +1,3 @@
 export const appSettings = {
-	name: "Invoice Generator 997",
+	name: "MoneyMap",
 };
