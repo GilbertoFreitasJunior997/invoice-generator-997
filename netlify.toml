@@ -3,4 +3,4 @@
   dir = "dist/client"
   
 [dev]
-  command = "vite dev"
+  command = "vite dev --port 3000"
