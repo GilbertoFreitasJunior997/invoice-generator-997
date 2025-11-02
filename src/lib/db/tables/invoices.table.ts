@@ -6,9 +6,7 @@ import { userSnapshotsTable } from "./user-snapshots.table";
 export const invoicesTable = sqliteTable("invoices", {
 	id: id(),
 
-	invoiceNumber: integer("invoice_number", { mode: "number" })
-		.notNull()
-		.unique(),
+	invoiceNumber: integer("invoice_number", { mode: "number" }).notNull(),
 	fileName: text("file_name").notNull(),
 	invoicedAt: text("invoiced_at").notNull(),
 	totalAmount: real("total_amount").notNull(),

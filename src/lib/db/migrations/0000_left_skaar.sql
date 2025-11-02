@@ -60,7 +60,6 @@ CREATE TABLE `invoices` (
 	FOREIGN KEY (`client_snapshot_id`) REFERENCES `client_snapshots`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `invoices_invoice_number_unique` ON `invoices` (`invoice_number`);--> statement-breakpoint
 CREATE TABLE `services` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,

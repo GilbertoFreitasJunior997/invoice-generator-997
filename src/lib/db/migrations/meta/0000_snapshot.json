@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "0e64ac1f-b506-4824-8403-889d0f1e115c",
+  "id": "7072c5ff-edc8-4df4-886e-1b25033b1178",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "client_snapshots": {
@@ -394,15 +394,7 @@
           "autoincrement": false
         }
       },
-      "indexes": {
-        "invoices_invoice_number_unique": {
-          "name": "invoices_invoice_number_unique",
-          "columns": [
-            "invoice_number"
-          ],
-          "isUnique": true
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "invoices_user_id_users_id_fk": {
           "name": "invoices_user_id_users_id_fk",
