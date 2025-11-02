@@ -10,7 +10,7 @@ CREATE TABLE `client_snapshots` (
 	`country` text NOT NULL,
 	`zip` text NOT NULL,
 	`client_id` text,
-	`snapshot_date` integer DEFAULT (unixepoch()) NOT NULL,
+	`snapshot_date` text NOT NULL,
 	FOREIGN KEY (`client_id`) REFERENCES `clients`(`id`) ON UPDATE set null ON DELETE set null
 );
 --> statement-breakpoint
@@ -26,8 +26,8 @@ CREATE TABLE `clients` (
 	`country` text NOT NULL,
 	`zip` text NOT NULL,
 	`user_id` text NOT NULL,
-	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
-	`updated_at` integer DEFAULT (unixepoch()) NOT NULL,
+	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
@@ -39,7 +39,7 @@ CREATE TABLE `invoice_items` (
 	`currency` text NOT NULL,
 	`quantity` integer NOT NULL,
 	`invoice_id` text NOT NULL,
-	`snapshot_date` integer DEFAULT (unixepoch()) NOT NULL,
+	`snapshot_date` text NOT NULL,
 	FOREIGN KEY (`invoice_id`) REFERENCES `invoices`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
@@ -47,10 +47,11 @@ CREATE TABLE `invoices` (
 	`id` text PRIMARY KEY NOT NULL,
 	`invoice_number` integer NOT NULL,
 	`file_name` text NOT NULL,
+	`invoiced_at` text NOT NULL,
 	`user_id` text NOT NULL,
 	`user_snapshot_id` text NOT NULL,
 	`client_snapshot_id` text NOT NULL,
-	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
+	`created_at` text NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade,
 	FOREIGN KEY (`user_snapshot_id`) REFERENCES `user_snapshots`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`client_snapshot_id`) REFERENCES `client_snapshots`(`id`) ON UPDATE no action ON DELETE no action
@@ -64,8 +65,8 @@ CREATE TABLE `services` (
 	`rate` integer NOT NULL,
 	`currency` text NOT NULL,
 	`user_id` text NOT NULL,
-	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
-	`updated_at` integer DEFAULT (unixepoch()) NOT NULL,
+	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
@@ -84,7 +85,7 @@ CREATE TABLE `user_snapshots` (
 	`country` text NOT NULL,
 	`zip` text NOT NULL,
 	`user_id` text NOT NULL,
-	`snapshot_date` integer DEFAULT (unixepoch()) NOT NULL,
+	`snapshot_date` text NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
@@ -103,8 +104,8 @@ CREATE TABLE `users` (
 	`country` text NOT NULL,
 	`zip` text NOT NULL,
 	`work_os_id` text NOT NULL,
-	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
-	`updated_at` integer DEFAULT (unixepoch()) NOT NULL
+	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `users_work_os_id_unique` ON `users` (`work_os_id`);--> statement-breakpoint

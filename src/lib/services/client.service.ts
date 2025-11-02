@@ -4,6 +4,7 @@ import { db } from "../db";
 import { clientsTable } from "../db/tables";
 import { ServerNotFoundError } from "../errors/server-fns.errors";
 import { clientUpsertSchema } from "../schemas/client.schemas";
+import { formatDbDate } from "../utils/date.utils";
 import {
 	createServerErrorResponse,
 	createServerSuccessResponse,
@@ -83,7 +84,7 @@ export const upsertClient = createServerFn()
 						zip: data.zip,
 						email: data.email,
 						taxId: data.taxId,
-						updatedAt: new Date(),
+						updatedAt: formatDbDate(),
 					})
 					.where(eq(clientsTable.id, data.id))
 					.returning();

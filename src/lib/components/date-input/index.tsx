@@ -9,7 +9,7 @@ import { Field } from "../field";
 import { inputBoxClassNames } from "../field/consts";
 import type { DateInputProps } from "./types";
 
-export const DateInput = ({ ...props }: DateInputProps) => {
+export const DateInput = (props: DateInputProps) => {
 	const {
 		id,
 		errors,

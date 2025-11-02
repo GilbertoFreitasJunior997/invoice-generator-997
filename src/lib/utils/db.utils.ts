@@ -1,24 +1,25 @@
 import { type SQL, sql } from "drizzle-orm";
-import { integer, type SQLiteTable, text } from "drizzle-orm/sqlite-core";
+import { type SQLiteTable, text } from "drizzle-orm/sqlite-core";
 import { v4 as uuidv4 } from "uuid";
 import { usersTable } from "../db/tables/user.table";
+import { formatDbDate } from "./date.utils";
 
 export function createdAt() {
-	return integer("created_at", { mode: "timestamp" })
+	return text("created_at")
 		.notNull()
-		.default(sql`(unixepoch())`);
+		.$defaultFn(() => formatDbDate());
 }
 
 export function updatedAt() {
-	return integer("updated_at", { mode: "timestamp" })
+	return text("updated_at")
 		.notNull()
-		.default(sql`(unixepoch())`);
+		.$defaultFn(() => formatDbDate());
 }
 
 export function snapshotDate() {
-	return integer("snapshot_date", { mode: "timestamp" })
+	return text("snapshot_date")
 		.notNull()
-		.default(sql`(unixepoch())`);
+		.$defaultFn(() => formatDbDate());
 }
 
 export function id() {

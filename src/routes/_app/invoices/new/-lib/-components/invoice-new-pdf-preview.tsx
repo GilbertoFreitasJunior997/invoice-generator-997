@@ -21,16 +21,18 @@ export const InvoiceNewPDFPreview = ({
 
 	return (
 		<div className="grow flex items-center justify-center">
-			{hasPdf ? (
-				<iframe
-					title="Invoice PDF Preview"
-					key={count.current}
-					className="max-w-3xl w-full h-full rounded-lg"
-					src={pdfInstance.url ?? ""}
-				/>
-			) : (
-				<div></div>
-			)}
+			<div className="max-w-3xl size-full rounded-lg overflow-hidden background-gradient border border-muted">
+				{hasPdf ? (
+					<iframe
+						title="Invoice PDF Preview"
+						key={count.current}
+						className="size-full"
+						src={pdfInstance.url ?? ""}
+					/>
+				) : (
+					<div className="size-full" />
+				)}
+			</div>
 		</div>
 	);
 };

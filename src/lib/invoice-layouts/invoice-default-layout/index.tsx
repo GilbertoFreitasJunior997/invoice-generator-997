@@ -1,4 +1,5 @@
 import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { format } from "date-fns";
 import type { InvoiceDefaultLayoutProps } from "./types";
 
 const styles = StyleSheet.create({
@@ -158,6 +159,7 @@ export const InvoiceDefaultLayout = ({
 	client,
 	services,
 	userLogo: _userLogo,
+	invoicedAt,
 }: InvoiceDefaultLayoutProps) => {
 	const quantity = 1;
 	const servicesWithQuantity = services.map((service) => ({
@@ -171,11 +173,7 @@ export const InvoiceDefaultLayout = ({
 		0,
 	);
 
-	const invoiceDate = new Date().toLocaleDateString("en-US", {
-		year: "numeric",
-		month: "short",
-		day: "numeric",
-	});
+	const invoiceDate = format(invoicedAt, "MMM d, yyyy");
 
 	const clientLocation =
 		client.city && client.state

@@ -63,7 +63,11 @@ export const SelectMultipleInput = (props: SelectMultipleInputProps) => {
 							onBlur={onBlur}
 							{...inputProps}
 						>
-							{hasValue ? valueDisplay : placeholder}
+							{hasValue ? (
+								valueDisplay
+							) : (
+								<span className="text-muted-foreground">{placeholder}</span>
+							)}
 
 							<ChevronsUpDown className="opacity-50" />
 						</Button>

@@ -7,6 +7,7 @@ export const InvoiceNewForm = withForm({
 	render: function Render({ form }) {
 		const { clientsQuery, servicesQuery, nextInvoiceNumberQuery } =
 			useInvoiceNewQueries();
+
 		const { data: clients, isFetching: isClientsLoading } = clientsQuery;
 		const { data: services, isFetching: isServicesLoading } = servicesQuery;
 		const { data: nextInvoiceNumber, isFetching: isNextInvoiceNumberLoading } =
@@ -56,6 +57,11 @@ export const InvoiceNewForm = withForm({
 								isLoading={isServicesLoading}
 							/>
 						)}
+					/>
+
+					<form.AppField
+						name="invoicedAt"
+						children={(field) => <field.DateInput label="Invoice Date" />}
 					/>
 
 					<form.AppField

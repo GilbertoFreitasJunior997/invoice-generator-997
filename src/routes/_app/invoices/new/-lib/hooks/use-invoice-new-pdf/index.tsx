@@ -3,18 +3,20 @@ import { getRouteApi } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { getLogoFromStorage } from "@/lib/components/logo-input/utils";
 import { InvoiceDefaultLayout } from "@/lib/invoice-layouts/invoice-default-layout";
+import type { InvoiceGenerationForm } from "@/lib/schemas/invoice.schemas";
 import { blobToBase64 } from "@/lib/utils/blobs.utils";
 import { useInvoiceNewQueries } from "../use-invoice-new-queries";
 
 const Route = getRouteApi("/_app/invoices/new/");
 
-type UseInvoiceNewPDFProps = {
-	clientId?: string;
-	servicesIds?: string[];
-};
+type UseInvoiceNewPDFProps = Pick<
+	InvoiceGenerationForm,
+	"clientId" | "servicesIds" | "invoicedAt"
+>;
 export const useInvoiceNewPDF = ({
 	clientId,
 	servicesIds,
+	invoicedAt,
 }: UseInvoiceNewPDFProps) => {
 	const { user } = Route.useLoaderData();
 
@@ -41,7 +43,12 @@ export const useInvoiceNewPDF = ({
 	);
 
 	useEffect(() => {
-		if (!selectedClient || !selectedServices.length || !nextInvoiceNumber) {
+		if (
+			!selectedClient ||
+			!selectedServices.length ||
+			!nextInvoiceNumber ||
+			!invoicedAt
+		) {
 			return;
 		}
 
@@ -58,6 +65,7 @@ export const useInvoiceNewPDF = ({
 
 				updatePDF(
 					<InvoiceDefaultLayout
+						invoicedAt={invoicedAt}
 						userLogo={userLogo}
 						invoiceNumber={nextInvoiceNumber}
 						user={user}
@@ -69,7 +77,14 @@ export const useInvoiceNewPDF = ({
 				setIsLoading(false);
 			}
 		})();
-	}, [selectedClient, selectedServices, updatePDF, user, nextInvoiceNumber]);
+	}, [
+		selectedClient,
+		selectedServices,
+		updatePDF,
+		user,
+		nextInvoiceNumber,
+		invoicedAt,
+	]);
 
 	return { pdfInstance, isLoading };
 };

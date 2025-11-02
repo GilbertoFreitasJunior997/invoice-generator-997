@@ -1,24 +1,74 @@
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useInputProps } from "../base-field/utils";
+import { Field } from "../field";
+import { inputBorderStateClassNames } from "../field/consts";
 import type { CheckboxProps } from "./types";
 
-export const Checkbox = ({ className, ...props }: CheckboxProps) => {
+const checkboxSizeClassNames = "size-5 min-h-5 max-h-5 min-w-5 max-w-5 p-0";
+
+export const Checkbox = (props: CheckboxProps) => {
+	const {
+		id,
+		errors,
+		label,
+		inputProps,
+		description,
+		isRequired,
+		value,
+		onChange,
+		onBlur,
+		isLoading,
+		rootClassName,
+		className,
+	} = useInputProps(props);
+
+	const handleCheckedChange = (checked: CheckboxPrimitive.CheckedState) => {
+		const isChecked = checked === "indeterminate" ? false : !!checked;
+		onChange?.(isChecked);
+	};
+
 	return (
-		<CheckboxPrimitive.Root
-			data-slot="checkbox"
+		<Field.Root
 			className={cn(
-				"peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
-				className,
+				rootClassName,
+				"grid grid-cols-[auto_1fr] gap-2 items-center",
 			)}
-			{...props}
 		>
-			<CheckboxPrimitive.Indicator
-				data-slot="checkbox-indicator"
-				className="grid place-content-center text-current transition-none"
+			<Field.LoadingContainer
+				isLoading={isLoading}
+				className={checkboxSizeClassNames}
 			>
-				<CheckIcon className="size-3.5" />
-			</CheckboxPrimitive.Indicator>
-		</CheckboxPrimitive.Root>
+				<CheckboxPrimitive.Root
+					className={cn(
+						inputBorderStateClassNames,
+						"peer dark:bg-input/30 transition-shadow outline-none focus-visible:ring-[3px]",
+						"data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary",
+						"rounded-md",
+						checkboxSizeClassNames,
+						"disabled:cursor-not-allowed disabled:opacity-50",
+						className,
+					)}
+					onBlur={onBlur}
+					{...inputProps}
+					checked={value ?? false}
+					onCheckedChange={handleCheckedChange}
+				>
+					<CheckboxPrimitive.Indicator
+						data-slot="checkbox-indicator"
+						className="grid place-content-center text-current transition-none"
+					>
+						<CheckIcon className="size-4" />
+					</CheckboxPrimitive.Indicator>
+				</CheckboxPrimitive.Root>
+			</Field.LoadingContainer>
+
+			<Field.Label htmlFor={id} label={label} isRequired={isRequired} />
+
+			<Field.Description description={description} className="col-span-2" />
+
+			<Field.Error errors={errors} className="col-span-2" />
+		</Field.Root>
 	);
 };

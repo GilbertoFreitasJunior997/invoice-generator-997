@@ -188,3 +188,7 @@ body {
 		@apply bg-background text-foreground;
 	}
 }
+
+@utility background-gradient {
+	@apply bg-linear-to-br from-background via-background to-muted/20;
+}

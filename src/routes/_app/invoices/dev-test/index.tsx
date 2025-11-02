@@ -9,6 +9,7 @@ import {
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import type { InvoiceDefaultLayoutProps } from "@/lib/invoice-layouts/invoice-default-layout/types";
+import { formatDbDate } from "@/lib/utils/date.utils";
 
 const styles = StyleSheet.create({
 	page: {
@@ -314,8 +315,8 @@ const invoiceSampleData = {
 		country: "Brazil",
 		zip: "17400-114",
 		workOsId: "user_01K73CENTEMYDWM7TMH14RREYW",
-		createdAt: new Date("2025-11-01T23:39:30.000Z"),
-		updatedAt: new Date("2025-11-01T23:39:30.000Z"),
+		createdAt: formatDbDate(),
+		updatedAt: formatDbDate(),
 	},
 	client: {
 		id: "f738572f-e4f9-47dc-89d9-88a9a116113f",
@@ -329,8 +330,8 @@ const invoiceSampleData = {
 		country: "USA",
 		zip: "33332",
 		userId: "8a08b683-e8f2-410a-8eda-fb53d2b62266",
-		createdAt: new Date("2025-11-01T23:41:13.000Z"),
-		updatedAt: new Date("2025-11-01T23:41:13.000Z"),
+		createdAt: formatDbDate(),
+		updatedAt: formatDbDate(),
 	},
 	services: [
 		{
@@ -340,8 +341,8 @@ const invoiceSampleData = {
 			rate: 1200,
 			currency: "USD",
 			userId: "8a08b683-e8f2-410a-8eda-fb53d2b62266",
-			createdAt: new Date("2025-11-01T23:41:23.000Z"),
-			updatedAt: new Date("2025-11-01T23:41:23.000Z"),
+			createdAt: formatDbDate(),
+			updatedAt: formatDbDate(),
 		},
 	],
 } satisfies InvoiceDefaultLayoutProps;

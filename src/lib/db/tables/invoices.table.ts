@@ -10,6 +10,7 @@ export const invoicesTable = sqliteTable("invoices", {
 		.notNull()
 		.unique(),
 	fileName: text("file_name").notNull(),
+	invoicedAt: text("invoiced_at").notNull(),
 
 	userId: userId(),
 	userSnapshotId: text("user_snapshot_id")

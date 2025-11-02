@@ -4,6 +4,7 @@ import { db } from "../db";
 import { servicesTable } from "../db/tables";
 import { ServerNotFoundError } from "../errors/server-fns.errors";
 import { serviceUpsertSchema } from "../schemas/service.schemas";
+import { formatDbDate } from "../utils/date.utils";
 import {
 	createServerErrorResponse,
 	createServerSuccessResponse,
@@ -60,7 +61,7 @@ export const upsertService = createServerFn()
 						description: data.description,
 						rate: data.rate,
 						currency: data.currency,
-						updatedAt: new Date(),
+						updatedAt: formatDbDate(),
 					})
 					.where(eq(servicesTable.id, id))
 					.returning();

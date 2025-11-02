@@ -7,5 +7,6 @@ export type InvoiceDefaultLayoutProps = {
 	user: UserSelect;
 	client: ClientSelect;
 	services: ServiceSelect[];
+	invoicedAt: Date;
 	userLogo?: string;
 };

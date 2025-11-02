@@ -20,7 +20,7 @@ function App() {
 	const { signInUrl } = Route.useLoaderData();
 
 	return (
-		<div className="flex flex-col items-center justify-center h-screen bg-linear-to-br from-background via-background to-muted/20">
+		<div className="flex flex-col items-center justify-center h-screen background-gradient">
 			<Button asChild>
 				<a href={signInUrl}> Sign in </a>
 			</Button>

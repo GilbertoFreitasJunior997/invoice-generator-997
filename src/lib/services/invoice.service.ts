@@ -13,6 +13,7 @@ import {
 } from "../db/tables";
 import { ServerBadRequestError } from "../errors/server-fns.errors";
 import { invoiceGenerationSchema } from "../schemas/invoice.schemas";
+import { formatDbDate } from "../utils/date.utils";
 import {
 	createServerErrorResponse,
 	createServerSuccessResponse,
@@ -99,6 +100,10 @@ export const createInvoice = createServerFn()
 						userId: user.id,
 						clientSnapshotId: snapshotClient.id,
 						userSnapshotId: snapshotUser.id,
+						invoicedAt: formatDbDate({
+							date: data.invoicedAt,
+							withTime: false,
+						}),
 					})
 					.returning();
 
@@ -140,6 +145,23 @@ export const getInvoices = createServerFn()
 			});
 
 			return createServerSuccessResponse({ data: invoices });
+		} catch (error) {
+			return createServerErrorResponse({ error });
+		}
+	});
+
+export const checkIsUserFirstInvoice = createServerFn()
+	.inputValidator((d: { userId: string }) => d)
+	.handler(async ({ data }) => {
+		try {
+			const { userId } = data;
+			const invoice = await db.query.invoicesTable.findFirst({
+				where: eq(invoicesTable.userId, userId),
+			});
+
+			const hasInvoice = !!invoice;
+
+			return createServerSuccessResponse({ data: hasInvoice });
 		} catch (error) {
 			return createServerErrorResponse({ error });
 		}

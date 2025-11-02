@@ -7,6 +7,7 @@ import {
 	getAuthUserSchema,
 	userSetupAccountSchema,
 } from "../schemas/user.schemas";
+import { formatDbDate } from "../utils/date.utils";
 import {
 	createServerErrorResponse,
 	createServerSuccessResponse,
@@ -29,7 +30,7 @@ export const getAuthUser = createServerFn({ method: "POST" })
 					.update(usersTable)
 					.set({
 						email: data.email,
-						updatedAt: new Date(),
+						updatedAt: formatDbDate(),
 					})
 					.where(eq(usersTable.workOsId, data.id))
 					.returning();
@@ -81,6 +82,34 @@ export const getUserNextInvoiceNumber = createServerFn({ method: "GET" })
 			const nextInvoiceNumber = user.currentInvoiceNumber + 1;
 
 			return createServerSuccessResponse({ data: nextInvoiceNumber });
+		} catch (error) {
+			return createServerErrorResponse({ error });
+		}
+	});
+
+export const updateUserCurrentInvoiceNumber = createServerFn({ method: "POST" })
+	.inputValidator((d: { userId: string; currentInvoiceNumber: number }) => d)
+	.handler(async ({ data }) => {
+		try {
+			const user = await db.query.usersTable.findFirst({
+				where: eq(usersTable.id, data.userId),
+			});
+
+			if (!user) {
+				throw new ServerBadRequestError("User not found");
+			}
+
+			await db
+				.update(usersTable)
+				.set({
+					currentInvoiceNumber: data.currentInvoiceNumber,
+					updatedAt: formatDbDate(),
+				})
+				.where(eq(usersTable.id, data.userId));
+
+			return createServerSuccessResponse({
+				message: "Invoice number updated successfully",
+			});
 		} catch (error) {
 			return createServerErrorResponse({ error });
 		}

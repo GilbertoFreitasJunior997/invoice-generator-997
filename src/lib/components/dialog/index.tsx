@@ -41,13 +41,31 @@ export type DialogContentProps = React.ComponentProps<
 	typeof DialogPrimitive.Content
 > & {
 	showCloseButton?: boolean;
+	closeOnInteractOutside?: boolean;
 };
 const Content = ({
 	className,
 	children,
 	showCloseButton = true,
+	closeOnInteractOutside = true,
 	...props
 }: DialogContentProps) => {
+	const handleOnEscapeKeyDown = (e: KeyboardEvent) => {
+		e.preventDefault();
+
+		props.onEscapeKeyDown?.(e);
+	};
+
+	const handleOnInteractOutside = (
+		e: Parameters<NonNullable<typeof props.onInteractOutside>>[0],
+	) => {
+		if (!closeOnInteractOutside) {
+			e.preventDefault();
+		}
+
+		props.onInteractOutside?.(e);
+	};
+
 	return (
 		<Portal data-slot="dialog-portal">
 			<Overlay />
@@ -59,6 +77,8 @@ const Content = ({
 					className,
 				)}
 				{...props}
+				onEscapeKeyDown={handleOnEscapeKeyDown}
+				onInteractOutside={handleOnInteractOutside}
 			>
 				{children}
 				{showCloseButton && (
