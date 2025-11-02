@@ -30,10 +30,12 @@ export const InvoiceNewFirstInvoiceDialog = ({
 			onChange: invoiceNewFirstInvoiceFormSchema,
 		},
 		onSubmit: async ({ value }) => {
+			const invoiceNumber = value.isFirstInvoice
+				? 0
+				: value.currentInvoiceNumber;
+
 			await updateInvoiceNumber({
-				currentInvoiceNumber: value.isFirstInvoice
-					? 0
-					: value.currentInvoiceNumber,
+				currentInvoiceNumber: invoiceNumber,
 				isFirstInvoice: value.isFirstInvoice,
 			});
 

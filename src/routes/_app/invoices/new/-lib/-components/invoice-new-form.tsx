@@ -2,6 +2,13 @@ import { withForm } from "@/lib/utils/forms.utils";
 import { useInvoiceNewQueries } from "../hooks/use-invoice-new-queries";
 import { invoiceNewFormDefaultValues } from "./consts";
 
+const normalizeCompanyName = (name: string) => {
+	return name
+		.replace(/[^\w\s-]/g, "")
+		.replace(/\s+/g, "-")
+		.toLowerCase();
+};
+
 export const InvoiceNewForm = withForm({
 	defaultValues: invoiceNewFormDefaultValues,
 	render: function Render({ form }) {
@@ -19,7 +26,10 @@ export const InvoiceNewForm = withForm({
 				return;
 			}
 
-			form.setFieldValue("fileName", `INV${nextInvoiceNumber}-${client.name}`);
+			form.setFieldValue(
+				"fileName",
+				`INV${nextInvoiceNumber}-${normalizeCompanyName(client.name)}`,
+			);
 		};
 
 		return (

@@ -34,7 +34,7 @@ function RouteComponent() {
 	const { user } = Route.useLoaderData();
 
 	const [isFirstInvoiceDialogOpen, setIsFirstInvoiceDialogOpen] =
-		useState(true);
+		useState(false);
 
 	const { mutateAsync: createInvoiceMutation } = useServerMutation(
 		createInvoiceMutationOptions({

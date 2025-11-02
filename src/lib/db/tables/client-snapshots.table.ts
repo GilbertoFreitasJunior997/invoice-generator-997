@@ -7,7 +7,6 @@ export const clientSnapshotsTable = sqliteTable("client_snapshots", {
 
 	clientId: text("client_id").references(() => clientsTable.id, {
 		onDelete: "set null",
-		onUpdate: "set null",
 	}),
 
 	snapshotDate: snapshotDate(),

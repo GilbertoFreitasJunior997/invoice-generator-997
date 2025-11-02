@@ -12,7 +12,10 @@ import {
 	usersTable,
 } from "../db/tables";
 import { ServerBadRequestError } from "../errors/server-fns.errors";
-import { invoiceGenerationSchema } from "../schemas/invoice.schemas";
+import {
+	type InvoiceSelectWithRelations,
+	invoiceGenerationSchema,
+} from "../schemas/invoice.schemas";
 import { formatDbDate } from "../utils/date.utils";
 import {
 	createServerErrorResponse,
@@ -91,6 +94,11 @@ export const createInvoice = createServerFn()
 					.returning();
 
 				const nextInvoiceNumber = user.currentInvoiceNumber + 1;
+				const totalAmount = services.reduce(
+					// TODO: use quantity
+					(sum, service) => sum + service.rate * 1,
+					0,
+				);
 
 				const [invoice] = await tx
 					.insert(invoicesTable)
@@ -104,6 +112,7 @@ export const createInvoice = createServerFn()
 							date: data.invoicedAt,
 							withTime: false,
 						}),
+						totalAmount,
 					})
 					.returning();
 
@@ -118,8 +127,10 @@ export const createInvoice = createServerFn()
 					services.map((service) => ({
 						...service,
 						id: undefined,
+						// TODO: use quantity
 						quantity: 1,
 						invoiceId: invoice.id,
+						serviceId: service.id,
 					})),
 				);
 
@@ -135,14 +146,19 @@ export const createInvoice = createServerFn()
 		}
 	});
 
-export const getInvoices = createServerFn()
+export const getInvoicesWithRelations = createServerFn()
 	.inputValidator((d: { userId: string }) => d)
 	.handler(async ({ data }) => {
 		try {
 			const { userId } = data;
-			const invoices = await db.query.invoicesTable.findMany({
+			const invoices = (await db.query.invoicesTable.findMany({
 				where: eq(invoicesTable.userId, userId),
-			});
+				with: {
+					clientSnapshot: true,
+					userSnapshot: true,
+					items: true,
+				},
+			})) as InvoiceSelectWithRelations[];
 
 			return createServerSuccessResponse({ data: invoices });
 		} catch (error) {
@@ -159,9 +175,9 @@ export const checkIsUserFirstInvoice = createServerFn()
 				where: eq(invoicesTable.userId, userId),
 			});
 
-			const hasInvoice = !!invoice;
+			const isFirstInvoice = !invoice;
 
-			return createServerSuccessResponse({ data: hasInvoice });
+			return createServerSuccessResponse({ data: isFirstInvoice });
 		} catch (error) {
 			return createServerErrorResponse({ error });
 		}

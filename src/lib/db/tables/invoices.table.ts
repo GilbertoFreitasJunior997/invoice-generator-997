@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createdAt, id, userId } from "@/lib/utils/db.utils";
 import { clientSnapshotsTable } from "./client-snapshots.table";
 import { userSnapshotsTable } from "./user-snapshots.table";
@@ -11,6 +11,7 @@ export const invoicesTable = sqliteTable("invoices", {
 		.unique(),
 	fileName: text("file_name").notNull(),
 	invoicedAt: text("invoiced_at").notNull(),
+	totalAmount: real("total_amount").notNull(),
 
 	userId: userId(),
 	userSnapshotId: text("user_snapshot_id")

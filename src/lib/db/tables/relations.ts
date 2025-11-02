@@ -43,11 +43,12 @@ export const clientSnapshotsRelations = relations(
 	}),
 );
 
-export const servicesRelations = relations(servicesTable, ({ one }) => ({
+export const servicesRelations = relations(servicesTable, ({ one, many }) => ({
 	user: one(usersTable, {
 		fields: [servicesTable.userId],
 		references: [usersTable.id],
 	}),
+	items: many(invoiceItemsTable),
 }));
 
 export const invoiceItemsRelations = relations(
@@ -56,6 +57,10 @@ export const invoiceItemsRelations = relations(
 		invoice: one(invoicesTable, {
 			fields: [invoiceItemsTable.invoiceId],
 			references: [invoicesTable.id],
+		}),
+		service: one(servicesTable, {
+			fields: [invoiceItemsTable.serviceId],
+			references: [servicesTable.id],
 		}),
 	}),
 );

@@ -6,7 +6,9 @@ export const badgeVariants = cva(
 		variants: {
 			variant: {
 				primary: "bg-primary text-primary-foreground",
-				secondary: "bg-secondary text-secondary-foreground",
+				secondary: "border-muted bg-muted text-foreground/80",
+				warning:
+					"bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
 				destructive:
 					"bg-destructive text-white focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
 			},
@@ -24,7 +26,13 @@ export const badgeVariants = cva(
 			{
 				variant: "secondary",
 				isGhost: true,
-				class: "border-secondary/60 bg-secondary/10 text-secondary",
+				class:
+					"border border-muted-foreground/20 dark:border-secondary bg-muted dark:bg-secondary/40 text-foreground/80",
+			},
+			{
+				variant: "warning",
+				isGhost: true,
+				class: "border-yellow-400 dark:border-yellow-900",
 			},
 			{
 				variant: "destructive",

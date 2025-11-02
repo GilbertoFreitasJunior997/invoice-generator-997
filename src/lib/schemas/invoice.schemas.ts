@@ -1,4 +1,21 @@
+import type { InferSelectModel } from "drizzle-orm";
+import { createSelectSchema } from "drizzle-zod";
 import z from "zod";
+import {
+	type clientSnapshotsTable,
+	type invoiceItemsTable,
+	invoicesTable,
+	type userSnapshotsTable,
+} from "../db/tables";
+
+export const invoiceSelectSchema = createSelectSchema(invoicesTable);
+export type InvoiceSelect = z.infer<typeof invoiceSelectSchema>;
+
+export type InvoiceSelectWithRelations = InvoiceSelect & {
+	clientSnapshot: InferSelectModel<typeof clientSnapshotsTable>;
+	userSnapshot: InferSelectModel<typeof userSnapshotsTable>;
+	items: InferSelectModel<typeof invoiceItemsTable>[];
+};
 
 export const invoiceGenerationFormSchema = z.object({
 	fileName: z.string().min(1),

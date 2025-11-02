@@ -73,7 +73,7 @@ export default function SetupAccountPage() {
 
 	const form = useAppForm({
 		defaultValues: {
-			name: `${authUser.firstName} ${authUser.lastName}`,
+			name: "",
 			email: authUser.email,
 			addressLine1: "",
 			addressLine2: "",
@@ -148,7 +148,13 @@ export default function SetupAccountPage() {
 										<form.Group className="justify-between">
 											<form.AppField
 												name="name"
-												children={(field) => <field.TextInput label="Name" />}
+												children={(field) => (
+													<field.TextInput
+														label="Name"
+														placeholder="Acme Inc."
+														description="Use your business name"
+													/>
+												)}
 											/>
 
 											<form.AppField

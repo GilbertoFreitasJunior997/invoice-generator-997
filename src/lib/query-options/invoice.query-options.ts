@@ -6,7 +6,7 @@ import type {
 import {
 	checkIsUserFirstInvoice,
 	createInvoice,
-	getInvoices,
+	getInvoicesWithRelations,
 } from "../services/invoice.service";
 import { updateUserCurrentInvoiceNumber } from "../services/user.service";
 import { userQueryKeys } from "./user.query-options";
@@ -14,7 +14,7 @@ import { userQueryKeys } from "./user.query-options";
 const baseKeys = ["invoices"] as const;
 export const invoiceQueryKeys = {
 	base: baseKeys,
-	all: (userId: string) => [...baseKeys, userId],
+	withRelations: (userId: string) => [...baseKeys, userId, "with-relations"],
 	isUserFirstInvoice: (userId: string) => [
 		...baseKeys,
 		userId,
@@ -36,8 +36,14 @@ export const createInvoiceMutationOptions = (data: {
 				queryKey: invoiceQueryKeys.base,
 				exact: false,
 			});
+
 			context.client.invalidateQueries({
 				queryKey: userQueryKeys.nextInvoiceNumber(data.userId),
+				exact: false,
+			});
+
+			context.client.invalidateQueries({
+				queryKey: invoiceQueryKeys.isUserFirstInvoice(data.userId),
 				exact: false,
 			});
 
@@ -45,10 +51,12 @@ export const createInvoiceMutationOptions = (data: {
 		},
 	});
 
-export const getInvoicesQueryOptions = (data: { userId: string }) =>
+export const getInvoicesWithRelationsQueryOptions = (data: {
+	userId: string;
+}) =>
 	queryOptions({
-		queryKey: invoiceQueryKeys.all(data.userId),
-		queryFn: () => getInvoices({ data: { userId: data.userId } }),
+		queryKey: invoiceQueryKeys.withRelations(data.userId),
+		queryFn: () => getInvoicesWithRelations({ data: { userId: data.userId } }),
 	});
 
 export const checkIsUserFirstInvoiceQueryOptions = (data: { userId: string }) =>

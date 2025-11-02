@@ -1,7 +1,7 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { snapshotDate } from "@/lib/utils/db.utils";
 import { invoicesTable } from "./invoices.table";
-import { getServicesColumns } from "./services.table";
+import { getServicesColumns, servicesTable } from "./services.table";
 
 export const invoiceItemsTable = sqliteTable("invoice_items", {
 	...getServicesColumns(),
@@ -14,6 +14,10 @@ export const invoiceItemsTable = sqliteTable("invoice_items", {
 			onDelete: "cascade",
 			onUpdate: "cascade",
 		}),
+
+	serviceId: text("service_id").references(() => servicesTable.id, {
+		onDelete: "set null",
+	}),
 
 	snapshotDate: snapshotDate(),
 });

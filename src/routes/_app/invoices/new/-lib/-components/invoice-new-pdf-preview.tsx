@@ -21,7 +21,7 @@ export const InvoiceNewPDFPreview = ({
 
 	return (
 		<div className="grow flex items-center justify-center">
-			<div className="max-w-3xl size-full rounded-lg overflow-hidden background-gradient border border-muted">
+			<div className="max-w-3xl size-full rounded-lg overflow-hidden border border-muted bg-muted dark:bg-muted/20">
 				{hasPdf ? (
 					<iframe
 						title="Invoice PDF Preview"

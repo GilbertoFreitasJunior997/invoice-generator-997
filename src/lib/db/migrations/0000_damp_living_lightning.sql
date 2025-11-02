@@ -11,7 +11,7 @@ CREATE TABLE `client_snapshots` (
 	`zip` text NOT NULL,
 	`client_id` text,
 	`snapshot_date` text NOT NULL,
-	FOREIGN KEY (`client_id`) REFERENCES `clients`(`id`) ON UPDATE set null ON DELETE set null
+	FOREIGN KEY (`client_id`) REFERENCES `clients`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
 CREATE TABLE `clients` (
@@ -39,8 +39,10 @@ CREATE TABLE `invoice_items` (
 	`currency` text NOT NULL,
 	`quantity` integer NOT NULL,
 	`invoice_id` text NOT NULL,
+	`service_id` text,
 	`snapshot_date` text NOT NULL,
-	FOREIGN KEY (`invoice_id`) REFERENCES `invoices`(`id`) ON UPDATE cascade ON DELETE cascade
+	FOREIGN KEY (`invoice_id`) REFERENCES `invoices`(`id`) ON UPDATE cascade ON DELETE cascade,
+	FOREIGN KEY (`service_id`) REFERENCES `services`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
 CREATE TABLE `invoices` (
@@ -48,6 +50,7 @@ CREATE TABLE `invoices` (
 	`invoice_number` integer NOT NULL,
 	`file_name` text NOT NULL,
 	`invoiced_at` text NOT NULL,
+	`total_amount` real NOT NULL,
 	`user_id` text NOT NULL,
 	`user_snapshot_id` text NOT NULL,
 	`client_snapshot_id` text NOT NULL,
