@@ -1,5 +1,5 @@
 import { useStore } from "@tanstack/react-form";
-import { useEffect } from "react";
+import { getRouteApi } from "@tanstack/react-router";
 import { Button } from "@/lib/components/button";
 import { Sheet } from "@/lib/components/sheet";
 import {
@@ -12,21 +12,50 @@ import {
 } from "@/lib/query-options/service.query-options";
 import {
 	currenciesSelectOptions,
-	currencyDecimalSeparators,
-	currencyPrefixes,
-	currencyThousandSeparators,
+	getCurrencyConfig,
 } from "@/lib/schemas/currency.schemas";
 import { serviceUpsertFormSchema } from "@/lib/schemas/service.schemas";
 import { useAppForm } from "@/lib/utils/forms.utils";
-import { Route } from "@/routes/_app/services";
+
+const Route = getRouteApi("/_app/services/");
 
 export const ServicesForm = () => {
-	const { user } = Route.useLoaderData();
 	const navigate = Route.useNavigate();
 	const { isCreating, editId } = Route.useSearch();
 
 	const isOpen = isCreating || !!editId;
 	const isEditing = !!editId;
+
+	const handleOpenChange = (open: boolean) => {
+		if (!open) {
+			navigate({
+				search: { isCreating: undefined, editId: undefined },
+			});
+		}
+	};
+
+	return (
+		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange}>
+			<Sheet.Content className="w-md">
+				<Sheet.Header>
+					<Sheet.Title>
+						{isEditing ? `Edit Service Details` : "Add New Service"}
+					</Sheet.Title>
+				</Sheet.Header>
+
+				<ServiceFormContent editId={editId} isEditing={isEditing} />
+			</Sheet.Content>
+		</Sheet.Root>
+	);
+};
+
+type ServiceFormContentProps = {
+	editId?: string;
+	isEditing: boolean;
+};
+const ServiceFormContent = ({ editId, isEditing }: ServiceFormContentProps) => {
+	const { user } = Route.useLoaderData();
+	const navigate = Route.useNavigate();
 
 	const { mutateAsync: upsertServiceMutation } = useServerMutation(
 		upsertServiceMutationOptions({
@@ -65,115 +94,77 @@ export const ServicesForm = () => {
 	});
 
 	const selectedCurrency = useStore(form.store, (s) => s.values.currency);
-	const currencyPrefix =
-		currencyPrefixes[selectedCurrency] ?? currencyPrefixes.USD;
-
-	const currencyDecimalSeparator =
-		currencyDecimalSeparators[selectedCurrency] ??
-		currencyDecimalSeparators.USD;
-
-	const currencyThousandSeparator =
-		currencyThousandSeparators[selectedCurrency] ??
-		currencyThousandSeparators.USD;
-
-	const handleOpenChange = (open: boolean) => {
-		if (!open) {
-			navigate({
-				search: { isCreating: undefined, editId: undefined },
-			});
-		}
-	};
-
-	useEffect(() => {
-		if (isEditing && service) {
-			form.reset();
-		}
-	}, [isEditing, service, form]);
-
-	useEffect(() => {
-		if (!isOpen) {
-			form.reset();
-		}
-	}, [isOpen, form]);
+	const { prefix, thousandSeparator, decimalSeparator } =
+		getCurrencyConfig(selectedCurrency);
 
 	return (
-		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange}>
-			<Sheet.Content className="w-md">
-				<Sheet.Header>
-					<Sheet.Title>
-						{isEditing ? `Edit ${service?.name} Details` : "Add New Service"}
-					</Sheet.Title>
-				</Sheet.Header>
-
-				<form.Root form={form} isLoading={isServiceLoading}>
-					<Sheet.Body>
-						<form.Group className="px-4">
-							<form.AppField
-								name="name"
-								children={(field) => (
-									<field.TextInput
-										label="Name"
-										placeholder="Website Design, Acme Inc. Contract, etc."
-										description="This will not be displayed on the invoice. Used for organizational purposes."
-									/>
-								)}
+		<form.Root form={form} isLoading={isServiceLoading}>
+			<Sheet.Body>
+				<form.Group className="px-4">
+					<form.AppField
+						name="name"
+						children={(field) => (
+							<field.TextInput
+								label="Name"
+								placeholder="Website Design, Acme Inc. Contract, etc."
+								description="This will not be displayed on the invoice. Used for organizational purposes."
 							/>
+						)}
+					/>
 
-							<form.Group className="grid grid-cols-3">
-								<form.AppField
-									name="description"
-									children={(field) => (
-										<field.TextArea
-											label="Description"
-											description="Describe the service you are offering. This will be displayed to your clients."
-											placeholder="Software Development, Design, etc."
-											rootClassName="col-span-3"
-										/>
-									)}
+					<form.Group className="grid grid-cols-3">
+						<form.AppField
+							name="description"
+							children={(field) => (
+								<field.TextArea
+									label="Description"
+									description="Describe the service you are offering. This will be displayed to your clients."
+									placeholder="Software Development, Design, etc."
+									rootClassName="col-span-3"
 								/>
+							)}
+						/>
 
-								<form.AppField
-									name="rate"
-									children={(field) => (
-										<field.NumberInput
-											label="Rate"
-											thousandSeparator={currencyThousandSeparator}
-											decimalSeparator={currencyDecimalSeparator}
-											decimalScale={2}
-											fixedDecimalScale={true}
-											prefix={currencyPrefix}
-											min={0}
-											allowNegative={false}
-											rootClassName="col-span-2"
-										/>
-									)}
+						<form.AppField
+							name="rate"
+							children={(field) => (
+								<field.NumberInput
+									label="Rate"
+									thousandSeparator={thousandSeparator}
+									decimalSeparator={decimalSeparator}
+									decimalScale={2}
+									fixedDecimalScale={true}
+									prefix={prefix}
+									min={0}
+									allowNegative={false}
+									rootClassName="col-span-2"
 								/>
+							)}
+						/>
 
-								<form.AppField
-									name="currency"
-									children={(field) => (
-										<field.SelectInput
-											label="Currency"
-											items={currenciesSelectOptions}
-											rootClassName="col-span-1"
-										/>
-									)}
+						<form.AppField
+							name="currency"
+							children={(field) => (
+								<field.SelectInput
+									label="Currency"
+									items={currenciesSelectOptions}
+									rootClassName="col-span-1"
 								/>
-							</form.Group>
-						</form.Group>
-					</Sheet.Body>
+							)}
+						/>
+					</form.Group>
+				</form.Group>
+			</Sheet.Body>
 
-					<Sheet.Footer className="flex flex-row justify-end gap-2">
-						<Sheet.Close asChild>
-							<Button variant="outline">Cancel</Button>
-						</Sheet.Close>
+			<Sheet.Footer className="flex flex-row justify-end gap-2">
+				<Sheet.Close asChild>
+					<Button variant="outline">Cancel</Button>
+				</Sheet.Close>
 
-						<form.SubmitButton disabled={isServiceLoading}>
-							{isEditing ? "Update" : "Add"} Service
-						</form.SubmitButton>
-					</Sheet.Footer>
-				</form.Root>
-			</Sheet.Content>
-		</Sheet.Root>
+				<form.SubmitButton disabled={isServiceLoading}>
+					{isEditing ? "Update" : "Add"} Service
+				</form.SubmitButton>
+			</Sheet.Footer>
+		</form.Root>
 	);
 };

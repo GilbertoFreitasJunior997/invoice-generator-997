@@ -7,6 +7,7 @@ import {
 	removeClient,
 	upsertClient,
 } from "../services/client.service";
+import { invoiceQueryKeys } from "./invoice.query-options";
 
 const baseKeys = ["clients"] as const;
 export const clientQueryKeys = {
@@ -61,6 +62,10 @@ export const upsertClientMutationOptions = (data: {
 				queryKey: clientQueryKeys.base,
 				exact: false,
 			});
+			context.client.invalidateQueries({
+				queryKey: invoiceQueryKeys.base,
+				exact: false,
+			});
 
 			data.onSuccess?.();
 		},
@@ -97,6 +102,10 @@ export const removeClientMutationOptions = (data: {
 		onSuccess: (_a, _b, _c, context) => {
 			context.client.invalidateQueries({
 				queryKey: clientQueryKeys.base,
+				exact: false,
+			});
+			context.client.invalidateQueries({
+				queryKey: invoiceQueryKeys.base,
 				exact: false,
 			});
 

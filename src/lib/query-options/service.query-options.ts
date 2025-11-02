@@ -6,6 +6,7 @@ import {
 	getServiceById,
 	upsertService,
 } from "../services/service.service";
+import { invoiceQueryKeys } from "./invoice.query-options";
 
 const baseKeys = ["services"] as const;
 export const serviceQueryKeys = {
@@ -50,6 +51,10 @@ export const upsertServiceMutationOptions = (data: {
 				queryKey: serviceQueryKeys.base,
 				exact: false,
 			});
+			context.client.invalidateQueries({
+				queryKey: invoiceQueryKeys.base,
+				exact: false,
+			});
 
 			data.onSuccess?.();
 		},
@@ -66,6 +71,10 @@ export const deleteServiceMutationOptions = (data: {
 		onSuccess: (_a, _b, _c, context) => {
 			context.client.invalidateQueries({
 				queryKey: serviceQueryKeys.base,
+				exact: false,
+			});
+			context.client.invalidateQueries({
+				queryKey: invoiceQueryKeys.base,
 				exact: false,
 			});
 

@@ -25,3 +25,11 @@ export const currenciesSelectOptions = currencies.map((currency) => ({
 	label: currency,
 	value: currency,
 })) satisfies SelectInputItem[];
+
+export const getCurrencyConfig = (currency: Currency = "USD") => {
+	return {
+		prefix: currencyPrefixes[currency],
+		thousandSeparator: currencyThousandSeparators[currency],
+		decimalSeparator: currencyDecimalSeparators[currency],
+	};
+};

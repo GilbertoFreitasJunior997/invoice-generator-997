@@ -1,4 +1,5 @@
 import { useStore } from "@tanstack/react-form";
+import { getRouteApi } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { AddressForm } from "@/lib/components/address-form";
 import { Button } from "@/lib/components/button";
@@ -15,15 +16,46 @@ import {
 import { clientUpsertFormSchema } from "@/lib/schemas/client.schemas";
 import { defaultCountry } from "@/lib/utils/address.utils";
 import { useAppForm } from "@/lib/utils/forms.utils";
-import { Route } from "@/routes/_app/clients";
+
+const Route = getRouteApi("/_app/clients/");
 
 export const ClientsForm = () => {
-	const { user } = Route.useLoaderData();
 	const navigate = Route.useNavigate();
 	const { isCreating, editId } = Route.useSearch();
 
 	const isOpen = isCreating || !!editId;
 	const isEditing = !!editId;
+
+	const handleOpenChange = (open: boolean) => {
+		if (!open) {
+			navigate({
+				search: { isCreating: undefined, editId: undefined },
+			});
+		}
+	};
+
+	return (
+		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange}>
+			<Sheet.Content className="w-md">
+				<Sheet.Header>
+					<Sheet.Title>
+						{isEditing ? `Edit Client Details` : "Add New Client"}
+					</Sheet.Title>
+				</Sheet.Header>
+
+				<ClientFormContent editId={editId} isEditing={isEditing} />
+			</Sheet.Content>
+		</Sheet.Root>
+	);
+};
+
+type ClientFormContentProps = {
+	editId?: string;
+	isEditing: boolean;
+};
+const ClientFormContent = ({ editId, isEditing }: ClientFormContentProps) => {
+	const { user } = Route.useLoaderData();
+	const navigate = Route.useNavigate();
 
 	const { mutateAsync: upsertClientMutation } = useServerMutation(
 		upsertClientMutationOptions({
@@ -82,26 +114,6 @@ export const ClientsForm = () => {
 		enabled: shouldCheckSameName,
 	});
 
-	const handleOpenChange = (open: boolean) => {
-		if (!open) {
-			navigate({
-				search: { isCreating: undefined, editId: undefined },
-			});
-		}
-	};
-
-	useEffect(() => {
-		if (isEditing && client) {
-			form.reset();
-		}
-	}, [isEditing, client, form]);
-
-	useEffect(() => {
-		if (!isOpen) {
-			form.reset();
-		}
-	}, [isOpen, form]);
-
 	useEffect(() => {
 		if (!shouldCheckSameName) {
 			return;
@@ -123,51 +135,41 @@ export const ClientsForm = () => {
 	}, [shouldCheckSameName, hasClientWithSameName, form]);
 
 	return (
-		<Sheet.Root open={isOpen} onOpenChange={handleOpenChange}>
-			<Sheet.Content className="w-md">
-				<Sheet.Header>
-					<Sheet.Title>
-						{isEditing ? `Edit ${client?.name} Details` : "Add New Client"}
-					</Sheet.Title>
-				</Sheet.Header>
+		<form.Root form={form} isLoading={isClientLoading}>
+			<Sheet.Body>
+				<form.Group className="px-4">
+					<form.AppField
+						name="name"
+						children={(field) => (
+							<field.TextInput label="Name" placeholder="Acme Inc." />
+						)}
+					/>
 
-				<form.Root form={form} isLoading={isClientLoading}>
-					<Sheet.Body>
-						<form.Group className="px-4">
-							<form.AppField
-								name="name"
-								children={(field) => (
-									<field.TextInput label="Name" placeholder="Acme Inc." />
-								)}
+					<form.AppField
+						name="email"
+						children={(field) => (
+							<field.TextInput
+								label="Email"
+								placeholder="accounting@acmeinc.com"
 							/>
+						)}
+					/>
 
-							<form.AppField
-								name="email"
-								children={(field) => (
-									<field.TextInput
-										label="Email"
-										placeholder="accounting@acmeinc.com"
-									/>
-								)}
-							/>
+					<AddressForm form={form} layout="stacked" />
+				</form.Group>
+			</Sheet.Body>
 
-							<AddressForm form={form} layout="stacked" />
-						</form.Group>
-					</Sheet.Body>
+			<Sheet.Footer className="flex flex-row justify-end gap-2">
+				<Sheet.Close asChild>
+					<Button variant="outline">Cancel</Button>
+				</Sheet.Close>
 
-					<Sheet.Footer className="flex flex-row justify-end gap-2">
-						<Sheet.Close asChild>
-							<Button variant="outline">Cancel</Button>
-						</Sheet.Close>
-
-						<form.SubmitButton
-							disabled={isClientLoading || isLoadingHasClientWithSameName}
-						>
-							{isEditing ? "Update" : "Add"} Client
-						</form.SubmitButton>
-					</Sheet.Footer>
-				</form.Root>
-			</Sheet.Content>
-		</Sheet.Root>
+				<form.SubmitButton
+					disabled={isClientLoading || isLoadingHasClientWithSameName}
+				>
+					{isEditing ? "Update" : "Add"} Client
+				</form.SubmitButton>
+			</Sheet.Footer>
+		</form.Root>
 	);
 };

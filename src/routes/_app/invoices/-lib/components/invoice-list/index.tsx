@@ -31,7 +31,7 @@ export const InvoiceList = () => {
 					<Loader2Icon className="size-4 animate-spin" />
 				</div>
 			) : (
-				<div>
+				<div className="flex flex-col gap-2">
 					{invoicesWithRelations?.map((invoice) => (
 						<InvoiceCard key={invoice.id} invoice={invoice} />
 					))}

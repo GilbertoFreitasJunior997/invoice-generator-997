@@ -1,5 +1,5 @@
-## improve create/edit sheets
-- extract form to other comp so no need to useEffect with form reset
+## fix db queries for invalid edit ids
+- it's showing 500 when accessing an editId=NON_EXISTANT_ID
 
 ## add search/filter to invoice list
 
