@@ -60,7 +60,12 @@ export const InvoiceNewForm = withForm({
 
 					<form.AppField
 						name="fileName"
-						children={(field) => <field.TextInput label="File Name" />}
+						children={(field) => (
+							<field.TextInput
+								label="File Name"
+								description="Recommended to use the invoice number and client name (e.g. 'INV1-Acme-Inc')."
+							/>
+						)}
 					/>
 				</form.Group>
 			</form.Root>

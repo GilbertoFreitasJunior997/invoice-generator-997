@@ -1,5 +1,14 @@
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
-import type { InvoiceDefaultLayoutProps } from "./types";
+import {
+	Document,
+	Page,
+	PDFViewer,
+	StyleSheet,
+	Text,
+	View,
+} from "@react-pdf/renderer";
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
+import type { InvoiceDefaultLayoutProps } from "@/lib/invoice-layouts/invoice-default-layout/types";
 
 const styles = StyleSheet.create({
 	page: {
@@ -281,3 +290,76 @@ export const InvoiceDefaultLayout = ({
 		</Document>
 	);
 };
+
+export const Route = createFileRoute("/_app/invoices/dev-test/")({
+	component: RouteComponent,
+	ssr: false,
+});
+
+const invoiceSampleData = {
+	invoiceNumber: 1,
+	user: {
+		id: "8a08b683-e8f2-410a-8eda-fb53d2b62266",
+		name: "Gilberto de Freitas",
+		avatarUrl:
+			"https://workoscdn.com/images/v1/DwzCIDxpe_khr850RkyRdMZLIehq7BdiKX3zrAvBrLs",
+		email: "gilbertofreitas997@gmail.com",
+		logoKey: null,
+		currentInvoiceNumber: 1,
+		taxId: "",
+		addressLine1: "Rua Tapajós 519, Vila Mariana",
+		addressLine2: "",
+		city: "Garça",
+		state: "São Paulo",
+		country: "Brazil",
+		zip: "17400-114",
+		workOsId: "user_01K73CENTEMYDWM7TMH14RREYW",
+		createdAt: new Date("2025-11-01T23:39:30.000Z"),
+		updatedAt: new Date("2025-11-01T23:39:30.000Z"),
+	},
+	client: {
+		id: "f738572f-e4f9-47dc-89d9-88a9a116113f",
+		name: "Crewfare",
+		email: "accounting@crewfare.com",
+		taxId: "",
+		addressLine1: "2678 Edgewater Ct",
+		addressLine2: "",
+		city: "Weston",
+		state: "FL",
+		country: "USA",
+		zip: "33332",
+		userId: "8a08b683-e8f2-410a-8eda-fb53d2b62266",
+		createdAt: new Date("2025-11-01T23:41:13.000Z"),
+		updatedAt: new Date("2025-11-01T23:41:13.000Z"),
+	},
+	services: [
+		{
+			id: "67015a88-c2e8-40f3-9ae6-6a6cff9f0427",
+			name: "Crewfare Role",
+			description: "Software Development",
+			rate: 1200,
+			currency: "USD",
+			userId: "8a08b683-e8f2-410a-8eda-fb53d2b62266",
+			createdAt: new Date("2025-11-01T23:41:23.000Z"),
+			updatedAt: new Date("2025-11-01T23:41:23.000Z"),
+		},
+	],
+} satisfies InvoiceDefaultLayoutProps;
+
+function RouteComponent() {
+	const count = useRef(0);
+	useEffect(() => {
+		count.current++;
+	}, []);
+
+	return (
+		<PDFViewer key={count.current} className="w-full grow h-full">
+			<InvoiceDefaultLayout
+				invoiceNumber={invoiceSampleData.invoiceNumber}
+				user={invoiceSampleData.user}
+				client={invoiceSampleData.client}
+				services={invoiceSampleData.services}
+			/>
+		</PDFViewer>
+	);
+}

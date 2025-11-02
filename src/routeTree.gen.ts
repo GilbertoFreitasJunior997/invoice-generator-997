@@ -21,6 +21,7 @@ import { Route as AppInvoicesIndexRouteImport } from './routes/_app/invoices/ind
 import { Route as AppClientsIndexRouteImport } from './routes/_app/clients/index'
 import { Route as ApiAuthCallbackRouteImport } from './routes/api/auth/callback'
 import { Route as AppInvoicesNewIndexRouteImport } from './routes/_app/invoices/new/index'
+import { Route as AppInvoicesDevTestIndexRouteImport } from './routes/_app/invoices/dev-test/index'
 
 const GuestRouteRoute = GuestRouteRouteImport.update({
   id: '/_guest',
@@ -80,6 +81,11 @@ const AppInvoicesNewIndexRoute = AppInvoicesNewIndexRouteImport.update({
   path: '/invoices/new/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppInvoicesDevTestIndexRoute = AppInvoicesDevTestIndexRouteImport.update({
+  id: '/invoices/dev-test/',
+  path: '/invoices/dev-test/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/account': typeof AppAccountRoute
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/clients': typeof AppClientsIndexRoute
   '/invoices': typeof AppInvoicesIndexRoute
   '/services': typeof AppServicesIndexRoute
+  '/invoices/dev-test': typeof AppInvoicesDevTestIndexRoute
   '/invoices/new': typeof AppInvoicesNewIndexRoute
 }
 export interface FileRoutesByTo {
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/clients': typeof AppClientsIndexRoute
   '/invoices': typeof AppInvoicesIndexRoute
   '/services': typeof AppServicesIndexRoute
+  '/invoices/dev-test': typeof AppInvoicesDevTestIndexRoute
   '/invoices/new': typeof AppInvoicesNewIndexRoute
 }
 export interface FileRoutesById {
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/_app/clients/': typeof AppClientsIndexRoute
   '/_app/invoices/': typeof AppInvoicesIndexRoute
   '/_app/services/': typeof AppServicesIndexRoute
+  '/_app/invoices/dev-test/': typeof AppInvoicesDevTestIndexRoute
   '/_app/invoices/new/': typeof AppInvoicesNewIndexRoute
 }
 export interface FileRouteTypes {
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/clients'
     | '/invoices'
     | '/services'
+    | '/invoices/dev-test'
     | '/invoices/new'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/clients'
     | '/invoices'
     | '/services'
+    | '/invoices/dev-test'
     | '/invoices/new'
   id:
     | '__root__'
@@ -158,6 +169,7 @@ export interface FileRouteTypes {
     | '/_app/clients/'
     | '/_app/invoices/'
     | '/_app/services/'
+    | '/_app/invoices/dev-test/'
     | '/_app/invoices/new/'
   fileRoutesById: FileRoutesById
 }
@@ -253,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInvoicesNewIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/invoices/dev-test/': {
+      id: '/_app/invoices/dev-test/'
+      path: '/invoices/dev-test'
+      fullPath: '/invoices/dev-test'
+      preLoaderRoute: typeof AppInvoicesDevTestIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
   }
 }
 
@@ -262,6 +281,7 @@ interface AppRouteRouteChildren {
   AppClientsIndexRoute: typeof AppClientsIndexRoute
   AppInvoicesIndexRoute: typeof AppInvoicesIndexRoute
   AppServicesIndexRoute: typeof AppServicesIndexRoute
+  AppInvoicesDevTestIndexRoute: typeof AppInvoicesDevTestIndexRoute
   AppInvoicesNewIndexRoute: typeof AppInvoicesNewIndexRoute
 }
 
@@ -271,6 +291,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppClientsIndexRoute: AppClientsIndexRoute,
   AppInvoicesIndexRoute: AppInvoicesIndexRoute,
   AppServicesIndexRoute: AppServicesIndexRoute,
+  AppInvoicesDevTestIndexRoute: AppInvoicesDevTestIndexRoute,
   AppInvoicesNewIndexRoute: AppInvoicesNewIndexRoute,
 }
 
