@@ -1,4 +1,5 @@
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+import { DateInput } from "@/lib/components/date-input";
 import { FormInputWrapper } from "@/lib/components/form-input-wrapper";
 import { NumberInput } from "@/lib/components/number-input";
 import { SelectInput } from "@/lib/components/select-input";
@@ -20,6 +21,7 @@ export const { useAppForm, withForm, withFieldGroup } = createFormHook({
 	formContext,
 	fieldContext,
 	fieldComponents: {
+		DateInput: FormInputWrapper(DateInput),
 		TextInput: FormInputWrapper(TextInput),
 		SelectInput: FormInputWrapper(SelectInput),
 		TextArea: FormInputWrapper(TextArea),
