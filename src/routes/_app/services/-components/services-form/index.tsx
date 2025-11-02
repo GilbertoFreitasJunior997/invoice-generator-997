@@ -1,5 +1,6 @@
 import { useStore } from "@tanstack/react-form";
 import { getRouteApi } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Button } from "@/lib/components/button";
 import { Sheet } from "@/lib/components/sheet";
 import {
@@ -72,7 +73,11 @@ const ServiceFormContent = ({ editId, isEditing }: ServiceFormContentProps) => {
 		}),
 	);
 
-	const { data: service, isFetching: isServiceLoading } = useServerQuery({
+	const {
+		data: editService,
+		isFetching: isEditServiceLoading,
+		error: editServiceError,
+	} = useServerQuery({
 		...getServiceByIdQueryOptions({
 			userId: user.id,
 			id: editId ?? "",
@@ -82,10 +87,10 @@ const ServiceFormContent = ({ editId, isEditing }: ServiceFormContentProps) => {
 
 	const form = useAppForm({
 		defaultValues: {
-			name: service?.name ?? "",
-			description: service?.description ?? "",
-			rate: service?.rate ?? 0,
-			currency: service?.currency ?? "USD",
+			name: editService?.name ?? "",
+			description: editService?.description ?? "",
+			rate: editService?.rate ?? 0,
+			currency: editService?.currency ?? "USD",
 		},
 		validators: {
 			onChange: serviceUpsertFormSchema,
@@ -97,8 +102,21 @@ const ServiceFormContent = ({ editId, isEditing }: ServiceFormContentProps) => {
 	const { prefix, thousandSeparator, decimalSeparator } =
 		getCurrencyConfig(selectedCurrency);
 
+	useEffect(() => {
+		if (!isEditing || !editServiceError) {
+			return;
+		}
+
+		navigate({
+			to: "/services",
+			search: {
+				editId: undefined,
+			},
+		});
+	}, [editServiceError, isEditing, navigate]);
+
 	return (
-		<form.Root form={form} isLoading={isServiceLoading}>
+		<form.Root form={form} isLoading={isEditServiceLoading}>
 			<Sheet.Body>
 				<form.Group className="px-4">
 					<form.AppField
@@ -161,7 +179,7 @@ const ServiceFormContent = ({ editId, isEditing }: ServiceFormContentProps) => {
 					<Button variant="outline">Cancel</Button>
 				</Sheet.Close>
 
-				<form.SubmitButton disabled={isServiceLoading}>
+				<form.SubmitButton disabled={isEditServiceLoading}>
 					{isEditing ? "Update" : "Add"} Service
 				</form.SubmitButton>
 			</Sheet.Footer>

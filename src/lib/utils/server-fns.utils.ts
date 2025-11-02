@@ -16,21 +16,10 @@ export const HTTP_STATUS = {
 
 export type HTTPStatusCode = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS];
 
-export type ServerSuccessResponse<TData> = {
-	success: true;
-	message?: string;
+export type ServerResponse<TData> = {
 	data: TData;
-};
-
-export type ServerErrorResponse = {
-	success: false;
 	message?: string;
-	rawError: object;
 };
-
-export type ServerResponse<TData> =
-	| ServerSuccessResponse<TData>
-	| ServerErrorResponse;
 
 export type CreateServerSuccessResponseParams<TData = null> = {
 	data?: TData;
@@ -40,15 +29,14 @@ export type CreateServerSuccessResponseParams<TData = null> = {
 
 export const createServerSuccessResponse = <TData = null>(
 	params?: CreateServerSuccessResponseParams<TData>,
-): ServerSuccessResponse<TData> => {
+): ServerResponse<TData> => {
 	const { data, message, status = HTTP_STATUS.OK } = params ?? {};
 
 	setResponseStatus(status);
 
 	return {
-		success: true,
 		data: data ?? (null as unknown as TData),
-		message,
+		message: message || undefined,
 	};
 };
 
@@ -57,8 +45,8 @@ export type CreateServerErrorResponseParams = {
 };
 export const createServerErrorResponse = ({
 	error,
-}: CreateServerErrorResponseParams): ServerErrorResponse => {
-	let message = DEFAULT_ERROR_MESSAGE;
+}: CreateServerErrorResponseParams): never => {
+	let message: string | undefined;
 	let status: HTTPStatusCode = HTTP_STATUS.INTERNAL_SERVER_ERROR;
 
 	if (error instanceof Error) {
@@ -72,11 +60,6 @@ export const createServerErrorResponse = ({
 	console.error("--------------------------------");
 	console.error("createServerErrorResponse", error);
 	console.error("--------------------------------");
-	setResponseStatus(status);
 
-	return {
-		success: false,
-		message,
-		rawError: error as object,
-	};
+	throw new Error(message, { cause: { status } });
 };

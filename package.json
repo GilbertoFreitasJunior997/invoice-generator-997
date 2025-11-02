@@ -9,7 +9,8 @@
     "check": "biome check",
     "db:generate": "bun drizzle-kit generate",
     "db:migrate": "bun drizzle-kit migrate",
-    "db:studio": "bun drizzle-kit studio"
+    "db:studio": "bun drizzle-kit studio",
+    "clean-install": "rm -rf node_modules bun.lock .netlify .tanstack && bun install"
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
@@ -28,7 +29,7 @@
     "@react-pdf/renderer": "^4.3.1",
     "@t3-oss/env-core": "^0.13.8",
     "@tailwindcss/vite": "^4.1.16",
-    "@tanstack/react-devtools": "^0.7.11",
+    "@tanstack/react-devtools": "^0.8.0",
     "@tanstack/react-form": "^1.23.8",
     "@tanstack/react-query": "^5.90.5",
     "@tanstack/react-query-devtools": "^5.90.2",
@@ -49,7 +50,7 @@
     "framer-motion": "^12.23.24",
     "iron-session": "^8.0.4",
     "jose": "^6.1.0",
-    "lucide-react": "^0.544.0",
+    "lucide-react": "^0.552.0",
     "react": "^19.2.0",
     "react-day-picker": "^9.11.1",
     "react-dom": "^19.2.0",
@@ -76,7 +77,7 @@
     "jsdom": "^27.0.1",
     "typescript": "^5.9.3",
     "vite": "^7.1.12",
-    "vitest": "^3.2.4",
+    "vitest": "^4.0.6",
     "web-vitals": "^5.1.0"
   }
 }

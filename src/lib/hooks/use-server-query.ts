@@ -11,26 +11,7 @@ import {
 } from "@tanstack/react-query";
 import { useEffect, useEffectEvent } from "react";
 import { toast } from "sonner";
-import type {
-	ServerErrorResponse,
-	ServerResponse,
-	ServerSuccessResponse,
-} from "../utils/server-fns.utils";
-
-const isServerResponse = (
-	response: unknown,
-): response is ServerResponse<unknown> => {
-	return (
-		typeof response === "object" && response !== null && "success" in response
-	);
-};
-
-const isServerError = (
-	// biome-ignore lint/suspicious/noExplicitAny: any makes it easier to check for the properties
-	error: any,
-): error is { result: ServerErrorResponse } => {
-	return error?.result?.success === false;
-};
+import type { ServerResponse } from "../utils/server-fns.utils";
 
 type UseServerQueryResult<TQueryOptions extends AnyUseQueryOptions> =
 	TQueryOptions extends UseQueryOptions<
@@ -39,11 +20,9 @@ type UseServerQueryResult<TQueryOptions extends AnyUseQueryOptions> =
 		infer _TData,
 		infer _TQueryKey
 	>
-		? TQueryFnData extends ServerSuccessResponse<infer TServerResponseData>
+		? TQueryFnData extends ServerResponse<infer TServerResponseData>
 			? UseQueryResult<TServerResponseData, TError>
-			: TQueryFnData extends ServerErrorResponse
-				? UseQueryResult<never, TError>
-				: UseQueryResult<TQueryFnData, TError>
+			: UseQueryResult<TQueryFnData, TError>
 		: never;
 
 type UseServerMutationResult<TMutationOptions extends UseMutationOptions> =
@@ -53,68 +32,31 @@ type UseServerMutationResult<TMutationOptions extends UseMutationOptions> =
 		infer TVariables,
 		infer TMutationResult
 	>
-		? TMutationFnData extends ServerSuccessResponse<infer TServerResponseData>
+		? TMutationFnData extends ServerResponse<infer TServerResponseData>
 			? UseMutationResult<
 					TServerResponseData,
 					TError,
 					TVariables,
 					TMutationResult
 				>
-			: TMutationFnData extends ServerErrorResponse
-				? UseMutationResult<never, TError, TVariables, TMutationResult>
-				: UseMutationResult<
-						TMutationFnData,
-						TError,
-						TVariables,
-						TMutationResult
-					>
+			: UseMutationResult<TMutationFnData, TError, TVariables, TMutationResult>
 		: never;
 
-type HandleServerResponseParams<T extends Promise<unknown>> = {
-	promise: T;
+type HandleServerResponseParams<T> = {
+	promise: Promise<ServerResponse<T>>;
 	isMutation: boolean;
 };
-const handleServerResponse = async <T extends Promise<unknown>>({
+const handleServerResponse = async <T>({
 	promise,
 	isMutation,
 }: HandleServerResponseParams<T>) => {
-	try {
-		const result = await promise;
+	const result = await promise;
 
-		if (isServerResponse(result)) {
-			// response will always be success, since success = false throws an error
-			if (!result.success) {
-				throw result;
-			}
-
-			if (isMutation && result.message) {
-				toast.success(result.message);
-			}
-
-			return result.data;
-		}
-
-		return result ?? null;
-	} catch (error) {
-		let message: string | undefined;
-
-		if (isServerError(error)) {
-			message = error.result.message;
-		} else if (error instanceof Error) {
-			message = error.message;
-		}
-
-		if (message) {
-			toast.error(message);
-		}
-
-		console.error("--------------------------------");
-		console.error(`ERROR ON ${isMutation ? "MUTATION" : "QUERY"}`);
-		console.error(error);
-		console.error("--------------------------------");
-
-		throw error;
+	if (isMutation && result.message) {
+		toast.success(result.message);
 	}
+
+	return result.data;
 };
 
 const createServerQueryFn = <TQueryOptions extends AnyUseQueryOptions>(
@@ -153,9 +95,7 @@ export const useServerQuery = <TQueryOptions extends AnyUseQueryOptions>(
 	const showNotifications = useEffectEvent(() => {
 		let message: string | undefined;
 
-		if (isServerError(error)) {
-			message = error.result.message;
-		} else if (error instanceof Error) {
+		if (error instanceof Error) {
 			message = error.message;
 		}
 

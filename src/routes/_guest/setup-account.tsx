@@ -29,14 +29,11 @@ export const Route = createFileRoute("/_guest/setup-account")({
 			throw redirect({ to: "/" });
 		}
 
-		const result = await getAuthUser({
+		await getAuthUser({
 			data: auth.user,
 		});
-		if (!result?.success) {
-			return;
-		}
 
-		redirect({ to: "/dashboard" });
+		throw redirect({ to: "/dashboard" });
 	},
 	loader: async () => {
 		const auth = await getAuth();

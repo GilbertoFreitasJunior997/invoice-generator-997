@@ -17,15 +17,15 @@ const getCurrentUser = createServerFn()
 			throw redirect({ href });
 		}
 
-		const result = await getAuthUser({
-			data: auth.user,
-		});
+		try {
+			const result = await getAuthUser({
+				data: auth.user,
+			});
 
-		if (!result?.success) {
+			return result.data;
+		} catch {
 			throw redirect({ to: "/setup-account" });
 		}
-
-		return result.data;
 	});
 
 const getCurrentUserQueryOptions = (pathname: string) =>

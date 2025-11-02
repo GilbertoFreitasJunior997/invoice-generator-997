@@ -72,7 +72,11 @@ const ClientFormContent = ({ editId, isEditing }: ClientFormContentProps) => {
 		}),
 	);
 
-	const { data: client, isFetching: isClientLoading } = useServerQuery({
+	const {
+		data: editClient,
+		isFetching: isEditClientLoading,
+		error: editClientError,
+	} = useServerQuery({
 		...getClientByIdQueryOptions({
 			userId: user.id,
 			id: editId ?? "",
@@ -82,15 +86,15 @@ const ClientFormContent = ({ editId, isEditing }: ClientFormContentProps) => {
 
 	const form = useAppForm({
 		defaultValues: {
-			name: client?.name ?? "",
-			email: client?.email ?? "",
-			addressLine1: client?.addressLine1 ?? "",
-			addressLine2: client?.addressLine2 ?? "",
-			country: client?.country ?? defaultCountry,
-			state: client?.state ?? "",
-			city: client?.city ?? "",
-			zip: client?.zip ?? "",
-			taxId: client?.taxId ?? "",
+			name: editClient?.name ?? "",
+			email: editClient?.email ?? "",
+			addressLine1: editClient?.addressLine1 ?? "",
+			addressLine2: editClient?.addressLine2 ?? "",
+			country: editClient?.country ?? defaultCountry,
+			state: editClient?.state ?? "",
+			city: editClient?.city ?? "",
+			zip: editClient?.zip ?? "",
+			taxId: editClient?.taxId ?? "",
 		},
 		validators: {
 			onChange: clientUpsertFormSchema,
@@ -101,7 +105,7 @@ const ClientFormContent = ({ editId, isEditing }: ClientFormContentProps) => {
 	const name = useStore(form.store, (s) => s.values.name);
 
 	const shouldCheckSameName =
-		!!name && (!isEditing || (isEditing && name !== client?.name));
+		!!name && (!isEditing || (isEditing && name !== editClient?.name));
 
 	const {
 		data: hasClientWithSameName,
@@ -134,8 +138,21 @@ const ClientFormContent = ({ editId, isEditing }: ClientFormContentProps) => {
 		});
 	}, [shouldCheckSameName, hasClientWithSameName, form]);
 
+	useEffect(() => {
+		if (!isEditing || !editClientError) {
+			return;
+		}
+
+		navigate({
+			to: "/clients",
+			search: {
+				editId: undefined,
+			},
+		});
+	}, [editClientError, isEditing, navigate]);
+
 	return (
-		<form.Root form={form} isLoading={isClientLoading}>
+		<form.Root form={form} isLoading={isEditClientLoading}>
 			<Sheet.Body>
 				<form.Group className="px-4">
 					<form.AppField
@@ -165,7 +182,7 @@ const ClientFormContent = ({ editId, isEditing }: ClientFormContentProps) => {
 				</Sheet.Close>
 
 				<form.SubmitButton
-					disabled={isClientLoading || isLoadingHasClientWithSameName}
+					disabled={isEditClientLoading || isLoadingHasClientWithSameName}
 				>
 					{isEditing ? "Update" : "Add"} Client
 				</form.SubmitButton>
