@@ -345,6 +345,7 @@ const invoiceSampleData = {
 			updatedAt: formatDbDate(),
 		},
 	],
+	invoicedAt: new Date(),
 } satisfies InvoiceDefaultLayoutProps;
 
 function RouteComponent() {
@@ -360,6 +361,7 @@ function RouteComponent() {
 				user={invoiceSampleData.user}
 				client={invoiceSampleData.client}
 				services={invoiceSampleData.services}
+				invoicedAt={invoiceSampleData.invoicedAt}
 			/>
 		</PDFViewer>
 	);
