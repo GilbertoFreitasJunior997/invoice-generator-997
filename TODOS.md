@@ -1,7 +1,4 @@
-## fix db queries for invalid edit ids
-- it's showing 500 when accessing an editId=NON_EXISTANT_ID
-
-## add search/filter to invoice list
+'## add search/filter to invoice list
 
 ## add a lot of animations
 - invoice cards
@@ -10,24 +7,6 @@
 ## invoice "templates" / fast create
 - create button should be dropdown or add new dropdown button for "templates" (maybe use a modal with select?)
 - add field to "also make this a template" (with description "you can use it later...")
-
-## "status" for services and clients.
-services status:
-- pending ?
-- active
-- inactive
-
-clients status:
-- active
-- inactive
-
-Only show "active" data on invoice creation.
-
-## "status" for invoices
-- pending
-- paid
-- overdue
-- canceled / deleted ?
 
 ## zero state view
 - tables

@@ -1,9 +1,11 @@
 import { createSelectSchema } from "drizzle-zod";
 import z from "zod";
-import { servicesTable } from "../db/tables";
+import { servicesTable } from "../db/tables/services.table";
 import { currencyEnumSchema } from "./currency.schemas";
+import { serviceStatusEnumSchema } from "./service-status.schemas";
 
 export const serviceSelectSchema = createSelectSchema(servicesTable);
+
 export type ServiceSelect = z.infer<typeof serviceSelectSchema>;
 
 export const serviceUpsertFormSchema = z.object({
@@ -12,6 +14,7 @@ export const serviceUpsertFormSchema = z.object({
 	description: z.string().min(1),
 	rate: z.number().min(0),
 	currency: currencyEnumSchema,
+	status: serviceStatusEnumSchema,
 });
 export type ServiceUpsertForm = z.infer<typeof serviceUpsertFormSchema>;
 

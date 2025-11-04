@@ -15,10 +15,6 @@ import {
 } from "@tanstack/react-table";
 import {
 	ChevronDownIcon,
-	ChevronLeftIcon,
-	ChevronRightIcon,
-	ChevronsLeftIcon,
-	ChevronsRightIcon,
 	EditIcon,
 	MoreHorizontalIcon,
 	TrashIcon,
@@ -26,10 +22,9 @@ import {
 import { useState } from "react";
 import { Button } from "@/lib/components/button";
 import { DropdownMenu } from "@/lib/components/dropdown-menu";
-import { Select } from "@/lib/components/select";
 import { Table as TableComponent } from "@/lib/components/table";
 import { Checkbox } from "../checkbox";
-import { dataTablePaginationOptions } from "./consts";
+import { Pagination } from "../pagination";
 import type { DataTableProps } from "./types";
 
 type DataTablePaginationProps<TData> = {
@@ -39,74 +34,19 @@ const DataTablePagination = <TData,>({
 	table,
 }: DataTablePaginationProps<TData>) => {
 	return (
-		<div className="flex items-center justify-end space-x-2 py-4">
-			<div className="flex-1 text-sm text-muted-foreground">
-				{table.getFilteredSelectedRowModel().rows.length} of{" "}
-				{table.getFilteredRowModel().rows.length} row(s) selected.
-			</div>
-			<div className="flex items-center space-x-6 lg:space-x-8">
-				<div className="flex items-center space-x-2">
-					<p className="text-sm font-medium">Rows per page</p>
-					<Select.Root
-						value={table.getState().pagination.pageSize.toString()}
-						onValueChange={(value) => {
-							table.setPageSize(Number(value));
-						}}
-					>
-						<Select.Trigger size="sm" className="w-[70px]">
-							<Select.Value />
-						</Select.Trigger>
-						<Select.Content>
-							{dataTablePaginationOptions.map((pageSize) => (
-								<Select.Item key={pageSize} value={pageSize.toString()}>
-									{pageSize}
-								</Select.Item>
-							))}
-						</Select.Content>
-					</Select.Root>
-				</div>
-
-				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
-					Page {table.getState().pagination.pageIndex + 1} of{" "}
-					{table.getPageCount()}
-				</div>
-
-				<div className="flex items-center space-x-2">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.setPageIndex(0)}
-						disabled={!table.getCanPreviousPage()}
-					>
-						<ChevronsLeftIcon className="h-4 w-4" />
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.previousPage()}
-						disabled={!table.getCanPreviousPage()}
-					>
-						<ChevronLeftIcon className="h-4 w-4" />
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.nextPage()}
-						disabled={!table.getCanNextPage()}
-					>
-						<ChevronRightIcon className="h-4 w-4" />
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-						disabled={!table.getCanNextPage()}
-					>
-						<ChevronsRightIcon className="h-4 w-4" />
-					</Button>
-				</div>
-			</div>
-		</div>
+		<Pagination
+			total={table.getFilteredRowModel().rows.length ?? 0}
+			resourceName="items"
+			pageSize={table.getState().pagination.pageSize}
+			pageIndex={table.getState().pagination.pageIndex + 1}
+			pageCount={table.getPageCount()}
+			onPageSizeChange={(value) => {
+				table.setPageSize(value);
+			}}
+			onPreviousPage={() => table.previousPage()}
+			onNextPage={() => table.nextPage()}
+			hideIfOnePage={false}
+		/>
 	);
 };
 

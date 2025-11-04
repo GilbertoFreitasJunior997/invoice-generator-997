@@ -27,6 +27,25 @@ export const getAllServices = createServerFn()
 		}
 	});
 
+export const getAllActiveServices = createServerFn()
+	.inputValidator((d: { userId: string }) => d)
+	.handler(async ({ data }) => {
+		try {
+			const { userId } = data;
+
+			const services = await db.query.servicesTable.findMany({
+				where: and(
+					eq(servicesTable.userId, userId),
+					eq(servicesTable.status, "active"),
+				),
+			});
+
+			return createServerSuccessResponse({ data: services });
+		} catch (error) {
+			createServerErrorResponse({ error });
+		}
+	});
+
 export const getServiceById = createServerFn()
 	.inputValidator((d: { userId: string; id: string }) => d)
 	.handler(async ({ data }) => {
@@ -61,6 +80,7 @@ export const upsertService = createServerFn()
 						description: data.description,
 						rate: data.rate,
 						currency: data.currency,
+						status: data.status,
 						updatedAt: formatDbDate(),
 					})
 					.where(eq(servicesTable.id, id))
@@ -80,6 +100,7 @@ export const upsertService = createServerFn()
 					description: data.description,
 					rate: data.rate,
 					currency: data.currency,
+					status: data.status,
 				})
 				.returning();
 

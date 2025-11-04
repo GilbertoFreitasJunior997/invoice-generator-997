@@ -47,6 +47,25 @@ export const getAllClients = createServerFn()
 		}
 	});
 
+export const getAllActiveClients = createServerFn()
+	.inputValidator((d: { userId: string }) => d)
+	.handler(async ({ data }) => {
+		try {
+			const { userId } = data;
+
+			const clients = await db.query.clientsTable.findMany({
+				where: and(
+					eq(clientsTable.userId, userId),
+					eq(clientsTable.status, "active"),
+				),
+			});
+
+			return createServerSuccessResponse({ data: clients });
+		} catch (error) {
+			createServerErrorResponse({ error });
+		}
+	});
+
 export const getClientById = createServerFn()
 	.inputValidator((d: { userId: string; id: string }) => d)
 	.handler(async ({ data }) => {
@@ -84,6 +103,7 @@ export const upsertClient = createServerFn()
 						zip: data.zip,
 						email: data.email,
 						taxId: data.taxId,
+						status: data.status,
 						updatedAt: formatDbDate(),
 					})
 					.where(eq(clientsTable.id, data.id))
@@ -108,6 +128,7 @@ export const upsertClient = createServerFn()
 					zip: data.zip,
 					email: data.email,
 					taxId: data.taxId,
+					status: data.status,
 				})
 				.returning();
 

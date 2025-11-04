@@ -1,14 +1,15 @@
-import {
-	Document,
-	Page,
-	PDFViewer,
-	StyleSheet,
-	Text,
-	View,
-} from "@react-pdf/renderer";
+import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
+import { Button } from "@/lib/components/button";
+import {
+	useServerMutation,
+	useServerQuery,
+} from "@/lib/hooks/use-server-query";
 import type { InvoiceDefaultLayoutProps } from "@/lib/invoice-layouts/invoice-default-layout/types";
+import { getAllActiveClientsQueryOptions } from "@/lib/query-options/client.query-options";
+import { createInvoiceMutationOptions } from "@/lib/query-options/invoice.query-options";
+import { getAllActiveServicesQueryOptions } from "@/lib/query-options/service.query-options";
 import { formatDbDate } from "@/lib/utils/date.utils";
 
 const styles = StyleSheet.create({
@@ -294,10 +295,11 @@ export const InvoiceDefaultLayout = ({
 
 export const Route = createFileRoute("/_app/invoices/dev-test/")({
 	component: RouteComponent,
-	ssr: false,
+	loader: async ({ context }) => ({ user: context.user }),
+	ssr: "data-only",
 });
 
-const invoiceSampleData = {
+export const invoiceSampleData = {
 	invoiceNumber: 1,
 	user: {
 		id: "8a08b683-e8f2-410a-8eda-fb53d2b62266",
@@ -331,6 +333,7 @@ const invoiceSampleData = {
 		userId: "8a08b683-e8f2-410a-8eda-fb53d2b62266",
 		createdAt: formatDbDate(),
 		updatedAt: formatDbDate(),
+		status: "active",
 	},
 	services: [
 		{
@@ -342,26 +345,97 @@ const invoiceSampleData = {
 			userId: "8a08b683-e8f2-410a-8eda-fb53d2b62266",
 			createdAt: formatDbDate(),
 			updatedAt: formatDbDate(),
+			status: "active",
 		},
 	],
 	invoicedAt: new Date(),
 } satisfies InvoiceDefaultLayoutProps;
 
+const useGenerateInvoiceTest = () => {
+	const { user } = Route.useLoaderData();
+
+	const { data: clients, isFetching: isClientsFetching } = useServerQuery(
+		getAllActiveClientsQueryOptions({
+			userId: user.id,
+		}),
+	);
+	const { data: services, isFetching: isServicesFetching } = useServerQuery(
+		getAllActiveServicesQueryOptions({
+			userId: user.id,
+		}),
+	);
+
+	const {
+		mutateAsync: createInvoiceMutation,
+		isPending: isCreateInvoicePending,
+	} = useServerMutation(
+		createInvoiceMutationOptions({
+			userId: user.id,
+			onSuccess: () => {
+				//
+			},
+		}),
+	);
+
+	const handleGenerateInvoice = async () => {
+		const clientId = clients?.[0]?.id;
+		const serviceId = services?.[0]?.id;
+
+		if (!clientId || !serviceId) {
+			return;
+		}
+
+		const promises = [];
+		for (let i = 0; i < 10; i++) {
+			promises.push(
+				createInvoiceMutation({
+					fileName: `INV${i}-${clients?.[0]?.name}`,
+					clientId,
+					servicesIds: [serviceId],
+					invoicedAt: new Date(),
+				}),
+			);
+		}
+
+		await Promise.all(promises);
+	};
+
+	const isLoading =
+		isCreateInvoicePending || isClientsFetching || isServicesFetching;
+
+	return {
+		handleGenerateInvoice,
+		isLoading,
+	};
+};
+
 function RouteComponent() {
+	const { handleGenerateInvoice, isLoading } = useGenerateInvoiceTest();
+
 	const count = useRef(0);
 	useEffect(() => {
 		count.current++;
 	}, []);
 
 	return (
-		<PDFViewer key={count.current} className="w-full grow h-full">
-			<InvoiceDefaultLayout
-				invoiceNumber={invoiceSampleData.invoiceNumber}
-				user={invoiceSampleData.user}
-				client={invoiceSampleData.client}
-				services={invoiceSampleData.services}
-				invoicedAt={invoiceSampleData.invoicedAt}
-			/>
-		</PDFViewer>
+		<div className="w-full flex flex-col gap-4">
+			{/* <PDFViewer key={count.current} className="w-full grow h-full">
+				<InvoiceDefaultLayout
+					invoiceNumber={invoiceSampleData.invoiceNumber}
+					user={invoiceSampleData.user}
+					client={invoiceSampleData.client}
+					services={invoiceSampleData.services}
+					invoicedAt={invoiceSampleData.invoicedAt}
+				/>
+			</PDFViewer> */}
+
+			<Button
+				type="button"
+				disabled={isLoading}
+				onClick={handleGenerateInvoice}
+			>
+				GENERATE INVOICE
+			</Button>
+		</div>
 	);
 }

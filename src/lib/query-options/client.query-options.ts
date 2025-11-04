@@ -2,6 +2,7 @@ import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import type { ClientUpsertForm } from "../schemas/client.schemas";
 import {
 	checkHasClientWithSameName,
+	getAllActiveClients,
 	getAllClients,
 	getClientById,
 	removeClient,
@@ -13,6 +14,7 @@ const baseKeys = ["clients"] as const;
 export const clientQueryKeys = {
 	base: baseKeys,
 	all: (userId: string) => [...baseKeys, userId],
+	allActive: (userId: string) => [...baseKeys, userId, "active"],
 	byId: (userId: string, id: string) => [...baseKeys, userId, id],
 	checkHasClientWithSameName: (userId: string, name: string) => [
 		...baseKeys,
@@ -27,6 +29,15 @@ export const getAllClientsQueryOptions = (data: { userId: string }) =>
 		queryKey: clientQueryKeys.all(data.userId),
 		queryFn: () =>
 			getAllClients({
+				data: { userId: data.userId },
+			}),
+	});
+
+export const getAllActiveClientsQueryOptions = (data: { userId: string }) =>
+	queryOptions({
+		queryKey: clientQueryKeys.allActive(data.userId),
+		queryFn: () =>
+			getAllActiveClients({
 				data: { userId: data.userId },
 			}),
 	});

@@ -3,7 +3,7 @@ import { Field } from "../field";
 import { Select } from "../select";
 import type { SelectInputProps } from "./types";
 
-export const SelectInput = (props: SelectInputProps) => {
+export const SelectInput = <T extends string>(props: SelectInputProps<T>) => {
 	const {
 		id,
 		errors,
@@ -22,7 +22,7 @@ export const SelectInput = (props: SelectInputProps) => {
 
 	const selectedItem = items?.find((item) => item.value === value);
 
-	const handleChange = (newValue: string) => {
+	const handleChange = (newValue: T) => {
 		if (!newValue || !items?.length) {
 			onChange?.(undefined);
 			return;

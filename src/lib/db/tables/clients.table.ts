@@ -1,4 +1,8 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+	type ClientStatus,
+	clientStatuses,
+} from "@/lib/schemas/client-status.schemas";
 import { type Country, countries } from "@/lib/schemas/countries.schemas";
 import { createdAt, id, updatedAt, userId } from "@/lib/utils/db.utils";
 
@@ -18,6 +22,10 @@ export function getClientsColumns() {
 			enum: countries as [Country, ...Country[]],
 		}).notNull(),
 		zip: text("zip").notNull(),
+
+		status: text("status", {
+			enum: clientStatuses as [ClientStatus, ...ClientStatus[]],
+		}).notNull(),
 	} as const;
 }
 

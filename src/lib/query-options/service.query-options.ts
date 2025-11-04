@@ -2,6 +2,7 @@ import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import type { ServiceUpsertForm } from "../schemas/service.schemas";
 import {
 	deleteService,
+	getAllActiveServices,
 	getAllServices,
 	getServiceById,
 	upsertService,
@@ -12,6 +13,7 @@ const baseKeys = ["services"] as const;
 export const serviceQueryKeys = {
 	base: baseKeys,
 	all: (userId: string) => [...baseKeys, userId],
+	allActive: (userId: string) => [...baseKeys, userId, "active"],
 	byId: (userId: string, id: string) => [...baseKeys, userId, id],
 };
 
@@ -20,6 +22,15 @@ export const getAllServicesQueryOptions = (data: { userId: string }) =>
 		queryKey: serviceQueryKeys.all(data.userId),
 		queryFn: () =>
 			getAllServices({
+				data: { userId: data.userId },
+			}),
+	});
+
+export const getAllActiveServicesQueryOptions = (data: { userId: string }) =>
+	queryOptions({
+		queryKey: serviceQueryKeys.allActive(data.userId),
+		queryFn: () =>
+			getAllActiveServices({
 				data: { userId: data.userId },
 			}),
 	});

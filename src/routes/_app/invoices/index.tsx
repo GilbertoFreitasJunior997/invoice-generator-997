@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/lib/components/button";
+import { paginationSearchParamsSchema } from "@/lib/schemas/global.schemas";
 import { InvoiceList } from "./-lib/components/invoice-list";
 
 export const Route = createFileRoute("/_app/invoices/")({
+	validateSearch: paginationSearchParamsSchema,
 	loader: async ({ context }) => {
 		return {
 			user: context.user,

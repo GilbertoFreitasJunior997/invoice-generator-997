@@ -1,4 +1,5 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
+import type { PaginationServiceParams } from "../schemas/global.schemas";
 import type {
 	InvoiceGenerationForm,
 	InvoiceNewFirstInvoiceForm,
@@ -6,7 +7,7 @@ import type {
 import {
 	checkIsUserFirstInvoice,
 	createInvoice,
-	getInvoicesWithRelations,
+	getInvoicesPaginatedWithRelations,
 } from "../services/invoice.service";
 import { updateUserCurrentInvoiceNumber } from "../services/user.service";
 import { userQueryKeys } from "./user.query-options";
@@ -14,7 +15,13 @@ import { userQueryKeys } from "./user.query-options";
 const baseKeys = ["invoices"] as const;
 export const invoiceQueryKeys = {
 	base: baseKeys,
-	withRelations: (userId: string) => [...baseKeys, userId, "with-relations"],
+	paginatedWithRelations: (paginateParams: PaginationServiceParams) => [
+		...baseKeys,
+		paginateParams.userId,
+		paginateParams.page,
+		paginateParams.pageSize,
+		"paginated-with-relations",
+	],
 	isUserFirstInvoice: (userId: string) => [
 		...baseKeys,
 		userId,
@@ -51,12 +58,15 @@ export const createInvoiceMutationOptions = (data: {
 		},
 	});
 
-export const getInvoicesWithRelationsQueryOptions = (data: {
-	userId: string;
-}) =>
+export const getInvoicesPaginatedWithRelationsQueryOptions = (
+	data: PaginationServiceParams,
+) =>
 	queryOptions({
-		queryKey: invoiceQueryKeys.withRelations(data.userId),
-		queryFn: () => getInvoicesWithRelations({ data: { userId: data.userId } }),
+		queryKey: invoiceQueryKeys.paginatedWithRelations(data),
+		queryFn: () =>
+			getInvoicesPaginatedWithRelations({
+				data,
+			}),
 	});
 
 export const checkIsUserFirstInvoiceQueryOptions = (data: { userId: string }) =>

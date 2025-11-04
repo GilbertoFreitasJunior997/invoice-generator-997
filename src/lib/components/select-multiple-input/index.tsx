@@ -9,7 +9,9 @@ import { Field } from "../field";
 import { inputBoxClassNames } from "../field/consts";
 import type { SelectMultipleInputProps } from "./types";
 
-export const SelectMultipleInput = (props: SelectMultipleInputProps) => {
+export const SelectMultipleInput = <T extends string>(
+	props: SelectMultipleInputProps<T>,
+) => {
 	const {
 		id,
 		errors,
@@ -35,7 +37,7 @@ export const SelectMultipleInput = (props: SelectMultipleInputProps) => {
 		.map((item) => item.label)
 		.join(", ");
 
-	const handleValueChange = (selectedItem: string) => {
+	const handleValueChange = (selectedItem: T) => {
 		const hasValue = value?.some((value) => value === selectedItem);
 		let updatedValue = value;
 

@@ -16,6 +16,7 @@ import {
 	getCurrencyConfig,
 } from "@/lib/schemas/currency.schemas";
 import { serviceUpsertFormSchema } from "@/lib/schemas/service.schemas";
+import { serviceStatusSelectOptions } from "@/lib/schemas/service-status.schemas";
 import { useAppForm } from "@/lib/utils/forms.utils";
 
 const Route = getRouteApi("/_app/services/");
@@ -91,6 +92,7 @@ const ServiceFormContent = ({ editId, isEditing }: ServiceFormContentProps) => {
 			description: editService?.description ?? "",
 			rate: editService?.rate ?? 0,
 			currency: editService?.currency ?? "USD",
+			status: editService?.status ?? "active",
 		},
 		validators: {
 			onChange: serviceUpsertFormSchema,
@@ -167,6 +169,16 @@ const ServiceFormContent = ({ editId, isEditing }: ServiceFormContentProps) => {
 									label="Currency"
 									items={currenciesSelectOptions}
 									rootClassName="col-span-1"
+								/>
+							)}
+						/>
+
+						<form.AppField
+							name="status"
+							children={(field) => (
+								<field.SelectInput
+									label="Status"
+									items={serviceStatusSelectOptions}
 								/>
 							)}
 						/>

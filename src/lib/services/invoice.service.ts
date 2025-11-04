@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, count, eq, inArray } from "drizzle-orm";
 import { cloneLogoToStorage } from "../components/logo-input/utils";
 import { db } from "../db";
 import {
@@ -12,10 +12,8 @@ import {
 	usersTable,
 } from "../db/tables";
 import { ServerBadRequestError } from "../errors/server-fns.errors";
-import {
-	type InvoiceSelectWithRelations,
-	invoiceGenerationSchema,
-} from "../schemas/invoice.schemas";
+import type { PaginationServiceParams } from "../schemas/global.schemas";
+import { invoiceGenerationSchema } from "../schemas/invoice.schemas";
 import { formatDbDate } from "../utils/date.utils";
 import {
 	createServerErrorResponse,
@@ -146,21 +144,34 @@ export const createInvoice = createServerFn()
 		}
 	});
 
-export const getInvoicesWithRelations = createServerFn()
-	.inputValidator((d: { userId: string }) => d)
+export const getInvoicesPaginatedWithRelations = createServerFn()
+	.inputValidator((d: PaginationServiceParams) => d)
 	.handler(async ({ data }) => {
 		try {
-			const { userId } = data;
-			const invoices = (await db.query.invoicesTable.findMany({
+			const { userId, page, pageSize } = data;
+
+			const invoicesQuery = db.query.invoicesTable.findMany({
 				where: eq(invoicesTable.userId, userId),
+				offset: (page - 1) * pageSize,
+				limit: pageSize,
 				with: {
 					clientSnapshot: true,
 					userSnapshot: true,
 					items: true,
 				},
-			})) as InvoiceSelectWithRelations[];
+			});
 
-			return createServerSuccessResponse({ data: invoices });
+			const countQuery = db
+				.select({ count: count() })
+				.from(invoicesTable)
+				.where(eq(invoicesTable.userId, userId));
+
+			const [invoices, [{ count: total }]] = await db.batch([
+				invoicesQuery,
+				countQuery,
+			]);
+
+			return createServerSuccessResponse({ data: { invoices, total } });
 		} catch (error) {
 			return createServerErrorResponse({ error });
 		}

@@ -14,6 +14,7 @@ import {
 	upsertClientMutationOptions,
 } from "@/lib/query-options/client.query-options";
 import { clientUpsertFormSchema } from "@/lib/schemas/client.schemas";
+import { clientStatusSelectOptions } from "@/lib/schemas/client-status.schemas";
 import { defaultCountry } from "@/lib/utils/address.utils";
 import { useAppForm } from "@/lib/utils/forms.utils";
 
@@ -95,6 +96,7 @@ const ClientFormContent = ({ editId, isEditing }: ClientFormContentProps) => {
 			city: editClient?.city ?? "",
 			zip: editClient?.zip ?? "",
 			taxId: editClient?.taxId ?? "",
+			status: editClient?.status ?? "active",
 		},
 		validators: {
 			onChange: clientUpsertFormSchema,
@@ -173,6 +175,16 @@ const ClientFormContent = ({ editId, isEditing }: ClientFormContentProps) => {
 					/>
 
 					<AddressForm form={form} layout="stacked" />
+
+					<form.AppField
+						name="status"
+						children={(field) => (
+							<field.SelectInput
+								label="Status"
+								items={clientStatusSelectOptions}
+							/>
+						)}
+					/>
 				</form.Group>
 			</Sheet.Body>
 
