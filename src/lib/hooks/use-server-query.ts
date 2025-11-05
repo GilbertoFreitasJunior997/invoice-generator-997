@@ -58,9 +58,15 @@ const handleServerResponse = async <T>({
 	return result.data;
 };
 
+type UseServerQueryExtraOptions = {
+	shouldShowNotifications?: boolean;
+};
 export const useServerQuery = <TQueryOptions extends AnyUseQueryOptions>(
 	options: TQueryOptions,
+	extraOptions?: UseServerQueryExtraOptions,
 ): UseServerQueryResult<TQueryOptions> => {
+	const shouldShowNotifications = extraOptions?.shouldShowNotifications ?? true;
+
 	const query = useQuery({
 		...options,
 		select: (result) => {
@@ -95,8 +101,12 @@ export const useServerQuery = <TQueryOptions extends AnyUseQueryOptions>(
 			return;
 		}
 
+		if (!shouldShowNotifications) {
+			return;
+		}
+
 		showNotifications();
-	}, [isFetching]);
+	}, [isFetching, shouldShowNotifications]);
 
 	return query;
 };

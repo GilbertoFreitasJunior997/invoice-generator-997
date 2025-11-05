@@ -392,6 +392,7 @@ const useGenerateInvoiceTest = () => {
 					fileName: `INV${i}-${clients?.[0]?.name}`,
 					clientId,
 					servicesIds: [serviceId],
+					invoiceNumber: i + 1,
 					invoicedAt: new Date(),
 				}),
 			);

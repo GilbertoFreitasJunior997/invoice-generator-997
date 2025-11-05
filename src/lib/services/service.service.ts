@@ -8,8 +8,8 @@ import { formatDbDate } from "../utils/date.utils";
 import {
 	createServerErrorResponse,
 	createServerSuccessResponse,
-	HTTP_STATUS,
 } from "../utils/server-fns.utils";
+import { HTTP_STATUS } from "../utils/server-fns-types.utils";
 
 export const getAllServices = createServerFn()
 	.inputValidator((d: { userId: string }) => d)

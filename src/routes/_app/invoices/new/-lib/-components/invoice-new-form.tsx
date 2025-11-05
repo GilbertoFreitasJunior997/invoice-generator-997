@@ -12,15 +12,43 @@ const normalizeCompanyName = (name: string) => {
 export const InvoiceNewForm = withForm({
 	defaultValues: invoiceNewFormDefaultValues,
 	render: function Render({ form }) {
-		const { clientsQuery, servicesQuery, nextInvoiceNumberQuery } =
-			useInvoiceNewQueries();
+		const { clientsQuery, servicesQuery } = useInvoiceNewQueries();
 
 		const { data: clients, isFetching: isClientsLoading } = clientsQuery;
 		const { data: services, isFetching: isServicesLoading } = servicesQuery;
-		const { data: nextInvoiceNumber, isFetching: isNextInvoiceNumberLoading } =
-			nextInvoiceNumberQuery;
+
+		const createInvoiceFileName = (
+			invoiceNumber: number,
+			clientName: string,
+		) => {
+			return `INV${invoiceNumber}-${normalizeCompanyName(clientName)}`;
+		};
+
+		const handleInvoiceNumberChange = (invoiceNumber: number) => {
+			if (!invoiceNumber) {
+				return;
+			}
+
+			const selectedClientId = form.getFieldValue("clientId");
+			const selectedClient = clients?.find(
+				(client) => client.id === selectedClientId,
+			);
+			if (!selectedClient) {
+				return;
+			}
+
+			form.setFieldValue(
+				"fileName",
+				createInvoiceFileName(invoiceNumber, selectedClient.name),
+			);
+		};
 
 		const handleClientChange = (clientId: string) => {
+			const currentInvoiceNumber = form.getFieldValue("invoiceNumber");
+			if (!currentInvoiceNumber) {
+				return;
+			}
+
 			const client = clients?.find((client) => client.id === clientId);
 			if (!client) {
 				return;
@@ -28,16 +56,12 @@ export const InvoiceNewForm = withForm({
 
 			form.setFieldValue(
 				"fileName",
-				`INV${nextInvoiceNumber}-${normalizeCompanyName(client.name)}`,
+				createInvoiceFileName(currentInvoiceNumber, client.name),
 			);
 		};
 
 		return (
-			<form.Root
-				form={form}
-				className="w-full"
-				isLoading={isNextInvoiceNumberLoading}
-			>
+			<form.Root form={form} className="w-full">
 				<form.Group className="">
 					<form.AppField
 						name="clientId"
@@ -80,6 +104,21 @@ export const InvoiceNewForm = withForm({
 							<field.TextInput
 								label="File Name"
 								description="Recommended to use the invoice number and client name (e.g. 'INV1-Acme-Inc')."
+							/>
+						)}
+					/>
+
+					<form.AppField
+						name="invoiceNumber"
+						listeners={{
+							onChange: ({ value }) => handleInvoiceNumberChange(value),
+						}}
+						children={(field) => (
+							<field.NumberInput
+								label="Invoice Number"
+								description="The number of the invoice to be created. Automatically generated from last invoice number."
+								min={1}
+								allowNegative={false}
 							/>
 						)}
 					/>

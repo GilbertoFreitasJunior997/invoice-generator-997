@@ -2,14 +2,12 @@
   
 ## Invoice Creation Form
 
-- [ ] Invoice number field on creation
-  - Remove "first invoice" modal and use invoice number directly on form
-  - If inserted invoice number already exists, alert user that it might cause conflicts
 - [ ] Remove "services" select-multiple and override with button
   - On click, add to array-like field on form:
     - Service (select input for service id)
     - Quantity (number input)
 - [ ] Include "due date" field
+- [ ] Link duplicated invoice to view in list on InvoceNewDuplicatedNumberDialog
 
 ## Invoice List
 
@@ -18,6 +16,7 @@
 - [ ] Soft and hard delete for invoices
 - [ ] If on invoice list and has no services/clients, show "please add .... before creating invoice"
 - [ ] If user is creating invoice with an invoice date on the past, prompt "import invoices"
+- [ ] Add option to visualize invoice in list
 
 ## Animations
 

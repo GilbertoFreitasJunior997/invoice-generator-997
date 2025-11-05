@@ -5,4 +5,5 @@ export const invoiceNewFormDefaultValues = {
 	clientId: "",
 	servicesIds: [] as string[],
 	invoicedAt: new Date(),
+	invoiceNumber: 0,
 } satisfies InvoiceGenerationForm;

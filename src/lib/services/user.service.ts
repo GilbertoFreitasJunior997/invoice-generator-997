@@ -59,6 +59,7 @@ export const setupUserAccount = createServerFn({ method: "POST" })
 				zip: data.zip,
 				taxId: data.taxId,
 				logoKey: data.logoKey,
+				currentInvoiceNumber: 0,
 			});
 
 			return createServerSuccessResponse();
@@ -82,34 +83,6 @@ export const getUserNextInvoiceNumber = createServerFn({ method: "GET" })
 			const nextInvoiceNumber = user.currentInvoiceNumber + 1;
 
 			return createServerSuccessResponse({ data: nextInvoiceNumber });
-		} catch (error) {
-			return createServerErrorResponse({ error });
-		}
-	});
-
-export const updateUserCurrentInvoiceNumber = createServerFn({ method: "POST" })
-	.inputValidator((d: { userId: string; currentInvoiceNumber: number }) => d)
-	.handler(async ({ data }) => {
-		try {
-			const user = await db.query.usersTable.findFirst({
-				where: eq(usersTable.id, data.userId),
-			});
-
-			if (!user) {
-				throw new ServerBadRequestError("User not found");
-			}
-
-			await db
-				.update(usersTable)
-				.set({
-					currentInvoiceNumber: data.currentInvoiceNumber,
-					updatedAt: formatDbDate(),
-				})
-				.where(eq(usersTable.id, data.userId));
-
-			return createServerSuccessResponse({
-				message: "Invoice number updated successfully",
-			});
 		} catch (error) {
 			return createServerErrorResponse({ error });
 		}

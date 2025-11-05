@@ -2,7 +2,7 @@ import { getDeployStore } from "@netlify/blobs";
 import { createServerFn } from "@tanstack/react-start";
 import { v4 as uuidv4 } from "uuid";
 import z from "zod";
-import { HTTP_STATUS } from "../utils/server-fns.utils";
+import { HTTP_STATUS } from "../utils/server-fns-types.utils";
 
 const getFormDataValues = (data: FormData) => {
 	const file = data.get("file");

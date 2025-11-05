@@ -22,6 +22,7 @@ export const invoiceGenerationFormSchema = z.object({
 	clientId: z.string().min(1),
 	servicesIds: z.array(z.string()).min(1),
 	invoicedAt: z.date(),
+	invoiceNumber: z.number().min(1),
 });
 export type InvoiceGenerationForm = z.infer<typeof invoiceGenerationFormSchema>;
 
@@ -30,11 +31,3 @@ export const invoiceGenerationSchema = invoiceGenerationFormSchema.extend(
 		userId: z.string().min(1),
 	}).shape,
 );
-
-export const invoiceNewFirstInvoiceFormSchema = z.object({
-	currentInvoiceNumber: z.number(),
-	isFirstInvoice: z.boolean(),
-});
-export type InvoiceNewFirstInvoiceForm = z.infer<
-	typeof invoiceNewFirstInvoiceFormSchema
->;

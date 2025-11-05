@@ -11,9 +11,10 @@ const Route = getRouteApi("/_app/invoices/new/");
 
 type UseInvoiceNewPDFProps = Pick<
 	InvoiceGenerationForm,
-	"clientId" | "servicesIds" | "invoicedAt"
+	"invoiceNumber" | "clientId" | "servicesIds" | "invoicedAt"
 >;
 export const useInvoiceNewPDF = ({
+	invoiceNumber,
 	clientId,
 	servicesIds,
 	invoicedAt,
@@ -25,11 +26,9 @@ export const useInvoiceNewPDF = ({
 		document: undefined,
 	});
 
-	const { clientsQuery, servicesQuery, nextInvoiceNumberQuery } =
-		useInvoiceNewQueries();
+	const { clientsQuery, servicesQuery } = useInvoiceNewQueries();
 	const { data: clients } = clientsQuery;
 	const { data: services } = servicesQuery;
-	const { data: nextInvoiceNumber } = nextInvoiceNumberQuery;
 
 	const selectedClient = useMemo(
 		() => clients?.find((client) => client.id === clientId) ?? null,
@@ -46,7 +45,7 @@ export const useInvoiceNewPDF = ({
 		if (
 			!selectedClient ||
 			!selectedServices.length ||
-			!nextInvoiceNumber ||
+			!invoiceNumber ||
 			!invoicedAt
 		) {
 			return;
@@ -67,7 +66,7 @@ export const useInvoiceNewPDF = ({
 					<InvoiceDefaultLayout
 						invoicedAt={invoicedAt}
 						userLogo={userLogo}
-						invoiceNumber={nextInvoiceNumber}
+						invoiceNumber={invoiceNumber}
 						user={user}
 						client={selectedClient}
 						services={selectedServices}
@@ -82,7 +81,7 @@ export const useInvoiceNewPDF = ({
 		selectedServices,
 		updatePDF,
 		user,
-		nextInvoiceNumber,
+		invoiceNumber,
 		invoicedAt,
 	]);
 

@@ -11,7 +11,10 @@ import {
 	userSnapshotsTable,
 	usersTable,
 } from "../db/tables";
-import { ServerBadRequestError } from "../errors/server-fns.errors";
+import {
+	ServerBadRequestError,
+	ServerNotFoundError,
+} from "../errors/server-fns.errors";
 import type { PaginationServiceParams } from "../schemas/global.schemas";
 import { invoiceGenerationSchema } from "../schemas/invoice.schemas";
 import { formatDbDate } from "../utils/date.utils";
@@ -24,7 +27,7 @@ export const createInvoice = createServerFn()
 	.inputValidator(invoiceGenerationSchema)
 	.handler(async ({ data }) => {
 		try {
-			const { userId, clientId, servicesIds, fileName } = data;
+			const { userId, clientId, servicesIds, fileName, invoiceNumber } = data;
 
 			const invoice = await db.transaction(async (tx) => {
 				const user = await tx.query.usersTable.findFirst({
@@ -91,7 +94,6 @@ export const createInvoice = createServerFn()
 					})
 					.returning();
 
-				const nextInvoiceNumber = user.currentInvoiceNumber + 1;
 				const totalAmount = services.reduce(
 					// TODO: use quantity
 					(sum, service) => sum + service.rate * 1,
@@ -101,7 +103,7 @@ export const createInvoice = createServerFn()
 				const [invoice] = await tx
 					.insert(invoicesTable)
 					.values({
-						invoiceNumber: nextInvoiceNumber,
+						invoiceNumber,
 						fileName,
 						userId: user.id,
 						clientSnapshotId: snapshotClient.id,
@@ -117,7 +119,7 @@ export const createInvoice = createServerFn()
 				await tx
 					.update(usersTable)
 					.set({
-						currentInvoiceNumber: nextInvoiceNumber,
+						currentInvoiceNumber: invoiceNumber,
 					})
 					.where(eq(usersTable.id, userId));
 
@@ -177,18 +179,24 @@ export const getInvoicesPaginatedWithRelations = createServerFn()
 		}
 	});
 
-export const checkIsUserFirstInvoice = createServerFn()
-	.inputValidator((d: { userId: string }) => d)
+export const getInvoiceByInvoiceNumber = createServerFn()
+	.inputValidator((d: { userId: string; invoiceNumber: number }) => d)
 	.handler(async ({ data }) => {
 		try {
-			const { userId } = data;
+			const { userId, invoiceNumber } = data;
+
 			const invoice = await db.query.invoicesTable.findFirst({
-				where: eq(invoicesTable.userId, userId),
+				where: and(
+					eq(invoicesTable.userId, userId),
+					eq(invoicesTable.invoiceNumber, invoiceNumber),
+				),
 			});
 
-			const isFirstInvoice = !invoice;
+			if (!invoice) {
+				throw new ServerNotFoundError("Invoice not found");
+			}
 
-			return createServerSuccessResponse({ data: isFirstInvoice });
+			return createServerSuccessResponse({ data: invoice });
 		} catch (error) {
 			return createServerErrorResponse({ error });
 		}

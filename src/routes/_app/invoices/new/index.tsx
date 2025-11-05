@@ -1,7 +1,7 @@
 import { useStore } from "@tanstack/react-form";
 import { createFileRoute } from "@tanstack/react-router";
 import { DownloadIcon } from "lucide-react";
-import { type MouseEvent, useEffect, useState } from "react";
+import { type MouseEvent, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/lib/components/button";
 import {
@@ -9,17 +9,22 @@ import {
 	useServerQuery,
 } from "@/lib/hooks/use-server-query";
 import {
-	checkIsUserFirstInvoiceQueryOptions,
 	createInvoiceMutationOptions,
+	getInvoiceByInvoiceNumberQueryOptions,
 } from "@/lib/query-options/invoice.query-options";
-import { invoiceGenerationFormSchema } from "@/lib/schemas/invoice.schemas";
+import {
+	type InvoiceGenerationForm,
+	invoiceGenerationFormSchema,
+} from "@/lib/schemas/invoice.schemas";
 import { downloadFile } from "@/lib/utils/blobs.utils";
 import { useAppForm } from "@/lib/utils/forms.utils";
 import { invoiceNewFormDefaultValues } from "./-lib/-components/consts";
-import { InvoiceNewFirstInvoiceDialog } from "./-lib/-components/invoice-new-first-invoice-dialog";
+import { InvoiceNewDuplicatedNumberDialog } from "./-lib/-components/invoice-new-duplicated-number-dialog";
+import type { InvoiceNewDuplicatedNumberDialogData } from "./-lib/-components/invoice-new-duplicated-number-dialog/types";
 import { InvoiceNewForm } from "./-lib/-components/invoice-new-form";
 import { InvoiceNewPDFPreview } from "./-lib/-components/invoice-new-pdf-preview";
 import { useInvoiceNewPDF } from "./-lib/hooks/use-invoice-new-pdf";
+import { useInvoiceNewQueries } from "./-lib/hooks/use-invoice-new-queries";
 
 export const Route = createFileRoute("/_app/invoices/new/")({
 	ssr: "data-only",
@@ -33,58 +38,91 @@ function RouteComponent() {
 	const navigate = Route.useNavigate();
 	const { user } = Route.useLoaderData();
 
-	const [isFirstInvoiceDialogOpen, setIsFirstInvoiceDialogOpen] =
-		useState(false);
+	const [duplicatedNumberDialogData, setDuplicatedNumberDialogData] =
+		useState<InvoiceNewDuplicatedNumberDialogData>();
 
-	const { mutateAsync: createInvoiceMutation } = useServerMutation(
+	const { nextInvoiceNumberQuery } = useInvoiceNewQueries();
+	const { data: nextInvoiceNumber, isFetching: isNextInvoiceNumberLoading } =
+		nextInvoiceNumberQuery;
+
+	const {
+		mutateAsync: createInvoiceMutation,
+		isPending: isCreatingInvoicePending,
+	} = useServerMutation(
 		createInvoiceMutationOptions({
 			userId: user.id,
 		}),
 	);
 
-	const { data: isUserFirstInvoice, isFetching: isUserFirstInvoiceFetching } =
-		useServerQuery(
-			checkIsUserFirstInvoiceQueryOptions({
-				userId: user.id,
-			}),
-		);
+	const handleCreateInvoice = async (formData: InvoiceGenerationForm) => {
+		if (!pdfInstance?.url) {
+			toast.error("Please select a client and services to create an invoice");
+			return;
+		}
+
+		const invoice = await createInvoiceMutation({
+			fileName: formData.fileName,
+			clientId: formData.clientId,
+			servicesIds: formData.servicesIds,
+			invoicedAt: formData.invoicedAt,
+			invoiceNumber: formData.invoiceNumber,
+		});
+
+		downloadFile({
+			url: pdfInstance.url,
+			filename: `${invoice.fileName}.pdf`,
+		});
+
+		navigate({
+			to: "/invoices",
+		});
+	};
 
 	const form = useAppForm({
-		defaultValues: invoiceNewFormDefaultValues,
+		defaultValues: {
+			...invoiceNewFormDefaultValues,
+			invoiceNumber:
+				nextInvoiceNumber ?? invoiceNewFormDefaultValues.invoiceNumber,
+		},
 		validators: {
 			onChange: invoiceGenerationFormSchema,
 		},
 		onSubmit: async ({ value }) => {
-			if (!pdfInstance?.url) {
-				toast.error("Please select a client and services to create an invoice");
+			const { data: invoiceWithSameNumber } =
+				await refetchInvoiceByInvoiceNumber();
+
+			if (invoiceWithSameNumber) {
+				setDuplicatedNumberDialogData({
+					formData: value,
+					invoiceWithSameNumber,
+				});
 				return;
 			}
 
-			const invoice = await createInvoiceMutation({
-				fileName: value.fileName,
-				clientId: value.clientId,
-				servicesIds: value.servicesIds,
-				invoicedAt: value.invoicedAt,
-			});
-
-			downloadFile({
-				url: pdfInstance.url,
-				filename: `${invoice.fileName}.pdf`,
-			});
-
-			form.reset();
-
-			navigate({
-				to: "/invoices",
-			});
+			await handleCreateInvoice(value);
 		},
 	});
 
+	const invoiceNumber = useStore(form.store, (s) => s.values.invoiceNumber);
 	const clientId = useStore(form.store, (s) => s.values.clientId);
 	const servicesIds = useStore(form.store, (s) => s.values.servicesIds);
 	const invoicedAt = useStore(form.store, (s) => s.values.invoicedAt);
 
+	const { refetch: refetchInvoiceByInvoiceNumber } = useServerQuery(
+		{
+			...getInvoiceByInvoiceNumberQueryOptions({
+				userId: user.id,
+				invoiceNumber,
+			}),
+			enabled: false,
+		},
+		{
+			shouldShowNotifications: false,
+		},
+	);
+
 	const { pdfInstance } = useInvoiceNewPDF({
+		invoiceNumber,
 		clientId,
 		servicesIds,
 		invoicedAt,
@@ -97,52 +135,64 @@ function RouteComponent() {
 		void form.handleSubmit();
 	};
 
-	useEffect(() => {
-		if (isUserFirstInvoice) {
-			setIsFirstInvoiceDialogOpen(true);
+	const handleUseDifferentNumber = () => {
+		setDuplicatedNumberDialogData(undefined);
+	};
+
+	const handleUseDuplicatedNumber = async () => {
+		if (!duplicatedNumberDialogData) {
+			toast.error("Something went wrong. Please try again.");
+			return;
 		}
-	}, [isUserFirstInvoice]);
+
+		setDuplicatedNumberDialogData(undefined);
+		await handleCreateInvoice(duplicatedNumberDialogData.formData);
+	};
 
 	return (
-		<div className="h-full overflow-auto flex flex-col">
-			<h1>Create Invoice</h1>
+		<>
+			<div className="h-full overflow-auto flex flex-col">
+				<h1>Create Invoice</h1>
+				<div className="flex gap-2 w-full grow">
+					<div className="w-[30%] max-w-[400px] flex flex-col gap-2">
+						<InvoiceNewForm form={form} />
+						<div>
+							<form.Subscribe
+								selector={(state) => ({ isSubmitting: state.isSubmitting })}
+								children={({ isSubmitting }) => {
+									const isDisabled =
+										isSubmitting ||
+										isNextInvoiceNumberLoading ||
+										isCreatingInvoicePending;
+									const isLoading = isSubmitting || isCreatingInvoicePending;
 
-			<div className="flex gap-2 w-full grow">
-				<div className="w-[30%] max-w-[400px] flex flex-col gap-2">
-					<InvoiceNewForm form={form} />
-
-					<div>
-						<form.Subscribe
-							selector={(state) => ({ isSubmitting: state.isSubmitting })}
-							children={({ isSubmitting }) => {
-								const isDisabled = isSubmitting || isUserFirstInvoiceFetching;
-
-								return (
-									<Button
-										className="w-full"
-										onClick={handleCreateInvoiceClick}
-										disabled={isDisabled}
-									>
-										{isSubmitting ? "Creating Invoice..." : "Create Invoice"}
-										<DownloadIcon />
-									</Button>
-								);
-							}}
-						/>
+									return (
+										<Button
+											className="w-full"
+											onClick={handleCreateInvoiceClick}
+											disabled={isDisabled}
+										>
+											{isLoading ? "Creating Invoice..." : "Create Invoice"}
+											<DownloadIcon />
+										</Button>
+									);
+								}}
+							/>
+						</div>
 					</div>
+					<InvoiceNewPDFPreview
+						pdfInstance={pdfInstance}
+						clientId={clientId}
+						servicesIds={servicesIds}
+					/>
 				</div>
-
-				<InvoiceNewPDFPreview
-					pdfInstance={pdfInstance}
-					clientId={clientId}
-					servicesIds={servicesIds}
-				/>
 			</div>
 
-			<InvoiceNewFirstInvoiceDialog
-				isOpen={isFirstInvoiceDialogOpen}
-				onOpenChange={setIsFirstInvoiceDialogOpen}
+			<InvoiceNewDuplicatedNumberDialog
+				data={duplicatedNumberDialogData}
+				onUseDifferentNumber={handleUseDifferentNumber}
+				onUseDuplicatedNumber={handleUseDuplicatedNumber}
 			/>
-		</div>
+		</>
 	);
 }

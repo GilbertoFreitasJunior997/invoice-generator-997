@@ -1,15 +1,11 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import type { PaginationServiceParams } from "../schemas/global.schemas";
-import type {
-	InvoiceGenerationForm,
-	InvoiceNewFirstInvoiceForm,
-} from "../schemas/invoice.schemas";
+import type { InvoiceGenerationForm } from "../schemas/invoice.schemas";
 import {
-	checkIsUserFirstInvoice,
 	createInvoice,
+	getInvoiceByInvoiceNumber,
 	getInvoicesPaginatedWithRelations,
 } from "../services/invoice.service";
-import { updateUserCurrentInvoiceNumber } from "../services/user.service";
 import { userQueryKeys } from "./user.query-options";
 
 const baseKeys = ["invoices"] as const;
@@ -26,6 +22,12 @@ export const invoiceQueryKeys = {
 		...baseKeys,
 		userId,
 		"is-user-first-invoice",
+	],
+	byInvoiceNumber: (userId: string, invoiceNumber: number) => [
+		...baseKeys,
+		userId,
+		invoiceNumber,
+		"by-invoice-number",
 	],
 };
 
@@ -69,27 +71,14 @@ export const getInvoicesPaginatedWithRelationsQueryOptions = (
 			}),
 	});
 
-export const checkIsUserFirstInvoiceQueryOptions = (data: { userId: string }) =>
-	queryOptions({
-		queryKey: invoiceQueryKeys.isUserFirstInvoice(data.userId),
-		queryFn: () => checkIsUserFirstInvoice({ data: { userId: data.userId } }),
-	});
-
-export const updateUserCurrentInvoiceNumberMutationOptions = (data: {
+export const getInvoiceByInvoiceNumberQueryOptions = (data: {
 	userId: string;
+	invoiceNumber: number;
 }) =>
-	mutationOptions({
-		mutationFn: (formData: InvoiceNewFirstInvoiceForm) =>
-			updateUserCurrentInvoiceNumber({
-				data: {
-					userId: data.userId,
-					currentInvoiceNumber: formData.currentInvoiceNumber,
-				},
+	queryOptions({
+		queryKey: invoiceQueryKeys.byInvoiceNumber(data.userId, data.invoiceNumber),
+		queryFn: () =>
+			getInvoiceByInvoiceNumber({
+				data: { userId: data.userId, invoiceNumber: data.invoiceNumber },
 			}),
-		onSuccess: (_a, _b, _c, context) => {
-			context.client.invalidateQueries({
-				queryKey: userQueryKeys.nextInvoiceNumber(data.userId),
-				exact: false,
-			});
-		},
 	});

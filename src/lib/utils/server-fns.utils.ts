@@ -1,20 +1,6 @@
 import { setResponseStatus } from "@tanstack/react-start/server";
 import { ServerError } from "../errors/server-fns.errors";
-
-export const DEFAULT_ERROR_MESSAGE = "Something went wrong! Please try again.";
-
-export const HTTP_STATUS = {
-	OK: 200,
-	CREATED: 201,
-	NO_CONTENT: 204,
-	BAD_REQUEST: 400,
-	UNAUTHORIZED: 401,
-	FORBIDDEN: 403,
-	NOT_FOUND: 404,
-	INTERNAL_SERVER_ERROR: 500,
-} as const;
-
-export type HTTPStatusCode = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS];
+import { HTTP_STATUS, type HTTPStatusCode } from "./server-fns-types.utils";
 
 export type ServerResponse<TData> = {
 	data: TData;

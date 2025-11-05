@@ -2,7 +2,7 @@ import {
 	DEFAULT_ERROR_MESSAGE,
 	HTTP_STATUS,
 	type HTTPStatusCode,
-} from "../utils/server-fns.utils";
+} from "../utils/server-fns-types.utils";
 
 export class ServerError extends Error {
 	status: HTTPStatusCode;

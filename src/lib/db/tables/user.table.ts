@@ -18,7 +18,7 @@ export function getUsersColumns() {
 
 		currentInvoiceNumber: integer("current_invoice_number", { mode: "number" })
 			.notNull()
-			.default(1),
+			.default(0),
 
 		taxId: text("tax_id"),
 
