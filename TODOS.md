@@ -1,73 +1,79 @@
-# TODOS
+# TODOS!!
+  
+## Invoice Creation Form
 
-## finish invoice creation form
+- [ ] Invoice number field on creation
+  - Remove "first invoice" modal and use invoice number directly on form
+  - If inserted invoice number already exists, alert user that it might cause conflicts
+- [ ] Remove "services" select-multiple and override with button
+  - On click, add to array-like field on form:
+    - Service (select input for service id)
+    - Quantity (number input)
+- [ ] Include "due date" field
 
-- invoice number field on creation --> remove "first invoice" modal and use invoice number directly on form.
-  if inserted invoice number already exists, alert user that it might cause conflicts.
-- remove "services" select-multiple and override with button. on click, add to array-like field on form a service (select input for service id) and quantity (number input)
-- include "due date"
+## Invoice List
 
-## add search/filter to invoice list
+- [ ] Add search/filter functionality
+- [ ] Add zero state view for empty invoice list
+- [ ] Soft and hard delete for invoices
+- [ ] If on invoice list and has no services/clients, show "please add .... before creating invoice"
+- [ ] If user is creating invoice with an invoice date on the past, prompt "import invoices"
 
-## add a lot of animations
+## Animations
 
-- invoice cards
-- service+quantity forms on invoice new
+- [ ] Invoice cards animations
+- [ ] Service+quantity forms on invoice new page
 
-## invoice "templates" / fast create
+## Invoice Templates / Fast Create
 
-- create button should be dropdown or add new dropdown button for "templates" (maybe use a modal with select?)
-- add field to "also make this a template" (with description "you can use it later...")
+- [ ] Create button should be dropdown or add new dropdown button for "templates" (maybe use a modal with select?)
+- [ ] Add field to "also make this a template" (with description "you can use it later...")
 
-## zero state view
+## Zero State Views
 
-- tables
-- invoice list
+- [ ] Tables
+- [ ] Invoice list
 
-## soft and hard delete for invoices
+## Client Currency
 
-## add client currency
+- [ ] Add client currency field so it can be displayed correctly on the invoice
+- [ ] Add field for "en-US" "pt-BR" etc on the currencies declaration (with prefix suffix etc)
 
-- add client currency field so it can be displayed correctly on the invoice,
-  also add field for "en-US" "pt-BR" etc on the currencies declaration (with prefix suffix etc)
+## User Account Page
 
-## user account page
+- [ ] Implement user account page
 
-## improve data table (specially columns)
+## Data Table Improvements
 
-- multi-row actions
-- filter
-- inline action buttons ?
+- [ ] Multi-row actions
+- [ ] Filter functionality
+- [ ] Inline action buttons
 
-## extract "address" table ?
+## Database Structure
 
-## new invoice layouts
+- [ ] Extract "address" table (consider if needed)
 
-- create other options for invoice layouts with react-pdf
+## Invoice Layouts
 
-## better formatting for currencies
+- [ ] Create other options for invoice layouts with react-pdf
 
-- it's being done in multiple places differently
+## Currency Formatting
 
----
+- [ ] Better formatting for currencies
+  - Currently being done in multiple places differently
+  - Need to standardize approach
 
-## FIGURE OUT
+## Architecture & Components
 
-- how to handle invoices with services with diferent currencies (e.g. service 1 BRL & service 2 USD - how to show the total? disable this behaviour on invoice creation?)
+- [ ] Audit components (some are using shadcn definition still)
 
----
+## User Experience Enhancements
 
-## QoL
+- [ ] On sign-up/login page, add "we use workOs to protect your auth data"
+- [ ] React-tour / react-joyride (consider adding onboarding)
 
-- if on invoice list and has no services/clients, show "please add .... before creating invoice"
-- if user is creating invoice with a invoice date on the past, prompt "import invoices"
-- react-tour / react-joyride ??
+## Questions to Resolve
 
----
-
-## others
-
-- on sign-up/login page, add "we use workOs to protect your auth data"
-- audit components (some are using shadcn definition still)
-
----
+- [ ] How to handle invoices with services with different currencies
+  - Example: service 1 BRL & service 2 USD - how to show the total?
+  - Should we disable this behaviour on invoice creation?
