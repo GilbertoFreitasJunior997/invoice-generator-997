@@ -2,12 +2,10 @@
   
 ## Invoice Creation Form
 
-- [ ] Remove "services" select-multiple and override with button
-  - On click, add to array-like field on form:
-    - Service (select input for service id)
-    - Quantity (number input)
+- [ ] Improve form layout
 - [ ] Include "due date" field
 - [ ] Link duplicated invoice to view in list on InvoceNewDuplicatedNumberDialog
+- [ ] Fix issue when adding two services and removing one, it breaks pdf generation (change pdf lib?)
 
 ## Invoice List
 
@@ -76,3 +74,7 @@
 - [ ] How to handle invoices with services with different currencies
   - Example: service 1 BRL & service 2 USD - how to show the total?
   - Should we disable this behaviour on invoice creation?
+
+## Change loader to useRouteContext for users
+
+const { user } = Route.useRouteContext(); instead of useLoaderData()

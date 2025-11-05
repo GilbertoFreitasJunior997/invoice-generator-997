@@ -161,15 +161,8 @@ export const InvoiceDefaultLayout = ({
 	userLogo: _userLogo,
 	invoicedAt,
 }: InvoiceDefaultLayoutProps) => {
-	const quantity = 1;
-	const servicesWithQuantity = services.map((service) => ({
-		...service,
-		quantity,
-		total: service.rate * quantity,
-	}));
-
-	const total = servicesWithQuantity.reduce(
-		(sum, service) => sum + service.total,
+	const total = services.reduce(
+		(sum, service) => sum + service.rate * service.quantity,
 		0,
 	);
 
@@ -248,8 +241,8 @@ export const InvoiceDefaultLayout = ({
 						</View>
 					</View>
 
-					{servicesWithQuantity.map((service) => (
-						<View key={service.id} style={styles.tableRow}>
+					{services.map((service, index) => (
+						<View key={index} style={styles.tableRow}>
 							<View style={styles.tableColItem}>
 								<Text style={styles.tableCellText}>{service.description}</Text>
 							</View>
@@ -263,7 +256,7 @@ export const InvoiceDefaultLayout = ({
 							</View>
 							<View style={styles.tableColAmount}>
 								<Text style={styles.tableCellText}>
-									${service.total.toFixed(2)}
+									${(service.rate * service.quantity).toFixed(2)}
 								</Text>
 							</View>
 						</View>

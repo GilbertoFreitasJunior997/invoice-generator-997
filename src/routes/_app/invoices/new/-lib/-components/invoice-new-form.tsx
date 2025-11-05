@@ -1,3 +1,5 @@
+import { PlusIcon, TrashIcon } from "lucide-react";
+import { Button } from "@/lib/components/button";
 import { withForm } from "@/lib/utils/forms.utils";
 import { useInvoiceNewQueries } from "../hooks/use-invoice-new-queries";
 import { invoiceNewFormDefaultValues } from "./consts";
@@ -79,18 +81,72 @@ export const InvoiceNewForm = withForm({
 							/>
 						)}
 					/>
+
 					<form.AppField
-						name="servicesIds"
-						children={(field) => (
-							<field.SelectMultipleInput
-								label="Services"
-								items={services?.map((service) => ({
-									label: service.name,
-									value: service.id,
-								}))}
-								isLoading={isServicesLoading}
-							/>
-						)}
+						name="services"
+						mode="array"
+						children={(field) => {
+							return (
+								<div className="flex flex-col gap-2">
+									<Button
+										variant="outline"
+										size="sm"
+										className="w-full"
+										onClick={() =>
+											field.pushValue({
+												serviceId: "",
+												quantity: 1,
+											})
+										}
+									>
+										<PlusIcon />
+										Add Service
+									</Button>
+
+									{field.state.value.map((_, index) => {
+										return (
+											<div
+												key={index}
+												className="grid grid-cols-6 gap-2 items-end"
+											>
+												<form.AppField
+													name={`services[${index}].serviceId`}
+													children={(subField) => (
+														<subField.SelectInput
+															label="Service"
+															items={services?.map((service) => ({
+																label: service.name,
+																value: service.id,
+															}))}
+															isLoading={isServicesLoading}
+															rootClassName="col-span-3"
+														/>
+													)}
+												/>
+
+												<form.AppField
+													name={`services[${index}].quantity`}
+													children={(subField) => (
+														<subField.NumberInput
+															label="Quantity"
+															rootClassName="col-span-2"
+														/>
+													)}
+												/>
+
+												<Button
+													variant="outline"
+													className="col-span-1"
+													onClick={() => field.removeValue(index)}
+												>
+													<TrashIcon />
+												</Button>
+											</div>
+										);
+									})}
+								</div>
+							);
+						}}
 					/>
 
 					<form.AppField

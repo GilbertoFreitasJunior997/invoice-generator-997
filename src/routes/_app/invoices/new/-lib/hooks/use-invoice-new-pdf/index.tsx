@@ -3,7 +3,10 @@ import { getRouteApi } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { getLogoFromStorage } from "@/lib/components/logo-input/utils";
 import { InvoiceDefaultLayout } from "@/lib/invoice-layouts/invoice-default-layout";
-import type { InvoiceGenerationForm } from "@/lib/schemas/invoice.schemas";
+import type {
+	InvoiceGenerationForm,
+	InvoiceGenerationServiceWithQuantity,
+} from "@/lib/schemas/invoice.schemas";
 import { blobToBase64 } from "@/lib/utils/blobs.utils";
 import { useInvoiceNewQueries } from "../use-invoice-new-queries";
 
@@ -11,15 +14,15 @@ const Route = getRouteApi("/_app/invoices/new/");
 
 type UseInvoiceNewPDFProps = Pick<
 	InvoiceGenerationForm,
-	"invoiceNumber" | "clientId" | "servicesIds" | "invoicedAt"
+	"invoiceNumber" | "clientId" | "services" | "invoicedAt"
 >;
 export const useInvoiceNewPDF = ({
 	invoiceNumber,
 	clientId,
-	servicesIds,
+	services,
 	invoicedAt,
 }: UseInvoiceNewPDFProps) => {
-	const { user } = Route.useLoaderData();
+	const { user } = Route.useRouteContext();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [pdfInstance, updatePDF] = usePDF({
@@ -28,18 +31,35 @@ export const useInvoiceNewPDF = ({
 
 	const { clientsQuery, servicesQuery } = useInvoiceNewQueries();
 	const { data: clients } = clientsQuery;
-	const { data: services } = servicesQuery;
+	const { data: allServices } = servicesQuery;
 
 	const selectedClient = useMemo(
 		() => clients?.find((client) => client.id === clientId) ?? null,
 		[clients, clientId],
 	);
 
-	const selectedServices = useMemo(
-		() =>
-			services?.filter((service) => servicesIds?.includes(service.id)) ?? [],
-		[services, servicesIds],
-	);
+	const selectedServices = useMemo(() => {
+		const selectedServices: InvoiceGenerationServiceWithQuantity[] = [];
+
+		for (const service of services) {
+			if (!service?.serviceId) {
+				continue;
+			}
+
+			const allService = allServices?.find((s) => s.id === service.serviceId);
+
+			if (!allService) {
+				throw new Error(`Service "${service.serviceId}" not found`);
+			}
+
+			selectedServices.push({
+				...allService,
+				quantity: service.quantity,
+			});
+		}
+
+		return selectedServices;
+	}, [services, allServices]);
 
 	useEffect(() => {
 		if (

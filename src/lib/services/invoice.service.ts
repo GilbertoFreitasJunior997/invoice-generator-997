@@ -27,7 +27,13 @@ export const createInvoice = createServerFn()
 	.inputValidator(invoiceGenerationSchema)
 	.handler(async ({ data }) => {
 		try {
-			const { userId, clientId, servicesIds, fileName, invoiceNumber } = data;
+			const {
+				userId,
+				clientId,
+				services: formServices,
+				fileName,
+				invoiceNumber,
+			} = data;
 
 			const invoice = await db.transaction(async (tx) => {
 				const user = await tx.query.usersTable.findFirst({
@@ -49,15 +55,21 @@ export const createInvoice = createServerFn()
 					throw new ServerBadRequestError("Client not found");
 				}
 
+				if (!formServices.length) {
+					throw new ServerBadRequestError("At least one service is required");
+				}
+
 				const services = await tx.query.servicesTable.findMany({
 					where: and(
 						eq(servicesTable.userId, user.id),
-						inArray(servicesTable.id, servicesIds),
+						inArray(
+							servicesTable.id,
+							formServices.map((service) => service.serviceId),
+						),
 					),
 				});
-
-				if (!services.length || services.length !== servicesIds.length) {
-					throw new ServerBadRequestError("Services not found");
+				if (!services.length) {
+					throw new ServerBadRequestError("Selected services not found");
 				}
 
 				const [snapshotClient] = await tx
@@ -94,11 +106,24 @@ export const createInvoice = createServerFn()
 					})
 					.returning();
 
-				const totalAmount = services.reduce(
-					// TODO: use quantity
-					(sum, service) => sum + service.rate * 1,
-					0,
-				);
+				let totalAmount = 0;
+				const servicesWithQuantity = services.map((service) => {
+					const formService = formServices.find(
+						(formService) => formService.serviceId === service.id,
+					);
+					if (!formService) {
+						throw new ServerBadRequestError(
+							`Selected service "${service.id}" not found`,
+						);
+					}
+
+					totalAmount += service.rate * formService.quantity;
+
+					return {
+						...service,
+						quantity: formService.quantity,
+					};
+				});
 
 				const [invoice] = await tx
 					.insert(invoicesTable)
@@ -124,11 +149,10 @@ export const createInvoice = createServerFn()
 					.where(eq(usersTable.id, userId));
 
 				await tx.insert(invoiceItemsTable).values(
-					services.map((service) => ({
+					servicesWithQuantity.map((service) => ({
 						...service,
 						id: undefined,
-						// TODO: use quantity
-						quantity: 1,
+						quantity: service.quantity,
 						invoiceId: invoice.id,
 						serviceId: service.id,
 					})),

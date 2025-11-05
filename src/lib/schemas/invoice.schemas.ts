@@ -7,6 +7,7 @@ import {
 	invoicesTable,
 	type userSnapshotsTable,
 } from "../db/tables";
+import type { ServiceSelect } from "./service.schemas";
 
 const invoiceSelectSchema = createSelectSchema(invoicesTable);
 export type InvoiceSelect = z.infer<typeof invoiceSelectSchema>;
@@ -17,10 +18,21 @@ export type InvoiceSelectWithRelations = InvoiceSelect & {
 	items: InferSelectModel<typeof invoiceItemsTable>[];
 };
 
+export const invoiceGenerationServiceSchema = z.object({
+	serviceId: z.string().min(1),
+	quantity: z.number().min(1),
+});
+export type InvoiceGenerationService = z.infer<
+	typeof invoiceGenerationServiceSchema
+>;
+
+export type InvoiceGenerationServiceWithQuantity = ServiceSelect &
+	Pick<InvoiceGenerationService, "quantity">;
+
 export const invoiceGenerationFormSchema = z.object({
 	fileName: z.string().min(1),
 	clientId: z.string().min(1),
-	servicesIds: z.array(z.string()).min(1),
+	services: z.array(invoiceGenerationServiceSchema).min(1),
 	invoicedAt: z.date(),
 	invoiceNumber: z.number().min(1),
 });

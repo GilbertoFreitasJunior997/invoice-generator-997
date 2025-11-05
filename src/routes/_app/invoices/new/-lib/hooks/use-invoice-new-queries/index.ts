@@ -7,7 +7,7 @@ import { getUserNextInvoiceNumberQueryOptions } from "@/lib/query-options/user.q
 const Route = getRouteApi("/_app/invoices/new/");
 
 export const useInvoiceNewQueries = () => {
-	const { user } = Route.useLoaderData();
+	const { user } = Route.useRouteContext();
 
 	const clientsQuery = useServerQuery({
 		...getAllActiveClientsQueryOptions({

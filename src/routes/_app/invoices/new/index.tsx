@@ -28,15 +28,12 @@ import { useInvoiceNewQueries } from "./-lib/hooks/use-invoice-new-queries";
 
 export const Route = createFileRoute("/_app/invoices/new/")({
 	ssr: "data-only",
-	loader: ({ context }) => ({
-		user: context.user,
-	}),
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	const navigate = Route.useNavigate();
-	const { user } = Route.useLoaderData();
+	const { user } = Route.useRouteContext();
 
 	const [duplicatedNumberDialogData, setDuplicatedNumberDialogData] =
 		useState<InvoiceNewDuplicatedNumberDialogData>();
@@ -63,7 +60,7 @@ function RouteComponent() {
 		const invoice = await createInvoiceMutation({
 			fileName: formData.fileName,
 			clientId: formData.clientId,
-			servicesIds: formData.servicesIds,
+			services: formData.services,
 			invoicedAt: formData.invoicedAt,
 			invoiceNumber: formData.invoiceNumber,
 		});
@@ -105,7 +102,7 @@ function RouteComponent() {
 
 	const invoiceNumber = useStore(form.store, (s) => s.values.invoiceNumber);
 	const clientId = useStore(form.store, (s) => s.values.clientId);
-	const servicesIds = useStore(form.store, (s) => s.values.servicesIds);
+	const services = useStore(form.store, (s) => s.values.services);
 	const invoicedAt = useStore(form.store, (s) => s.values.invoicedAt);
 
 	const { refetch: refetchInvoiceByInvoiceNumber } = useServerQuery(
@@ -124,7 +121,7 @@ function RouteComponent() {
 	const { pdfInstance } = useInvoiceNewPDF({
 		invoiceNumber,
 		clientId,
-		servicesIds,
+		services,
 		invoicedAt,
 	});
 
@@ -183,7 +180,7 @@ function RouteComponent() {
 					<InvoiceNewPDFPreview
 						pdfInstance={pdfInstance}
 						clientId={clientId}
-						servicesIds={servicesIds}
+						services={services}
 					/>
 				</div>
 			</div>
