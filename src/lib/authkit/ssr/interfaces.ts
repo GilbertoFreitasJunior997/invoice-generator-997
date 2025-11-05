@@ -6,15 +6,6 @@ export interface GetAuthURLOptions {
 	returnPathname?: string;
 }
 
-export interface CookieOptions {
-	path: "/";
-	httpOnly: true;
-	secure: boolean;
-	sameSite: "lax" | "strict" | "none";
-	maxAge: number;
-	domain: string | undefined;
-}
-
 export interface UserInfo {
 	user: User;
 	sessionId: string;
@@ -34,18 +25,6 @@ export interface NoUserInfo {
 	entitlements?: undefined;
 	impersonator?: undefined;
 	accessToken?: undefined;
-}
-
-export interface AuthkitOptions {
-	debug?: boolean;
-	redirectUri?: string;
-	screenHint?: "sign-up" | "sign-in";
-}
-
-export interface AuthkitResponse {
-	session: UserInfo | NoUserInfo;
-	headers: Headers;
-	authorizationUrl?: string;
 }
 
 /**

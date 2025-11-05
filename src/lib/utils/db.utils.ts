@@ -1,5 +1,4 @@
-import { type SQL, sql } from "drizzle-orm";
-import { type SQLiteTable, text } from "drizzle-orm/sqlite-core";
+import { text } from "drizzle-orm/sqlite-core";
 import { v4 as uuidv4 } from "uuid";
 import { usersTable } from "../db/tables/user.table";
 import { formatDbDate } from "./date.utils";
@@ -36,43 +35,3 @@ export function userId() {
 			onUpdate: "cascade",
 		});
 }
-
-export const getUpdateBatchColumnsSql = <T extends { id?: string }>({
-	table,
-	columns,
-	values,
-}: {
-	table: SQLiteTable & {
-		id: {
-			dataType: "string";
-		};
-	};
-	columns: (keyof T)[];
-	values: T[];
-}) => {
-	const updateBatchColumnsSql = {} as Record<keyof T, SQL>;
-	const ids: string[] = [];
-
-	for (const column of columns) {
-		const sqlChunks = [sql`(CASE`];
-
-		for (const value of values) {
-			if (!value.id) {
-				throw new Error(
-					"Item ID is required for item update. Item: " +
-						JSON.stringify(value, null, 2),
-				);
-			}
-
-			sqlChunks.push(sql`WHEN ${table.id} = ${value.id} then ${value[column]}`);
-
-			ids.push(value.id);
-		}
-
-		sqlChunks.push(sql`END)`);
-
-		updateBatchColumnsSql[column] = sql.join(sqlChunks, sql.raw(" "));
-	}
-
-	return { updateBatchColumnsSql, ids };
-};

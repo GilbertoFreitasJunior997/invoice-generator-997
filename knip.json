@@ -1,0 +1,37 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/router.tsx",
+    "src/routes/**/__root.tsx",
+    "src/routes/**/route.tsx",
+    "src/routes/**/index.tsx",
+    "src/routes/**/*.tsx",
+    "!src/routes/**/-components/**",
+    "!src/routes/**/-lib/**"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "!src/routeTree.gen.ts"
+  ],
+  "ignore": [
+    "src/routeTree.gen.ts"
+  ],
+  "paths": {
+    "@/*": [
+      "./src/*"
+    ]
+  },
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  },
+  "ignoreDependencies": [
+    "tailwindcss",
+    "tw-animate-css",
+    "@tanstack/router-plugin"
+  ],
+  "ignoreBinaries": [
+    "netlify"
+  ],
+  "tags": ["-lintignore"]
+}

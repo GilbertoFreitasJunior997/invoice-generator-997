@@ -19,8 +19,8 @@ import type { LogoInputProps, LogoInputValue } from "./types";
 import { getLogoFromStorage } from "./utils";
 
 const MAX_FILE_SIZE_MB = 5;
-export const supportedImageExtensions = ["png", "jpeg", "jpg"];
-export const supportedImageMimeTypes = ["image/png", "image/jpeg", "image/jpg"];
+const supportedImageExtensions = ["png", "jpeg", "jpg"];
+const supportedImageMimeTypes = ["image/png", "image/jpeg", "image/jpg"];
 
 export const LogoInput = ({
 	imageKey,

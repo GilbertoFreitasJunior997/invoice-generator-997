@@ -15,12 +15,11 @@ import {
 	FormSubmitButton,
 } from "../components/form";
 
-export const { formContext, fieldContext, useFieldContext, useFormContext } =
-	createFormHookContexts();
+const formHookContexts = createFormHookContexts();
 
-export const { useAppForm, withForm, withFieldGroup } = createFormHook({
-	formContext,
-	fieldContext,
+export const { useAppForm, withForm } = createFormHook({
+	formContext: formHookContexts.formContext,
+	fieldContext: formHookContexts.fieldContext,
 	fieldComponents: {
 		Checkbox: FormInputWrapper(Checkbox),
 		DateInput: FormInputWrapper(DateInput),
@@ -38,3 +37,5 @@ export const { useAppForm, withForm, withFieldGroup } = createFormHook({
 		SubmitButton: FormSubmitButton,
 	},
 });
+
+export const { useFieldContext, useFormContext } = formHookContexts;

@@ -6,7 +6,7 @@ import type { GetAuthURLOptions, NoUserInfo, UserInfo } from "./ssr/interfaces";
 import { terminateSession, withAuth } from "./ssr/session";
 import { getWorkOS } from "./ssr/workos";
 
-export const getAuthorizationUrl = createServerFn({ method: "GET" })
+const getAuthorizationUrl = createServerFn({ method: "GET" })
 	.inputValidator((options?: GetAuthURLOptions) => options)
 	.handler(({ data: options = {} }) => {
 		const { returnPathname, screenHint, redirectUri } = options;
@@ -30,13 +30,6 @@ export const getSignInUrl = createServerFn({ method: "GET" })
 		});
 	});
 
-export const getSignUpUrl = createServerFn({ method: "GET" })
-	.inputValidator((data?: string) => data)
-	.handler(async ({ data: returnPathname }) => {
-		return getAuthorizationUrl({
-			data: { returnPathname, screenHint: "sign-up" },
-		});
-	});
 
 export const signOut = createServerFn({ method: "POST" })
 	.inputValidator((data?: string) => data)

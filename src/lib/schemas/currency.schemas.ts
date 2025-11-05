@@ -6,17 +6,17 @@ export const currencies = currencyEnumSchema.options;
 export const currenciesSelectOptions = createSelectOptions(currencies);
 export type Currency = (typeof currencies)[number];
 
-export const currencyPrefixes: Record<Currency, string> = {
+const currencyPrefixes: Record<Currency, string> = {
 	USD: "$",
 	BRL: "R$",
 };
 
-export const currencyThousandSeparators: Record<Currency, string> = {
+const currencyThousandSeparators: Record<Currency, string> = {
 	USD: ".",
 	BRL: ",",
 };
 
-export const currencyDecimalSeparators: Record<Currency, string> = {
+const currencyDecimalSeparators: Record<Currency, string> = {
 	USD: ",",
 	BRL: ".",
 };

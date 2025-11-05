@@ -30,7 +30,7 @@ const countryPlaceholders = {
 	},
 } satisfies Record<Country, CountryPlaceholders>;
 
-export const getCountryPlaceholders = (country: Country) =>
+const getCountryPlaceholders = (country: Country) =>
 	countryPlaceholders[country] ?? countryPlaceholders.USA;
 
 export const getCountryAddressLine1Placeholder = (country: Country) =>

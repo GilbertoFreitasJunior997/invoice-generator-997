@@ -4,11 +4,11 @@ export type FormRootContext = {
 	isLoading?: boolean;
 };
 
-export const formRootContextDefaultValues: FormRootContext = {
+const formRootContextDefaultValues: FormRootContext = {
 	isLoading: false,
 };
 
-export const formRootContext = createContext<FormRootContext>(
+const formRootContext = createContext<FormRootContext>(
 	formRootContextDefaultValues,
 );
 

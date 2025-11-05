@@ -10,4 +10,3 @@ export const addressSchema = z.object({
 	zip: z.string().min(1),
 	taxId: z.string(),
 });
-export type Address = z.infer<typeof addressSchema>;

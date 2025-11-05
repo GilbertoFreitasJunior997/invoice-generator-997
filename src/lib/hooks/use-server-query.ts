@@ -7,7 +7,6 @@ import {
 	type UseQueryResult,
 	useMutation,
 	useQuery,
-	useSuspenseQuery,
 } from "@tanstack/react-query";
 import { useEffect, useEffectEvent } from "react";
 import { toast } from "sonner";
@@ -59,21 +58,6 @@ const handleServerResponse = async <T>({
 	return result.data;
 };
 
-const createServerQueryFn = <TQueryOptions extends AnyUseQueryOptions>(
-	queryOptions: TQueryOptions,
-) => {
-	return async (context: QueryFunctionContext) => {
-		if (!queryOptions.queryFn || typeof queryOptions.queryFn !== "function") {
-			throw new Error("Query function is required");
-		}
-
-		return handleServerResponse({
-			promise: queryOptions.queryFn(context),
-			isMutation: false,
-		});
-	};
-};
-
 export const useServerQuery = <TQueryOptions extends AnyUseQueryOptions>(
 	options: TQueryOptions,
 ): UseServerQueryResult<TQueryOptions> => {
@@ -115,17 +99,6 @@ export const useServerQuery = <TQueryOptions extends AnyUseQueryOptions>(
 	}, [isFetching]);
 
 	return query;
-};
-
-export const useServerSuspenseQuery = <
-	TQueryOptions extends AnyUseQueryOptions,
->(
-	options: TQueryOptions,
-): UseServerQueryResult<TQueryOptions> => {
-	return useSuspenseQuery({
-		...options,
-		queryFn: createServerQueryFn(options),
-	}) as UseServerQueryResult<TQueryOptions>;
 };
 
 type AnyUseMutationOptions = Omit<

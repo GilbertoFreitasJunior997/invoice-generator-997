@@ -4,7 +4,7 @@ import { servicesTable } from "../db/tables/services.table";
 import { currencyEnumSchema } from "./currency.schemas";
 import { serviceStatusEnumSchema } from "./service-status.schemas";
 
-export const serviceSelectSchema = createSelectSchema(servicesTable);
+const serviceSelectSchema = createSelectSchema(servicesTable);
 
 export type ServiceSelect = z.infer<typeof serviceSelectSchema>;
 

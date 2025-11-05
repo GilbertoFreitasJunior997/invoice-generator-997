@@ -4,7 +4,7 @@ import {
 	uploadBlobToStorage,
 } from "@/lib/services/blob.service";
 
-export const LOGOS_BLOB_STORE = "logos";
+const LOGOS_BLOB_STORE = "logos";
 
 export const uploadLogoToStorage = async (file?: File) => {
 	if (!file) {

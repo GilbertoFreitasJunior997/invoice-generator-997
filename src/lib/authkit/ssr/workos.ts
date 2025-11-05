@@ -2,7 +2,7 @@ import { WorkOS } from "@workos-inc/node";
 import { lazy } from "@/lib/utils/lazy";
 import { authkitConfig } from "./config";
 
-export function createWorkOSInstance() {
+function createWorkOSInstance() {
 	const options = {
 		apiHostname: authkitConfig.apiHostname,
 		https: authkitConfig.apiHttps,

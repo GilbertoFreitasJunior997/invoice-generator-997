@@ -8,7 +8,7 @@ import {
 	type userSnapshotsTable,
 } from "../db/tables";
 
-export const invoiceSelectSchema = createSelectSchema(invoicesTable);
+const invoiceSelectSchema = createSelectSchema(invoicesTable);
 export type InvoiceSelect = z.infer<typeof invoiceSelectSchema>;
 
 export type InvoiceSelectWithRelations = InvoiceSelect & {
@@ -38,10 +38,3 @@ export const invoiceNewFirstInvoiceFormSchema = z.object({
 export type InvoiceNewFirstInvoiceForm = z.infer<
 	typeof invoiceNewFirstInvoiceFormSchema
 >;
-
-export const invoiceNewFirstInvoiceSchema =
-	invoiceNewFirstInvoiceFormSchema.extend(
-		z.object({
-			userId: z.string().min(1),
-		}).shape,
-	);

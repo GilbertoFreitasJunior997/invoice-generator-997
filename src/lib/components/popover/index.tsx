@@ -7,15 +7,15 @@ import type {
 	PopoverTriggerProps,
 } from "./types";
 
-export const Root = ({ ...props }: PopoverRootProps) => {
+const Root = ({ ...props }: PopoverRootProps) => {
 	return <PopoverPrimitive.Root data-slot="popover" {...props} />;
 };
 
-export const Trigger = ({ ...props }: PopoverTriggerProps) => {
+const Trigger = ({ ...props }: PopoverTriggerProps) => {
 	return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
 };
 
-export const Content = ({
+const Content = ({
 	className,
 	align = "center",
 	sideOffset = 4,

@@ -3,7 +3,7 @@ import z from "zod";
 import { usersTable } from "../db/tables/user.table";
 import { addressSchema } from "./address.schemas";
 
-export const userSelectSchema = createSelectSchema(usersTable);
+const userSelectSchema = createSelectSchema(usersTable);
 export type UserSelect = z.infer<typeof userSelectSchema>;
 
 export const getAuthUserSchema = z.object({

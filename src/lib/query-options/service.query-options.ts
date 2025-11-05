@@ -10,7 +10,7 @@ import {
 import { invoiceQueryKeys } from "./invoice.query-options";
 
 const baseKeys = ["services"] as const;
-export const serviceQueryKeys = {
+const serviceQueryKeys = {
 	base: baseKeys,
 	all: (userId: string) => [...baseKeys, userId],
 	allActive: (userId: string) => [...baseKeys, userId, "active"],

@@ -4,7 +4,7 @@ import { clientsTable } from "../db/tables/clients.table";
 import { addressSchema } from "./address.schemas";
 import { clientStatusEnumSchema } from "./client-status.schemas";
 
-export const clientSelectSchema = createSelectSchema(clientsTable);
+const clientSelectSchema = createSelectSchema(clientsTable);
 export type ClientSelect = z.infer<typeof clientSelectSchema>;
 
 export const clientUpsertFormSchema = z
