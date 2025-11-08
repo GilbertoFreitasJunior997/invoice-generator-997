@@ -35,6 +35,7 @@ export const invoiceGenerationFormSchema = z.object({
 	services: z.array(invoiceGenerationServiceSchema).min(1),
 	invoicedAt: z.date(),
 	invoiceNumber: z.number().min(1),
+	dueDate: z.date().optional(),
 });
 export type InvoiceGenerationForm = z.infer<typeof invoiceGenerationFormSchema>;
 

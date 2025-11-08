@@ -160,6 +160,7 @@ export const InvoiceDefaultLayout = ({
 	services,
 	userLogo: _userLogo,
 	invoicedAt,
+	dueDate,
 }: InvoiceDefaultLayoutProps) => {
 	const total = services.reduce(
 		(sum, service) => sum + service.rate * service.quantity,
@@ -168,15 +169,11 @@ export const InvoiceDefaultLayout = ({
 
 	const invoiceDate = format(invoicedAt, "MMM d, yyyy");
 
-	const clientLocation =
-		client.city && client.state
-			? `${client.city}, ${client.state}`
-			: client.city || client.state || "";
+	const clientLocation = `${client.city}, ${client.state}, ${client.country}`;
 
-	const userLocation =
-		user.city && user.state
-			? `${user.city}, ${user.state}`
-			: user.city || user.state || "";
+	const userLocation = `${user.city}, ${user.state}, ${user.country}`;
+
+	const dueDateText = dueDate ? format(dueDate, "MMM d, yyyy") : "";
 
 	return (
 		<Document>
@@ -185,7 +182,11 @@ export const InvoiceDefaultLayout = ({
 					<Text style={styles.companyName}>{user.name}</Text>
 					<View style={styles.headerRight}>
 						<Text style={styles.invoiceNumberText}>#{invoiceNumber}</Text>
-						<Text style={styles.invoiceDateText}>{invoiceDate}</Text>
+						<Text style={styles.invoiceDateText}>Issued on {invoiceDate}</Text>
+
+						{dueDateText && (
+							<Text style={styles.invoiceDateText}>Due on {dueDateText}</Text>
+						)}
 					</View>
 				</View>
 

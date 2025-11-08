@@ -345,6 +345,7 @@ export const invoiceSampleData = {
 			userId: "8a08b683-e8f2-410a-8eda-fb53d2b62266",
 			createdAt: formatDbDate(),
 			updatedAt: formatDbDate(),
+			quantity: 1,
 			status: "active",
 		},
 	],
@@ -391,7 +392,7 @@ const useGenerateInvoiceTest = () => {
 				createInvoiceMutation({
 					fileName: `INV${i}-${clients?.[0]?.name}`,
 					clientId,
-					servicesIds: [serviceId],
+					services: [{ serviceId, quantity: 1 }],
 					invoiceNumber: i + 1,
 					invoicedAt: new Date(),
 				}),

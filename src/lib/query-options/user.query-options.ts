@@ -1,9 +1,13 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getUserNextInvoiceNumber } from "../services/user.service";
+import {
+	getCurrentUser,
+	getUserNextInvoiceNumber,
+} from "../services/user.service";
 
 const baseKeys = ["user"] as const;
 export const userQueryKeys = {
 	base: baseKeys,
+	currentUser: (pathname: string) => [...baseKeys, pathname, "current-user"],
 	nextInvoiceNumber: (userId: string) => [
 		...baseKeys,
 		userId,
@@ -20,4 +24,10 @@ export const getUserNextInvoiceNumberQueryOptions = (data: {
 			getUserNextInvoiceNumber({
 				data: { userId: data.userId },
 			}),
+	});
+
+export const getCurrentUserQueryOptions = (pathname: string) =>
+	queryOptions({
+		queryKey: userQueryKeys.currentUser(pathname),
+		queryFn: () => getCurrentUser({ data: { pathname } }),
 	});

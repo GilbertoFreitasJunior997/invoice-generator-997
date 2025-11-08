@@ -8,5 +8,6 @@ export type InvoiceDefaultLayoutProps = {
 	client: ClientSelect;
 	services: InvoiceGenerationServiceWithQuantity[];
 	invoicedAt: Date;
+	dueDate?: Date;
 	userLogo?: string;
 };

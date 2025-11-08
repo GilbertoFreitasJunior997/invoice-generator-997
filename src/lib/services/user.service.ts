@@ -1,5 +1,7 @@
+import { redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
+import { getAuth, getSignInUrl } from "../authkit/serverFunctions";
 import { db } from "../db";
 import { usersTable } from "../db/tables/user.table";
 import { ServerBadRequestError } from "../errors/server-fns.errors";
@@ -85,5 +87,25 @@ export const getUserNextInvoiceNumber = createServerFn({ method: "GET" })
 			return createServerSuccessResponse({ data: nextInvoiceNumber });
 		} catch (error) {
 			return createServerErrorResponse({ error });
+		}
+	});
+
+export const getCurrentUser = createServerFn()
+	.inputValidator((d: { pathname: string }) => d)
+	.handler(async ({ data: { pathname } }) => {
+		const auth = await getAuth();
+		if (!auth.user) {
+			const href = await getSignInUrl({ data: pathname });
+			throw redirect({ href });
+		}
+
+		try {
+			const result = await getAuthUser({
+				data: auth.user,
+			});
+
+			return result.data;
+		} catch {
+			throw redirect({ to: "/setup-account" });
 		}
 	});

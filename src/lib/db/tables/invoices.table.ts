@@ -13,6 +13,7 @@ export const invoicesTable = sqliteTable("invoices", {
 	invoiceNumber: integer("invoice_number", { mode: "number" }).notNull(),
 	fileName: text("file_name").notNull(),
 	invoicedAt: text("invoiced_at").notNull(),
+	dueDate: text("due_date"),
 	totalAmount: real("total_amount").notNull(),
 	status: text("status", {
 		enum: invoiceStatuses as [InvoiceStatus, ...InvoiceStatus[]],

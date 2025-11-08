@@ -125,6 +125,18 @@ export const createInvoice = createServerFn()
 					};
 				});
 
+				const invoicedAt = formatDbDate({
+					date: data.invoicedAt,
+					withTime: false,
+				});
+
+				const dueDate = data.dueDate
+					? formatDbDate({
+							date: data.dueDate,
+							withTime: false,
+						})
+					: undefined;
+
 				const [invoice] = await tx
 					.insert(invoicesTable)
 					.values({
@@ -133,10 +145,8 @@ export const createInvoice = createServerFn()
 						userId: user.id,
 						clientSnapshotId: snapshotClient.id,
 						userSnapshotId: snapshotUser.id,
-						invoicedAt: formatDbDate({
-							date: data.invoicedAt,
-							withTime: false,
-						}),
+						invoicedAt,
+						dueDate,
 						totalAmount,
 					})
 					.returning();

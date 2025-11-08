@@ -1,4 +1,5 @@
 import * as LabelPrimitive from "@radix-ui/react-label";
+import { AnimatePresence, motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils/cn";
 import { inputBoxSizeClassNames } from "./consts";
@@ -49,26 +50,30 @@ const Label = ({ className, label, isRequired, ...props }: FieldLabelProps) => {
 
 // named "FieldError" to avoid shadowing the global "Error" property
 const FieldError = ({ errors, className }: FieldErrorProps) => {
-	if (!errors?.length) {
-		return null;
-	}
-
 	return (
-		<div
-			role="alert"
-			data-slot="field-error"
-			className={cn("text-destructive text-sm font-normal", className)}
-		>
-			{errors.length === 1 ? (
-				<span>{errors[0]}</span>
-			) : (
-				<ul className="ml-4 flex list-disc flex-col gap-1">
-					{errors.map((error) => {
-						return <li key={error}>{error}</li>;
-					})}
-				</ul>
+		<AnimatePresence>
+			{!!errors?.length && (
+				<motion.div
+					role="alert"
+					data-slot="field-error"
+					className={cn("text-destructive text-sm font-normal", className)}
+					initial={{ opacity: 0, height: 0 }}
+					animate={{ opacity: 1, height: "auto" }}
+					exit={{ opacity: 0, height: 0 }}
+					transition={{ duration: 0.1 }}
+				>
+					{errors.length === 1 ? (
+						<span>{errors[0]}</span>
+					) : (
+						<ul className="ml-4 flex list-disc flex-col gap-1">
+							{errors.map((error) => {
+								return <li key={error}>{error}</li>;
+							})}
+						</ul>
+					)}
+				</motion.div>
 			)}
-		</div>
+		</AnimatePresence>
 	);
 };
 

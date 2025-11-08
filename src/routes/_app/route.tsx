@@ -1,38 +1,11 @@
-import { queryOptions } from "@tanstack/react-query";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { getAuth, getSignInUrl } from "@/lib/authkit/serverFunctions";
+import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { AppSidebar } from "@/lib/components/app-sidebar";
 import { Sidebar } from "@/lib/components/sidebar";
-import { getAuthUser } from "@/lib/services/user.service";
+import { getCurrentUserQueryOptions } from "@/lib/query-options/user.query-options";
+import { cn } from "@/lib/utils/cn";
+import { Route as InvoicesNewRoute } from "./invoices/new";
 
-export const getCurrentUserQueryKeys = ["current-user"] as const;
-
-const getCurrentUser = createServerFn()
-	.inputValidator((d: { pathname: string }) => d)
-	.handler(async ({ data: { pathname } }) => {
-		const auth = await getAuth();
-		if (!auth.user) {
-			const href = await getSignInUrl({ data: pathname });
-			throw redirect({ href });
-		}
-
-		try {
-			const result = await getAuthUser({
-				data: auth.user,
-			});
-
-			return result.data;
-		} catch {
-			throw redirect({ to: "/setup-account" });
-		}
-	});
-
-const getCurrentUserQueryOptions = (pathname: string) =>
-	queryOptions({
-		queryKey: getCurrentUserQueryKeys,
-		queryFn: () => getCurrentUser({ data: { pathname } }),
-	});
+const routesWithoutPadding = [InvoicesNewRoute.to];
 
 export const Route = createFileRoute("/_app")({
 	beforeLoad: async ({ location, context }) => {
@@ -49,17 +22,24 @@ export const Route = createFileRoute("/_app")({
 });
 
 function AuthenticatedRouteLayout() {
+	const location = useLocation();
+
+	const isRouteWithoutPadding = routesWithoutPadding.some((route) =>
+		location.pathname.replaceAll("/", "").startsWith(route.replaceAll("/", "")),
+	);
+
 	return (
 		<Sidebar.Provider>
 			<AppSidebar />
 
-			<div className="grow h-full p-3 grid grid-cols-[auto_1fr] background-gradient">
-				<Sidebar.Trigger />
-
-				<main className="pt-1 pl-2 overflow-x-hidden overflow-y-auto">
-					<Outlet />
-				</main>
-			</div>
+			<main
+				className={cn(
+					"grow h-full background-gradient overflow-x-hidden overflow-y-auto",
+					isRouteWithoutPadding ? "" : "p-8",
+				)}
+			>
+				<Outlet />
+			</main>
 		</Sidebar.Provider>
 	);
 }

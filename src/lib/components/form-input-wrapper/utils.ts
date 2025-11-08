@@ -1,8 +1,6 @@
 import type z from "zod";
 
-const isString = (
-	fieldSchema: z.ZodType,
-): fieldSchema is z.ZodString => {
+const isString = (fieldSchema: z.ZodType): fieldSchema is z.ZodString => {
 	return fieldSchema.type === "string";
 };
 

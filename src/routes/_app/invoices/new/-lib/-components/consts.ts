@@ -1,12 +1,14 @@
-import type {
-	InvoiceGenerationForm,
-	InvoiceGenerationService,
-} from "@/lib/schemas/invoice.schemas";
+import type { InvoiceGenerationForm } from "@/lib/schemas/invoice.schemas";
 
 export const invoiceNewFormDefaultValues = {
 	fileName: "",
 	clientId: "",
-	services: [] as InvoiceGenerationService[],
+	services: [
+		{
+			serviceId: "",
+			quantity: 1,
+		},
+	],
 	invoicedAt: new Date(),
 	invoiceNumber: 0,
-} satisfies InvoiceGenerationForm;
+} as InvoiceGenerationForm satisfies InvoiceGenerationForm;

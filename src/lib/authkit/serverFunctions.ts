@@ -30,7 +30,6 @@ export const getSignInUrl = createServerFn({ method: "GET" })
 		});
 	});
 
-
 export const signOut = createServerFn({ method: "POST" })
 	.inputValidator((data?: string) => data)
 	.handler(async ({ data: returnTo }) => {

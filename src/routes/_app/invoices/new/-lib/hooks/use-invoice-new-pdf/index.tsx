@@ -14,13 +14,14 @@ const Route = getRouteApi("/_app/invoices/new/");
 
 type UseInvoiceNewPDFProps = Pick<
 	InvoiceGenerationForm,
-	"invoiceNumber" | "clientId" | "services" | "invoicedAt"
+	"invoiceNumber" | "clientId" | "services" | "invoicedAt" | "dueDate"
 >;
 export const useInvoiceNewPDF = ({
 	invoiceNumber,
 	clientId,
 	services,
 	invoicedAt,
+	dueDate,
 }: UseInvoiceNewPDFProps) => {
 	const { user } = Route.useRouteContext();
 
@@ -85,6 +86,7 @@ export const useInvoiceNewPDF = ({
 				updatePDF(
 					<InvoiceDefaultLayout
 						invoicedAt={invoicedAt}
+						dueDate={dueDate}
 						userLogo={userLogo}
 						invoiceNumber={invoiceNumber}
 						user={user}
@@ -103,6 +105,7 @@ export const useInvoiceNewPDF = ({
 		user,
 		invoiceNumber,
 		invoicedAt,
+		dueDate,
 	]);
 
 	return { pdfInstance, isLoading };

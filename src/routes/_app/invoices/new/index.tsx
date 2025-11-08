@@ -1,6 +1,6 @@
 import { useStore } from "@tanstack/react-form";
 import { createFileRoute } from "@tanstack/react-router";
-import { DownloadIcon } from "lucide-react";
+import { FileTextIcon } from "lucide-react";
 import { type MouseEvent, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/lib/components/button";
@@ -104,6 +104,7 @@ function RouteComponent() {
 	const clientId = useStore(form.store, (s) => s.values.clientId);
 	const services = useStore(form.store, (s) => s.values.services);
 	const invoicedAt = useStore(form.store, (s) => s.values.invoicedAt);
+	const dueDate = useStore(form.store, (s) => s.values.dueDate);
 
 	const { refetch: refetchInvoiceByInvoiceNumber } = useServerQuery(
 		{
@@ -123,6 +124,7 @@ function RouteComponent() {
 		clientId,
 		services,
 		invoicedAt,
+		dueDate,
 	});
 
 	const handleCreateInvoiceClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -148,41 +150,42 @@ function RouteComponent() {
 
 	return (
 		<>
-			<div className="h-full overflow-auto flex flex-col">
-				<h1>Create Invoice</h1>
-				<div className="flex gap-2 w-full grow">
-					<div className="w-[30%] max-w-[400px] flex flex-col gap-2">
-						<InvoiceNewForm form={form} />
-						<div>
-							<form.Subscribe
-								selector={(state) => ({ isSubmitting: state.isSubmitting })}
-								children={({ isSubmitting }) => {
-									const isDisabled =
-										isSubmitting ||
-										isNextInvoiceNumberLoading ||
-										isCreatingInvoicePending;
-									const isLoading = isSubmitting || isCreatingInvoicePending;
+			<div className="h-full grid grid-cols-[430px_1fr]">
+				<div className="flex flex-col gap-2 border-r border-border p-4 overflow-hidden">
+					<h1 className="text-xl font-semibold">Create Invoice</h1>
 
-									return (
-										<Button
-											className="w-full"
-											onClick={handleCreateInvoiceClick}
-											disabled={isDisabled}
-										>
-											{isLoading ? "Creating Invoice..." : "Create Invoice"}
-											<DownloadIcon />
-										</Button>
-									);
-								}}
-							/>
-						</div>
+					<div className="flex flex-col gap-6 overflow-y-auto">
+						<InvoiceNewForm form={form} />
+
+						<form.Subscribe
+							selector={(state) => ({ isSubmitting: state.isSubmitting })}
+							children={({ isSubmitting }) => {
+								const isDisabled =
+									isSubmitting ||
+									isNextInvoiceNumberLoading ||
+									isCreatingInvoicePending;
+								const isLoading = isSubmitting || isCreatingInvoicePending;
+
+								return (
+									<Button
+										className="w-full"
+										onClick={handleCreateInvoiceClick}
+										disabled={isDisabled}
+									>
+										<FileTextIcon />
+										{isLoading ? "Creating Invoice..." : "Create Invoice"}
+									</Button>
+								);
+							}}
+						/>
 					</div>
-					<InvoiceNewPDFPreview
-						pdfInstance={pdfInstance}
-						clientId={clientId}
-						services={services}
-					/>
 				</div>
+
+				<InvoiceNewPDFPreview
+					pdfInstance={pdfInstance}
+					clientId={clientId}
+					services={services}
+				/>
 			</div>
 
 			<InvoiceNewDuplicatedNumberDialog

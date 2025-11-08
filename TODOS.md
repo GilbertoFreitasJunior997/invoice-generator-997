@@ -2,19 +2,19 @@
   
 ## Invoice Creation Form
 
-- [ ] Improve form layout
-- [ ] Include "due date" field
+- [ ] Allow creating services directly on invoice form (create checkbox/switch to persist service in db)
 - [ ] Link duplicated invoice to view in list on InvoceNewDuplicatedNumberDialog
 - [ ] Fix issue when adding two services and removing one, it breaks pdf generation (change pdf lib?)
 
 ## Invoice List
 
+- [ ] Add option to visualize invoice in list
+- [ ] Soft and hard delete for invoices
 - [ ] Add search/filter functionality
 - [ ] Add zero state view for empty invoice list
-- [ ] Soft and hard delete for invoices
 - [ ] If on invoice list and has no services/clients, show "please add .... before creating invoice"
+- [ ] Days are one-off
 - [ ] If user is creating invoice with an invoice date on the past, prompt "import invoices"
-- [ ] Add option to visualize invoice in list
 
 ## Animations
 

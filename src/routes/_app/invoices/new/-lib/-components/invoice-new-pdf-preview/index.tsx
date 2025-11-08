@@ -1,3 +1,4 @@
+import { FileTextIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import type { InvoiceNewPDFPreviewProps } from "./types";
 
@@ -20,8 +21,8 @@ export const InvoiceNewPDFPreview = ({
 	const hasPdf = pdfInstance?.url && clientId && services?.length;
 
 	return (
-		<div className="grow flex items-center justify-center">
-			<div className="max-w-3xl size-full rounded-lg overflow-hidden border border-muted bg-muted dark:bg-muted/20">
+		<div className="flex items-center justify-center bg-muted p-4">
+			<div className="max-w-3xl size-full rounded-lg overflow-hidden border border-border bg-background">
 				{hasPdf ? (
 					<iframe
 						title="Invoice PDF Preview"
@@ -30,7 +31,13 @@ export const InvoiceNewPDFPreview = ({
 						src={pdfInstance.url ?? ""}
 					/>
 				) : (
-					<div className="size-full" />
+					<div className="size-full flex flex-col gap-2 items-center justify-center text-muted-foreground">
+						<FileTextIcon className="size-13" />
+						<h5>PDF Preview</h5>
+						<span className="text-xs">
+							Your invoice will appear here as you fill in the form
+						</span>
+					</div>
 				)}
 			</div>
 		</div>

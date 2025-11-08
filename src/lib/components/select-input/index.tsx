@@ -13,7 +13,7 @@ export const SelectInput = <T extends string>(props: SelectInputProps<T>) => {
 		isRequired,
 		value,
 		onChange,
-		placeholder,
+		placeholder = "Select...",
 		rootClassName,
 		items,
 		isItemsLoading,
